@@ -17,7 +17,8 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
   const intoleranceSignals = analysisData.intoleranceSignals || {};
   const estimatedAge = analysisData.estimatedAge || analysis.estimatedAge;
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string | undefined) => {
+    if (!status) return 'text-gray-500';
     switch (status) {
       case 'excellent':
       case 'perfect':
@@ -38,7 +39,8 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string | undefined) => {
+    if (!status) return <Info className="w-4 h-4 text-gray-500" />;
     switch (status) {
       case 'excellent':
       case 'perfect':
@@ -59,7 +61,8 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
     }
   };
 
-  const formatStatus = (status: string) => {
+  const formatStatus = (status: string | undefined) => {
+    if (!status) return 'N/A';
     return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
