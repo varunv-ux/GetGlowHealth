@@ -7,6 +7,7 @@ import ConversationalAnalysis from "./conversational-analysis";
 import DetailedReports from "./detailed-reports";
 import DetailedAnalysisDisplay from "./detailed-analysis-display";
 import RecommendationsSection from "./recommendations-section";
+import ChatResponseDisplay from "./chat-response-display";
 import RawAnalysisDisplay from "./raw-analysis-display";
 import type { Analysis } from "@shared/schema";
 
@@ -47,6 +48,9 @@ export default function ResultsSection({ analysis, onNewAnalysis }: ResultsSecti
       
       {/* Recommendations */}
       <RecommendationsSection analysis={analysis} />
+      
+      {/* Chat Response Display */}
+      <ChatResponseDisplay analysis={analysis} />
       
       {/* Raw AI Analysis */}
       <RawAnalysisDisplay analysis={analysis} />
