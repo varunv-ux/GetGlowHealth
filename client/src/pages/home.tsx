@@ -2,7 +2,15 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Shield, UserCheck, History, Home as HomeIcon, BarChart3, LogOut, User } from "lucide-react";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Shield, UserCheck, History, Home as HomeIcon, BarChart3, LogOut, User, Menu, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import UploadSection from "@/components/upload-section";
@@ -41,11 +49,13 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-14">
             <div className="flex items-center">
-              <UserCheck className="text-medical-green w-8 h-8 mr-3" />
-              <h1 className="text-xl font-bold text-dark-grey">FaceHealth Pro</h1>
+              <UserCheck className="text-medical-green w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3" />
+              <h1 className="text-lg sm:text-xl font-bold text-dark-grey">FaceHealth Pro</h1>
             </div>
+            
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-6">
               <Link href="/" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors px-3 py-2 rounded-md text-sm font-medium">
                 <HomeIcon className="w-4 h-4" />
@@ -56,32 +66,70 @@ export default function Home() {
                 <span>History</span>
               </Link>
             </nav>
-            <div className="flex items-center space-x-4">
+            
+            {/* Mobile Navigation + Profile */}
+            <div className="flex items-center space-x-2">
               {user && (
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src={user.profileImageUrl} alt={user.firstName || 'User'} />
-                    <AvatarFallback>
-                      {user.firstName?.charAt(0) || user.email?.charAt(0) || <User className="w-4 h-4" />}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm text-gray-700 hidden md:inline">
-                    {user.firstName || user.email}
-                  </span>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={handleLogout}
-                    className="text-gray-600 hover:text-red-600 transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-2 p-2">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={user.profileImageUrl} alt={user.firstName || 'User'} />
+                        <AvatarFallback>
+                          {user.firstName?.charAt(0) || user.email?.charAt(0) || <User className="w-4 h-4" />}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm text-gray-700 hidden sm:inline max-w-24 truncate">
+                        {user.firstName || user.email}
+                      </span>
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {user.firstName || 'User'}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    
+                    {/* Mobile Navigation Items */}
+                    <div className="md:hidden">
+                      <Link href="/">
+                        <DropdownMenuItem>
+                          <HomeIcon className="w-4 h-4 mr-2" />
+                          Analysis
+                        </DropdownMenuItem>
+                      </Link>
+                      <Link href="/history">
+                        <DropdownMenuItem>
+                          <History className="w-4 h-4 mr-2" />
+                          History
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuSeparator />
+                    </div>
+                    
+                    <DropdownMenuItem>
+                      <Shield className="w-4 h-4 mr-2" />
+                      HIPAA Compliant
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleLogout}
+                      className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
-              <div className="flex items-center space-x-2">
-                <Shield className="text-trust-blue w-4 h-4" />
-                <span className="text-sm text-gray-600">HIPAA Compliant</span>
-              </div>
             </div>
           </div>
         </div>
