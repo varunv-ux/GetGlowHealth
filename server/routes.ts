@@ -23,6 +23,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // AI-powered facial analysis function using OpenAI GPT-4o
 async function performFacialAnalysis(imagePath: string) {
+  const startTime = Date.now();
   try {
     console.log("Starting performFacialAnalysis for:", imagePath);
     
@@ -31,20 +32,37 @@ async function performFacialAnalysis(imagePath: string) {
       throw new Error(`Image file not found: ${imagePath}`);
     }
     
-    // Read and encode image as base64
-    const imageBuffer = fs.readFileSync(imagePath);
+    // Process image to optimize size for OpenAI API (reduces upload time)
+    const processedImagePath = imagePath.replace(/\.(jpg|jpeg|png|webp)$/i, '_processed.jpg');
+    const imageResult = await processImage(imagePath, processedImagePath, {
+      maxWidth: 800,  // Smaller size for faster upload
+      maxHeight: 800,
+      quality: 75,    // Lower quality for faster processing
+      format: 'jpeg'
+    });
+    
+    // Read and encode processed image as base64
+    const imageBuffer = fs.readFileSync(processedImagePath);
     const base64Image = imageBuffer.toString('base64');
     
+    console.log("Image optimized:", {
+      originalSize: formatFileSize(imageResult.originalSize),
+      processedSize: formatFileSize(imageResult.processedSize),
+      dimensions: imageResult.processedDimensions,
+      wasResized: imageResult.wasResized
+    });
+    
     console.log("Image loaded, size:", imageBuffer.length, "bytes");
+    const apiStartTime = Date.now();
     console.log("Making OpenAI API call...");
     console.log("API Key exists:", !!process.env.OPENAI_API_KEY);
     
-    // Using GPT-4.1 model for enhanced facial analysis capabilities
+    // Using GPT-4o model with optimized settings for faster responses
     const promptConfig = configManager.getActivePrompt();
     const response = await openai.chat.completions.create({
-      model: "gpt-4.1",
-      temperature: promptConfig.temperature,
-      max_tokens: promptConfig.maxTokens,
+      model: "gpt-4o",
+      temperature: 0.3, // Lower temperature for faster, more consistent responses
+      max_tokens: 2000, // Reduced token limit for faster responses
       messages: [
         {
           role: "system",
@@ -69,12 +87,15 @@ async function performFacialAnalysis(imagePath: string) {
       response_format: { type: "json_object" }
     });
 
-    console.log("OpenAI response received");
+    const apiEndTime = Date.now();
+    const apiDuration = apiEndTime - apiStartTime;
+    console.log("OpenAI response received in", apiDuration, "ms");
     console.log("Response structure:", {
       choices: response.choices?.length,
       hasFirstChoice: !!response.choices?.[0],
       hasMessage: !!response.choices?.[0]?.message,
-      hasContent: !!response.choices?.[0]?.message?.content
+      hasContent: !!response.choices?.[0]?.message?.content,
+      tokensUsed: response.usage?.total_tokens
     });
     
     if (!response.choices || response.choices.length === 0) {
@@ -102,11 +123,25 @@ async function performFacialAnalysis(imagePath: string) {
     
     // Add raw OpenAI response for transparency
     analysisResult.rawAnalysis = {
-      model: "gpt-4.1",
+      model: "gpt-4o",
       usage: response.usage,
       responseTime: new Date().toISOString(),
       fullResponse: responseContent
     };
+    
+    // Clean up processed image file to save disk space
+    if (fs.existsSync(processedImagePath)) {
+      fs.unlinkSync(processedImagePath);
+    }
+    
+    const totalDuration = Date.now() - startTime;
+    console.log("Total analysis completed in", totalDuration, "ms");
+    console.log("Performance breakdown:", {
+      totalTime: totalDuration + "ms",
+      apiTime: apiDuration + "ms",
+      processingTime: (totalDuration - apiDuration) + "ms",
+      tokensUsed: response.usage?.total_tokens
+    });
     
     return analysisResult;
     

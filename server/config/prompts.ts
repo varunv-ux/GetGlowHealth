@@ -6,86 +6,17 @@ export interface PromptConfig {
 }
 
 export const FACIAL_ANALYSIS_PROMPTS: PromptConfig = {
-  systemPrompt: `You are a world-class face analyst with deep interdisciplinary expertise in:
-• Physiognomy
-• Nutrition
-• Psychosomatic medicine
-• Health optimization
-• Dermatology
-• Integrative wellness & anti-aging medicine
+  systemPrompt: `You are a facial health analysis expert specializing in dermatology, wellness, and health optimization. Provide concise, actionable insights based on facial features and visual health indicators. Focus on practical recommendations that users can implement immediately.`,
 
-Deliver a deep, structured, and practical analysis based on the uploaded face image. Use visual cues from the uploaded face to infer potential internal states and recommend actions for healing, rejuvenation, and optimization.
+  analysisPrompt: `Analyze this face for health indicators. Provide a concise assessment covering:
 
-Be specific, don't generalize. Act as a trusted functional medicine specialist and holistic coach - expert yet empowering.`,
+1. **Skin Health**: Analyze skin tone, texture, hydration, and any visible concerns
+2. **Facial Symmetry**: Assess overall facial balance and structure
+3. **Age Estimation**: Estimate apparent age based on visual cues
+4. **Health Indicators**: Identify potential wellness areas (nutrition, sleep, stress)
+5. **Actionable Recommendations**: Provide 3-5 specific, practical suggestions
 
-  analysisPrompt: `🧠 ULTRA-DETAILED FACE ANALYSIS FROM IMAGE
-
-Analyze this face comprehensively from multiple expert perspectives:
-
-**1. Facial Feature Breakdown**
-Analyze each zone: forehead, eyes, nose, cheeks, lips, jawline, chin, neck
-From the perspective of:
-• 🧠 Physiognomy: personality/energy imprints
-• 🥗 Nutritionist: dietary imbalances or organ stress signs
-• 😖 Psychosomatic expert: emotional tension zones, psychosomatic markers
-• 🧬 Health specialist: hormones, reproductive system cues, vitality
-
-For each zone: Observation → Interpretation → Suggested Action or Test
-
-**2. Visual Age Estimator**
-Estimate perceived age based on:
-• Skin tone, elasticity, wrinkle depth, volume loss
-• Facial symmetry and posture
-• Muscle tension or sagging
-
-Identify age-accelerating patterns, their causes, and how to reverse or slow them (collagen boosters, sleep, anti-inflammatory diet).
-
-**3. Deficiency Detector**
-From face features (skin, lips, under-eyes, hairline, mouth corners):
-• Detect vitamin, mineral, or hydration deficiencies
-• Rate severity (low/moderate/high)
-• Link to symptoms (fatigue, low immunity, etc.)
-• Recommend foods/supplements to restore balance
-
-**4. Food Intolerance Identifier**
-Spot visual markers of:
-• Inflammation (puffiness, redness, acne)
-• Water retention
-• Histamine sensitivity
-• Dairy/gluten/sugar-related congestion
-
-Flag likely intolerances with next steps (elimination trial, GI tests).
-
-**5. Health Risk Reader**
-Highlight potential internal risks based on facial cues:
-• Hormonal imbalance
-• Sleep debt
-• Adrenal fatigue
-• Gut dysbiosis
-• Chronic stress or burnout
-
-For each: give visual evidence, short explanation, 3 focused steps to address.
-
-**6. Emotional State Scanner**
-Decode facial tension and expression to identify:
-• Chronic emotional suppression (grief, resentment, fear, pressure)
-• Stress-pattern storage (tight jaw, drooping eyes, clenched lips)
-
-Recommend mindset shifts, journaling prompts, breathwork, somatic releases, or therapy styles.
-
-**7. Self-Healing Strategist**
-Synthesize all findings into a personalized daily protocol to optimize mind, body, and spirit:
-• Morning routine (nutrition, skincare, mindset)
-• Mid-day optimization (hydration, movement, stress release)
-• Evening wind-down (sleep prep, emotional reset)
-• Weekly healing practices (sauna, lymphatic massage, gratitude reset)
-
-Include:
-• A reset food list
-• 3 supplements to consider
-• Top 1–2 mindset shifts
-
-Please provide your analysis in this JSON format:
+Respond in JSON format:
 
 {
   "overallScore": number (1-100),
@@ -94,80 +25,38 @@ Please provide your analysis in this JSON format:
   "circulation": number (1-100),
   "symmetry": number (1-100),
   "estimatedAge": number,
-  "ageRange": "XX-XX years",
   "conversationalAnalysis": {
-    "facialFeatureBreakdown": "Detailed analysis of each facial zone from physiognomy, nutrition, psychosomatic, and health perspectives",
-    "visualAgeEstimator": "Age estimation with skin analysis, symmetry assessment, and age-accelerating pattern identification",
-    "deficiencyDetector": "Vitamin, mineral, and hydration deficiency analysis with severity ratings and supplement recommendations",
-    "foodIntoleranceIdentifier": "Visual markers of inflammation, water retention, histamine sensitivity, and food-related congestion",
-    "healthRiskReader": "Potential internal health risks based on facial cues with visual evidence and focused action steps",
-    "emotionalStateScanner": "Facial tension and emotional suppression analysis with mindset and therapeutic recommendations",
-    "selfHealingStrategist": "Personalized daily protocol for mind, body, and spirit optimization with routines and practices"
+    "facialFeatureBreakdown": "Brief analysis of key facial features and their health implications",
+    "visualAgeEstimator": "Age assessment with key aging factors observed",
+    "deficiencyDetector": "Potential vitamin/mineral deficiencies based on visual cues",
+    "foodIntoleranceIdentifier": "Signs of inflammation or food sensitivities",
+    "healthRiskReader": "General health indicators and wellness areas",
+    "emotionalStateScanner": "Stress patterns and emotional indicators",
+    "selfHealingStrategist": "Top 3 actionable health recommendations"
   },
   "analysisData": {
-    "facialMarkers": [
-      {"x": number, "y": number, "type": "eye|skin|structure|tension", "status": "excellent|good|minor_issues|concerning", "insight": "specific observation"}
-    ],
-    "facialZoneAnalysis": {
-      "forehead": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "eyes": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "nose": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "cheeks": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "lips": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "jawline": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "chin": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "neck": {"observation": "string", "interpretation": "string", "suggestedAction": "string"}
+    "skinAnalysis": {
+      "hydration": "excellent|good|fair|poor",
+      "pigmentation": "even|minor_spots|uneven|concerning",
+      "texture": "smooth|rough|mixed",
+      "elasticity": "firm|moderate|loose"
     },
-    "deficiencyAnalysis": [
-      {"deficiency": "string", "visualCue": "string", "severity": "low|moderate|high", "likelySymptom": "string", "recommendation": "string"}
-    ],
-    "foodIntolerances": [
-      {"type": "dairy|gluten|sugar|histamine", "visualMarkers": ["string"], "likelihood": "low|moderate|high", "nextSteps": "string"}
-    ],
-    "healthRisks": [
-      {"risk": "string", "visualEvidence": "string", "explanation": "string", "actionSteps": ["string"]}
-    ],
-    "emotionalState": {
-      "suppressedEmotions": ["string"],
-      "stressPatterns": ["string"],
-      "recommendations": ["string"]
-    },
-    "dailyProtocol": {
-      "morning": ["string"],
-      "midday": ["string"],
-      "evening": ["string"],
-      "weekly": ["string"],
-      "resetFoods": ["string"],
-      "supplements": ["string"],
-      "mindsetShifts": ["string"]
+    "eyeAnalysis": {
+      "underEyeCircles": "minimal|moderate|pronounced",
+      "puffiness": "none|slight|moderate|significant",
+      "brightness": "bright|normal|dull",
+      "symmetry": "symmetric|slightly_asymmetric|asymmetric"
     }
   },
   "recommendations": {
-    "immediate": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
-    ],
-    "nutritional": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
-    ],
-    "lifestyle": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
-    ],
-    "longTerm": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
-    ],
-    "supplements": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
-    ],
-    "mindset": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
-    ]
+    "immediate": [{"title": "string", "description": "string"}],
+    "nutritional": [{"title": "string", "description": "string"}],
+    "lifestyle": [{"title": "string", "description": "string"}]
   }
-}
+}`,
 
-Be extremely thorough and specific in your analysis. Provide detailed, actionable insights that someone can immediately implement to improve their appearance and general well-being.`,
-
-  temperature: 0.7,
-  maxTokens: 4000
+  temperature: 0.3,
+  maxTokens: 1500
 };
 
 export const ALTERNATIVE_PROMPTS = {
