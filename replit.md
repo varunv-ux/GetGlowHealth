@@ -8,6 +8,13 @@ FaceHealth Pro is a full-stack web application for facial health analysis using 
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+- **December 2024**: Implemented ultra-detailed prompt system with configurable analysis types
+- **December 2024**: Upgraded to GPT-4.1 model for enhanced analysis accuracy
+- **December 2024**: Added comprehensive analysis history system with image storage
+- **December 2024**: Implemented server-side image processing with resolution optimization
+
 ## System Architecture
 
 ### Frontend Architecture
@@ -51,9 +58,15 @@ Preferred communication style: Simple, everyday language.
 
 ### Image Processing Pipeline
 1. **Upload Validation**: File type and size validation (JPEG, PNG, WebP, 10MB limit)
-2. **Image Processing**: Client-side image resizing and optimization
-3. **OpenAI Vision Analysis**: Real AI-powered facial analysis using GPT-4o vision model
+2. **Image Processing**: Server-side image resizing and optimization using Sharp library
+3. **OpenAI Vision Analysis**: Real AI-powered facial analysis using GPT-4.1 vision model
 4. **Results Storage**: Analysis results stored with structured data
+
+### Prompt Configuration System
+- **Configurable Prompts**: Ultra-detailed prompt system with easy tuning capabilities
+- **Multiple Prompt Types**: DETAILED, SIMPLE, and MEDICAL prompt configurations
+- **Config Manager**: Server-side configuration management with hot-reloading
+- **Prompt Export/Import**: JSON-based configuration export and import functionality
 
 ## Data Flow
 
@@ -67,8 +80,9 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### AI Services
-- **OpenAI GPT-4o**: Vision model for real-time facial health analysis
+- **OpenAI GPT-4.1**: Advanced vision model for ultra-detailed facial health analysis
 - **OpenAI SDK**: JavaScript client for API integration
+- **Prompt Configuration**: Dynamic prompt system for analysis customization
 
 ### Development Tools
 - **Vite**: Development server and build tool
@@ -116,7 +130,7 @@ Preferred communication style: Simple, everyday language.
 
 **Monorepo Structure**: Single repository with client/server/shared directories for code sharing and simplified deployment.
 
-**OpenAI Vision Integration**: Real AI-powered facial health analysis using GPT-4o vision model for accurate health assessment and personalized recommendations.
+**OpenAI Vision Integration**: Real AI-powered facial health analysis using GPT-4.1 vision model for ultra-detailed health assessment and personalized recommendations with configurable prompt system.
 
 **JSONB Storage**: Flexible analysis data storage using PostgreSQL JSONB for complex health metrics and recommendations.
 

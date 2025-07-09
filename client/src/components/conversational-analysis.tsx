@@ -26,11 +26,11 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
 
   const analysisCards = [
     {
-      id: "faceAnalyst",
-      title: "Face Analysis (Physiognomist)",
+      id: "facialFeatureBreakdown",
+      title: "Facial Feature Breakdown",
       icon: <User className="w-5 h-5" />,
       color: "bg-trust-blue",
-      content: conversationalAnalysis.faceAnalyst
+      content: conversationalAnalysis.facialFeatureBreakdown
     },
     {
       id: "visualAgeEstimator",
@@ -41,39 +41,39 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
       badge: ageRange
     },
     {
-      id: "appearanceAssessment",
-      title: "Appearance Assessment",
+      id: "deficiencyDetector",
+      title: "Deficiency Detector",
       icon: <Apple className="w-5 h-5" />,
       color: "bg-warning-orange",
-      content: conversationalAnalysis.appearanceAssessment
+      content: conversationalAnalysis.deficiencyDetector
     },
     {
-      id: "expressionAnalysis",
-      title: "Expression Analysis",
+      id: "foodIntoleranceIdentifier",
+      title: "Food Intolerance Identifier",
       icon: <AlertTriangle className="w-5 h-5" />,
       color: "bg-error-red",
-      content: conversationalAnalysis.expressionAnalysis
+      content: conversationalAnalysis.foodIntoleranceIdentifier
     },
     {
-      id: "lifestyleIndicators",
-      title: "Lifestyle Indicators",
+      id: "healthRiskReader",
+      title: "Health Risk Reader",
       icon: <Shield className="w-5 h-5" />,
       color: "bg-trust-blue",
-      content: conversationalAnalysis.lifestyleIndicators
+      content: conversationalAnalysis.healthRiskReader
     },
     {
-      id: "wellnessObservations",
-      title: "Wellness Observations",
+      id: "emotionalStateScanner",
+      title: "Emotional State Scanner",
       icon: <Brain className="w-5 h-5" />,
       color: "bg-purple-500",
-      content: conversationalAnalysis.wellnessObservations
+      content: conversationalAnalysis.emotionalStateScanner
     },
     {
-      id: "improvementSuggestions",
-      title: "Improvement Suggestions",
+      id: "selfHealingStrategist",
+      title: "Self-Healing Strategist",
       icon: <Heart className="w-5 h-5" />,
       color: "bg-success-green",
-      content: conversationalAnalysis.improvementSuggestions
+      content: conversationalAnalysis.selfHealingStrategist
     }
   ];
 

@@ -8,6 +8,7 @@ import { insertAnalysisSchema } from "@shared/schema";
 import { z } from "zod";
 import OpenAI from "openai";
 import { processImage, formatFileSize, getImageFormat } from "./image-processor";
+import { configManager } from "./config/config-manager";
 
 const upload = multer({
   dest: 'uploads/',
@@ -38,138 +39,22 @@ async function performFacialAnalysis(imagePath: string) {
     console.log("API Key exists:", !!process.env.OPENAI_API_KEY);
     
     // Using GPT-4.1 model for enhanced facial analysis capabilities
+    const promptConfig = configManager.getActivePrompt();
     const response = await openai.chat.completions.create({
       model: "gpt-4.1",
-      temperature: 0.7,
+      temperature: promptConfig.temperature,
+      max_tokens: promptConfig.maxTokens,
       messages: [
         {
           role: "system",
-          content: "You are a comprehensive facial analysis expert specializing in physiognomy, appearance assessment, and wellness insights. Analyze facial features to provide insights about general appearance, lifestyle factors, and well-being indicators. Focus on observable features and aesthetic analysis rather than medical diagnosis. Provide both structured data and conversational analysis."
+          content: promptConfig.systemPrompt
         },
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: `Please analyze this face comprehensively from multiple expert perspectives:
-
-**1. Face Analyst (Physiognomist)**
-Analyze facial features using physiognomy principles. Describe facial structure, proportions, bone structure, and general appearance characteristics. Focus on observable features and aesthetic qualities.
-
-**2. Visual Age Estimator**
-Estimate apparent age based on facial features, skin texture, and overall appearance. Note any signs of aging or youthful qualities visible in the face.
-
-**3. Appearance Assessment**
-Assess general appearance indicators like skin tone, facial symmetry, eye brightness, and overall complexion quality. Comment on skin texture and facial harmony.
-
-**4. Expression Analysis**
-Analyze facial expressions, muscle tension patterns, and emotional indicators visible in the face. Note any signs of stress or relaxation.
-
-**5. Lifestyle Indicators**
-Identify lifestyle factors that might be reflected in facial appearance, such as sleep patterns, stress levels, or general wellness habits.
-
-**6. Wellness Observations**
-Note general wellness indicators visible in facial features, skin quality, and overall appearance. Focus on observable characteristics rather than medical conditions.
-
-**7. Improvement Suggestions**
-Based on appearance analysis, suggest general lifestyle, skincare, or wellness approaches that might enhance overall appearance and well-being.
-
-Please provide your analysis in this JSON format, including both structured data AND a comprehensive conversational analysis:
-
-{
-  "overallScore": number (1-100),
-  "skinHealth": number (1-100),
-  "eyeHealth": number (1-100),
-  "circulation": number (1-100),
-  "symmetry": number (1-100),
-  "estimatedAge": number,
-  "ageRange": "XX-XX years",
-  "conversationalAnalysis": {
-    "faceAnalyst": "Detailed physiognomist analysis with specific observations about facial structure, proportions, bone structure, and aesthetic qualities",
-    "visualAgeEstimator": "Comprehensive age assessment explaining apparent age, aging signs, and youthful qualities visible in facial features",
-    "appearanceAssessment": "Detailed appearance analysis covering skin tone, facial symmetry, eye brightness, complexion quality, and overall facial harmony",
-    "expressionAnalysis": "Analysis of facial expressions, muscle tension patterns, and emotional indicators visible in the face",
-    "lifestyleIndicators": "Assessment of lifestyle factors reflected in facial appearance, including sleep patterns, stress levels, and wellness habits",
-    "wellnessObservations": "General wellness indicators visible in facial features, skin quality, and overall appearance characteristics",
-    "improvementSuggestions": "Comprehensive suggestions for lifestyle, skincare, and wellness approaches to enhance overall appearance and well-being"
-  },
-  "analysisData": {
-    "facialMarkers": [
-      {"x": number, "y": number, "type": "eye|skin|structure", "status": "excellent|good|minor_issues|normal", "insight": "specific observation about this marker"}
-    ],
-    "skinAnalysis": {
-      "hydration": "excellent|good|normal|poor",
-      "pigmentation": "even|minor_spots|moderate_spots|significant_spots",
-      "texture": "smooth|slightly_rough|rough|very_rough",
-      "elasticity": "excellent|good|normal|poor",
-      "agingSignsDetected": ["specific aging signs"],
-      "skinTone": "description of skin tone and what it reveals",
-      "inflammationSigns": ["specific inflammation indicators"]
-    },
-    "eyeAnalysis": {
-      "underEyeCircles": "none|minimal|moderate|significant",
-      "puffiness": "none|minimal|moderate|significant",
-      "brightness": "high|medium|low",
-      "symmetry": "perfect|good|slight_asymmetry|noticeable_asymmetry",
-      "fatigueSignals": ["specific fatigue indicators"],
-      "eyeColor": "description and health implications",
-      "eyeClarity": "assessment of eye clarity and vitality"
-    },
-    "circulationAnalysis": {
-      "facialFlush": "healthy|normal|pale|excessive",
-      "lipColor": "healthy|normal|pale|dark",
-      "capillaryHealth": "excellent|good|normal|poor",
-      "overallTone": "even|slightly_uneven|uneven|very_uneven",
-      "circulationPatterns": ["specific circulation observations"]
-    },
-    "lifestyleInsights": {
-      "appearanceIndicators": ["general appearance observations"],
-      "recommendedNutrients": ["nutrients that might support appearance"],
-      "beneficialFoods": ["foods that might support skin and appearance"],
-      "wellnessObservations": ["general wellness observations"]
-    },
-    "skinObservations": {
-      "generalSigns": ["general skin observations"],
-      "textureNotes": ["skin texture observations"],
-      "appearanceFactors": ["factors that might influence appearance"],
-      "observationPatterns": ["patterns observed in skin appearance"]
-    },
-    "emotionalStateReading": {
-      "stressPatterns": ["specific stress indicators"],
-      "emotionalSignals": ["mood and emotional state indicators"],
-      "tensionAreas": ["areas of physical tension"],
-      "energyLevel": "assessment of overall energy and vitality"
-    },
-    "healthRiskAssessment": {
-      "hormonalIndicators": ["signs of hormonal imbalances"],
-      "sleepQualityClues": ["sleep quality indicators"],
-      "lifestyleConcerns": ["lifestyle factors affecting health"],
-      "systemicIssues": ["potential systemic health concerns"]
-    }
-  },
-  "recommendations": {
-    "immediate": [
-      {"icon": "fas fa-icon", "title": "Immediate Action", "description": "Specific immediate steps to take", "timeframe": "within 24-48 hours"}
-    ],
-    "nutritional": [
-      {"icon": "fas fa-icon", "title": "Nutritional Strategy", "description": "Specific dietary recommendations with foods and supplements", "timeframe": "within 1-2 weeks"}
-    ],
-    "lifestyle": [
-      {"icon": "fas fa-icon", "title": "Lifestyle Adjustment", "description": "Rest, stress, and mindset recommendations", "timeframe": "within 2-4 weeks"}
-    ],
-    "longTerm": [
-      {"icon": "fas fa-icon", "title": "Long-term Strategy", "description": "Comprehensive healing approach for sustained health", "timeframe": "3-6 months"}
-    ],
-    "supplements": [
-      {"icon": "fas fa-icon", "title": "Supplement Recommendation", "description": "Specific supplements to address deficiencies", "timeframe": "start within 1 week"}
-    ],
-    "mindset": [
-      {"icon": "fas fa-icon", "title": "Mindset Shift", "description": "Inner dialogue and emotional healing recommendations", "timeframe": "ongoing practice"}
-    ]
-  }
-}
-
-Be extremely thorough and specific in your analysis. Provide detailed, actionable insights that someone can immediately implement to improve their appearance and general well-being.`
+              text: promptConfig.analysisPrompt
             },
             {
               type: "image_url",
@@ -180,8 +65,7 @@ Be extremely thorough and specific in your analysis. Provide detailed, actionabl
           ]
         }
       ],
-      response_format: { type: "json_object" },
-      max_tokens: 4000
+      response_format: { type: "json_object" }
     });
 
     console.log("OpenAI response received");
@@ -380,6 +264,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     res.sendFile(filePath);
+  });
+
+  // Configuration management routes
+  
+  // Get current prompt configuration
+  app.get("/api/config/prompt", async (req, res) => {
+    try {
+      const config = configManager.getActivePrompt();
+      res.json(config);
+    } catch (error) {
+      console.error("Error retrieving prompt config:", error);
+      res.status(500).json({ error: "Failed to retrieve prompt configuration" });
+    }
+  });
+
+  // Update prompt configuration
+  app.post("/api/config/prompt", async (req, res) => {
+    try {
+      const { systemPrompt, analysisPrompt, temperature, maxTokens } = req.body;
+      
+      if (!systemPrompt || !analysisPrompt || typeof temperature !== 'number') {
+        return res.status(400).json({ error: "Invalid prompt configuration" });
+      }
+
+      const config = { systemPrompt, analysisPrompt, temperature, maxTokens };
+      configManager.updatePrompt(config);
+      
+      res.json({ message: "Prompt configuration updated successfully", config });
+    } catch (error) {
+      console.error("Error updating prompt config:", error);
+      res.status(500).json({ error: "Failed to update prompt configuration" });
+    }
+  });
+
+  // Set prompt type
+  app.post("/api/config/prompt/type", async (req, res) => {
+    try {
+      const { type } = req.body;
+      
+      if (!['DETAILED', 'SIMPLE', 'MEDICAL'].includes(type)) {
+        return res.status(400).json({ error: "Invalid prompt type" });
+      }
+
+      configManager.setPromptType(type);
+      const config = configManager.getActivePrompt();
+      
+      res.json({ message: `Prompt type set to ${type}`, config });
+    } catch (error) {
+      console.error("Error setting prompt type:", error);
+      res.status(500).json({ error: "Failed to set prompt type" });
+    }
+  });
+
+  // Get available prompt types
+  app.get("/api/config/prompt/types", async (req, res) => {
+    try {
+      const availablePrompts = configManager.getAvailablePrompts();
+      res.json(availablePrompts);
+    } catch (error) {
+      console.error("Error retrieving available prompts:", error);
+      res.status(500).json({ error: "Failed to retrieve available prompts" });
+    }
+  });
+
+  // Export prompt configuration
+  app.get("/api/config/prompt/export", async (req, res) => {
+    try {
+      const configJson = configManager.exportConfig();
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', 'attachment; filename="prompt-config.json"');
+      res.send(configJson);
+    } catch (error) {
+      console.error("Error exporting prompt config:", error);
+      res.status(500).json({ error: "Failed to export prompt configuration" });
+    }
+  });
+
+  // Import prompt configuration
+  app.post("/api/config/prompt/import", async (req, res) => {
+    try {
+      const { configJson } = req.body;
+      
+      if (!configJson) {
+        return res.status(400).json({ error: "No configuration provided" });
+      }
+
+      const success = configManager.importConfig(configJson);
+      
+      if (success) {
+        const config = configManager.getActivePrompt();
+        res.json({ message: "Prompt configuration imported successfully", config });
+      } else {
+        res.status(400).json({ error: "Invalid configuration format" });
+      }
+    } catch (error) {
+      console.error("Error importing prompt config:", error);
+      res.status(500).json({ error: "Failed to import prompt configuration" });
+    }
   });
 
   const httpServer = createServer(app);

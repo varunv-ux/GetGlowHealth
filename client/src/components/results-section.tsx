@@ -5,6 +5,7 @@ import FacialAnalysisDisplay from "./facial-analysis-display";
 import HealthScoreCard from "./health-score-card";
 import ConversationalAnalysis from "./conversational-analysis";
 import DetailedReports from "./detailed-reports";
+import DetailedAnalysisDisplay from "./detailed-analysis-display";
 import RecommendationsSection from "./recommendations-section";
 import RawAnalysisDisplay from "./raw-analysis-display";
 import type { Analysis } from "@shared/schema";
@@ -37,6 +38,9 @@ export default function ResultsSection({ analysis, onNewAnalysis }: ResultsSecti
       
       {/* Conversational Analysis */}
       <ConversationalAnalysis analysis={analysis} />
+      
+      {/* Detailed Analysis Display */}
+      <DetailedAnalysisDisplay analysis={analysis} />
       
       {/* Detailed Reports */}
       <DetailedReports analysis={analysis} />
