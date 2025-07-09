@@ -42,20 +42,31 @@ async function performFacialAnalysis(imagePath: string) {
       messages: [
         {
           role: "system",
-          content: "You are an expert dermatologist and facial health analyst. Analyze the facial image and provide comprehensive health assessment. Focus on skin health, eye condition, circulation indicators, and facial symmetry. Provide realistic scores (1-100) and detailed analysis. Respond with JSON in the exact format requested."
+          content: "You are a comprehensive health analyst combining expertise as a physiognomist, nutritionist, psychosomatic expert, and health specialist. Analyze facial features to provide deep insights about health, aging, deficiencies, emotional states, and provide personalized healing strategies. Respond with JSON in the exact format requested."
         },
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: `Analyze this facial image for health indicators and provide a comprehensive assessment. Return JSON with this exact structure:
+              text: `Analyze this facial image comprehensively from multiple expert perspectives:
+
+1. **Face Analyst**: Analyze like a physiognomist, nutritionist, psychosomatic expert, and health specialist
+2. **Visual Age Estimator**: Assess apparent age based on facial tone, skin texture, and symmetry
+3. **Deficiency Detector**: Identify nutrient deficiencies from skin tone, lips, eyes, jawline, and cheek fullness
+4. **Intolerance Identifier**: Look for signs of food intolerances or reactions
+5. **Health Risk Reader**: Highlight hormonal imbalances, sleep issues, or lifestyle concerns
+6. **Emotional State Scanner**: Decode tension, fatigue, or mood signals in the face
+7. **Self-Healing Strategist**: Provide holistic recommendations for diet, rest, stress, and mindset
+
+Return JSON with this exact structure:
 {
   "overallScore": number (1-100),
   "skinHealth": number (1-100),
   "eyeHealth": number (1-100),
   "circulation": number (1-100),
   "symmetry": number (1-100),
+  "estimatedAge": number,
   "analysisData": {
     "facialMarkers": [
       {"x": number, "y": number, "type": "eye|skin|structure", "status": "excellent|good|minor_issues|normal"}
@@ -64,32 +75,60 @@ async function performFacialAnalysis(imagePath: string) {
       "hydration": "excellent|good|normal|poor",
       "pigmentation": "even|minor_spots|moderate_spots|significant_spots",
       "texture": "smooth|slightly_rough|rough|very_rough",
-      "elasticity": "excellent|good|normal|poor"
+      "elasticity": "excellent|good|normal|poor",
+      "agingSignsDetected": ["string"]
     },
     "eyeAnalysis": {
       "underEyeCircles": "none|minimal|moderate|significant",
       "puffiness": "none|minimal|moderate|significant",
       "brightness": "high|medium|low",
-      "symmetry": "perfect|good|slight_asymmetry|noticeable_asymmetry"
+      "symmetry": "perfect|good|slight_asymmetry|noticeable_asymmetry",
+      "fatigueSignals": ["string"]
     },
     "circulationAnalysis": {
       "facialFlush": "healthy|normal|pale|excessive",
       "lipColor": "healthy|normal|pale|dark",
       "capillaryHealth": "excellent|good|normal|poor",
       "overallTone": "even|slightly_uneven|uneven|very_uneven"
+    },
+    "nutritionalInsights": {
+      "possibleDeficiencies": ["string"],
+      "recommendedNutrients": ["string"],
+      "healingFoods": ["string"]
+    },
+    "intoleranceSignals": {
+      "inflammationSigns": ["string"],
+      "digestiveClues": ["string"],
+      "possibleTriggers": ["string"]
+    },
+    "emotionalStateReading": {
+      "stressPatterns": ["string"],
+      "emotionalSignals": ["string"],
+      "tensionAreas": ["string"]
+    },
+    "healthRiskAssessment": {
+      "hormonalIndicators": ["string"],
+      "sleepQualityClues": ["string"],
+      "lifestyleConcerns": ["string"]
     }
   },
   "recommendations": {
     "immediate": [
       {"icon": "fas fa-icon", "title": "Action Title", "description": "Detailed description"}
     ],
+    "nutritional": [
+      {"icon": "fas fa-icon", "title": "Nutritional Strategy", "description": "Specific dietary recommendations"}
+    ],
+    "lifestyle": [
+      {"icon": "fas fa-icon", "title": "Lifestyle Adjustment", "description": "Rest, stress, and mindset recommendations"}
+    ],
     "longTerm": [
-      {"icon": "fas fa-icon", "title": "Action Title", "description": "Detailed description"}
+      {"icon": "fas fa-icon", "title": "Long-term Strategy", "description": "Comprehensive healing approach"}
     ]
   }
 }
 
-Provide specific, actionable recommendations based on the actual analysis of the face.`
+Provide specific, actionable insights based on physiognomist principles and holistic health analysis.`
             },
             {
               type: "image_url",

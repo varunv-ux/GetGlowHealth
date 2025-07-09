@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertTriangle, CheckCircle, Info, Lightbulb } from "lucide-react";
+import { AlertTriangle, CheckCircle, Info, Lightbulb, Calendar, Apple, Brain, Heart, Shield } from "lucide-react";
 import type { Analysis } from "@shared/schema";
 
 interface DetailedReportsProps {
@@ -11,6 +11,11 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
   const skinAnalysis = analysisData.skinAnalysis || {};
   const eyeAnalysis = analysisData.eyeAnalysis || {};
   const circulationAnalysis = analysisData.circulationAnalysis || {};
+  const nutritionalInsights = analysisData.nutritionalInsights || {};
+  const emotionalStateReading = analysisData.emotionalStateReading || {};
+  const healthRiskAssessment = analysisData.healthRiskAssessment || {};
+  const intoleranceSignals = analysisData.intoleranceSignals || {};
+  const estimatedAge = analysisData.estimatedAge || analysis.estimatedAge;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -60,6 +65,31 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      {/* Age Analysis Card */}
+      <Card className="shadow-lg">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h5 className="text-lg font-semibold text-dark-grey flex items-center">
+              <Calendar className="w-5 h-5 text-trust-blue mr-2" />
+              Age Analysis
+            </h5>
+            <div className="text-2xl font-bold text-trust-blue">
+              {estimatedAge || 'N/A'}
+            </div>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="text-sm text-gray-600 mb-2">Aging Signs Detected:</div>
+            {skinAnalysis.agingSignsDetected?.map((sign, index) => (
+              <div key={index} className="flex items-center">
+                <Info className="w-3 h-3 text-warning-orange mr-2" />
+                <span className="text-sm">{sign}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Skin Health Card */}
       <Card className="shadow-lg">
         <CardContent className="p-6">
@@ -67,7 +97,7 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
             <h5 className="text-lg font-semibold text-dark-grey">Skin Health</h5>
             <div className="flex items-center">
               <AlertTriangle className="w-4 h-4 text-warning-orange mr-1" />
-              <span className="text-sm font-medium text-warning-orange">Minor Issues</span>
+              <span className="text-sm font-medium text-warning-orange">Analysis</span>
             </div>
           </div>
           
@@ -154,6 +184,93 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
         </CardContent>
       </Card>
 
+      {/* Nutritional Insights Card */}
+      <Card className="shadow-lg">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h5 className="text-lg font-semibold text-dark-grey flex items-center">
+              <Apple className="w-5 h-5 text-success-green mr-2" />
+              Nutritional Insights
+            </h5>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="text-sm text-gray-600 mb-2">Possible Deficiencies:</div>
+            {nutritionalInsights.possibleDeficiencies?.map((deficiency, index) => (
+              <div key={index} className="flex items-center">
+                <AlertTriangle className="w-3 h-3 text-warning-orange mr-2" />
+                <span className="text-sm">{deficiency}</span>
+              </div>
+            ))}
+            <div className="text-sm text-gray-600 mb-2 mt-3">Healing Foods:</div>
+            {nutritionalInsights.healingFoods?.map((food, index) => (
+              <div key={index} className="flex items-center">
+                <CheckCircle className="w-3 h-3 text-success-green mr-2" />
+                <span className="text-sm">{food}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Emotional State Card */}
+      <Card className="shadow-lg">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h5 className="text-lg font-semibold text-dark-grey flex items-center">
+              <Brain className="w-5 h-5 text-trust-blue mr-2" />
+              Emotional State
+            </h5>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="text-sm text-gray-600 mb-2">Stress Patterns:</div>
+            {emotionalStateReading.stressPatterns?.map((pattern, index) => (
+              <div key={index} className="flex items-center">
+                <Info className="w-3 h-3 text-warning-orange mr-2" />
+                <span className="text-sm">{pattern}</span>
+              </div>
+            ))}
+            <div className="text-sm text-gray-600 mb-2 mt-3">Tension Areas:</div>
+            {emotionalStateReading.tensionAreas?.map((area, index) => (
+              <div key={index} className="flex items-center">
+                <AlertTriangle className="w-3 h-3 text-warning-orange mr-2" />
+                <span className="text-sm">{area}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Health Risk Assessment Card */}
+      <Card className="shadow-lg">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h5 className="text-lg font-semibold text-dark-grey flex items-center">
+              <Shield className="w-5 h-5 text-medical-green mr-2" />
+              Health Risk Assessment
+            </h5>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="text-sm text-gray-600 mb-2">Hormonal Indicators:</div>
+            {healthRiskAssessment.hormonalIndicators?.map((indicator, index) => (
+              <div key={index} className="flex items-center">
+                <Info className="w-3 h-3 text-trust-blue mr-2" />
+                <span className="text-sm">{indicator}</span>
+              </div>
+            ))}
+            <div className="text-sm text-gray-600 mb-2 mt-3">Sleep Quality Clues:</div>
+            {healthRiskAssessment.sleepQualityClues?.map((clue, index) => (
+              <div key={index} className="flex items-center">
+                <AlertTriangle className="w-3 h-3 text-warning-orange mr-2" />
+                <span className="text-sm">{clue}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Circulation Card */}
       <Card className="shadow-lg">
         <CardContent className="p-6">
@@ -161,7 +278,7 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
             <h5 className="text-lg font-semibold text-dark-grey">Circulation</h5>
             <div className="flex items-center">
               <Info className="w-4 h-4 text-trust-blue mr-1" />
-              <span className="text-sm font-medium text-trust-blue">Normal</span>
+              <span className="text-sm font-medium text-trust-blue">Analysis</span>
             </div>
           </div>
           
@@ -190,13 +307,6 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
                 {formatStatus(circulationAnalysis.overallTone)}
               </span>
             </div>
-          </div>
-          
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-            <p className="text-sm text-gray-700">
-              <Info className="w-4 h-4 text-trust-blue mr-2 inline" />
-              Regular exercise can further improve circulation and skin health.
-            </p>
           </div>
         </CardContent>
       </Card>
