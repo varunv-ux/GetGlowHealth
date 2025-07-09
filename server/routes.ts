@@ -12,17 +12,6 @@ const upload = multer({
   dest: 'uploads/',
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|webp/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb(new Error('Only JPEG, JPG, PNG, and WEBP images are allowed'));
-    }
   }
 });
 
@@ -32,13 +21,26 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // AI-powered facial analysis function using OpenAI GPT-4o
 async function performFacialAnalysis(imagePath: string) {
   try {
+    console.log("Starting performFacialAnalysis for:", imagePath);
+    
+    // Check if file exists
+    if (!fs.existsSync(imagePath)) {
+      throw new Error(`Image file not found: ${imagePath}`);
+    }
+    
     // Read and encode image as base64
     const imageBuffer = fs.readFileSync(imagePath);
     const base64Image = imageBuffer.toString('base64');
     
+    console.log("Image loaded, size:", imageBuffer.length, "bytes");
+    console.log("Making OpenAI API call...");
+    console.log("API Key exists:", !!process.env.OPENAI_API_KEY);
+    
     // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
+      temperature: 0.7,
+      timeout: 30000, // 30 second timeout
       messages: [
         {
           role: "system",
@@ -143,22 +145,65 @@ Provide specific, actionable insights based on physiognomist principles and holi
       max_tokens: 2000
     });
 
-    const analysisResult = JSON.parse(response.choices[0].message.content);
+    console.log("OpenAI response received");
+    console.log("Response structure:", {
+      choices: response.choices?.length,
+      hasFirstChoice: !!response.choices?.[0],
+      hasMessage: !!response.choices?.[0]?.message,
+      hasContent: !!response.choices?.[0]?.message?.content
+    });
+    
+    if (!response.choices || response.choices.length === 0) {
+      console.error("OpenAI returned no choices");
+      throw new Error("OpenAI returned no choices in response");
+    }
+    
+    const responseContent = response.choices[0].message.content;
+    console.log("OpenAI raw response:", responseContent);
+    
+    if (!responseContent) {
+      console.error("OpenAI returned null content");
+      console.log("Full OpenAI response:", JSON.stringify(response, null, 2));
+      throw new Error("OpenAI returned empty response");
+    }
+    
+    let analysisResult;
+    try {
+      analysisResult = JSON.parse(responseContent);
+    } catch (parseError) {
+      console.error("Failed to parse OpenAI JSON response:", parseError);
+      console.error("Raw response content:", responseContent);
+      throw new Error("Invalid JSON response from OpenAI");
+    }
     
     // Add raw OpenAI response for transparency
     analysisResult.rawAnalysis = {
       model: "gpt-4o",
       usage: response.usage,
       responseTime: new Date().toISOString(),
-      fullResponse: response.choices[0].message.content
+      fullResponse: responseContent
     };
     
     return analysisResult;
     
   } catch (error) {
     console.error("OpenAI analysis error:", error);
-    // Fallback to basic analysis if OpenAI fails
-    throw new Error("Failed to analyze image with AI");
+    
+    // Check if it's an OpenAI API error
+    if (error.response) {
+      console.error("OpenAI API error response:", error.response.status, error.response.data);
+    }
+    
+    // Provide more specific error message
+    if (error.message.includes("Invalid JSON")) {
+      throw new Error("OpenAI returned invalid JSON format");
+    } else if (error.message.includes("rate limit")) {
+      throw new Error("OpenAI rate limit exceeded. Please try again later.");
+    } else if (error.message.includes("insufficient_quota")) {
+      throw new Error("OpenAI quota exceeded. Please check your API key.");
+    } else {
+      throw new Error("Failed to analyze image with AI: " + error.message);
+    }
   }
 }
 
