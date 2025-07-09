@@ -10,6 +10,10 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+- **July 2025**: Combined all analysis tabs into single comprehensive analysis report
+- **July 2025**: Removed separate ConversationalAnalysis component and integrated content into DetailedAnalysisDisplay
+- **July 2025**: Streamlined mobile experience with unified analysis view
+- **July 2025**: Improved mobile navigation with header optimizations
 - **December 2024**: Implemented ultra-detailed prompt system with configurable analysis types
 - **December 2024**: Upgraded to GPT-4.1 model for enhanced analysis accuracy
 - **December 2024**: Added comprehensive analysis history system with image storage

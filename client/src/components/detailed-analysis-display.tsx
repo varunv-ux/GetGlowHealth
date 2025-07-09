@@ -1,8 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 import { 
   User, 
   Clock, 
@@ -18,7 +17,9 @@ import {
   Pill,
   Utensils,
   Moon,
-  Zap
+  Zap,
+  Target,
+  MessageSquare
 } from "lucide-react";
 import type { Analysis } from "@shared/schema";
 
@@ -28,12 +29,15 @@ interface DetailedAnalysisDisplayProps {
 
 export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDisplayProps) {
   const analysisData = analysis.analysisData || {};
+  const conversationalAnalysis = analysisData.conversationalAnalysis || {};
   const facialZones = analysisData.facialZoneAnalysis || {};
   const deficiencies = analysisData.deficiencyAnalysis || [];
   const foodIntolerances = analysisData.foodIntolerances || [];
   const healthRisks = analysisData.healthRisks || [];
   const emotionalState = analysisData.emotionalState || {};
   const dailyProtocol = analysisData.dailyProtocol || {};
+  const estimatedAge = analysisData.estimatedAge || analysis.estimatedAge;
+  const ageRange = analysisData.ageRange || `${estimatedAge}-${estimatedAge + 5} years`;
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -62,27 +66,46 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
             Comprehensive Analysis Report
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="facial-zones" className="w-full">
-            <div className="w-full overflow-x-auto scrollbar-hide">
-              <TabsList className="flex w-max md:grid md:w-full md:grid-cols-3 lg:grid-cols-6 mb-4">
-                <TabsTrigger value="facial-zones" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Facial Zones</TabsTrigger>
-                <TabsTrigger value="deficiencies" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Deficiencies</TabsTrigger>
-                <TabsTrigger value="intolerances" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Food Issues</TabsTrigger>
-                <TabsTrigger value="health-risks" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Health Risks</TabsTrigger>
-                <TabsTrigger value="emotional" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Emotional</TabsTrigger>
-                <TabsTrigger value="protocol" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Protocol</TabsTrigger>
-              </TabsList>
+        <CardContent className="space-y-8">
+          
+          {/* Facial Feature Analysis */}
+          {conversationalAnalysis.facialFeatureBreakdown && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <User className="w-5 h-5 text-trust-blue" />
+                <h3 className="text-lg font-semibold">Facial Feature Analysis</h3>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed">{conversationalAnalysis.facialFeatureBreakdown}</p>
+              </div>
             </div>
+          )}
 
-            <TabsContent value="facial-zones" className="space-y-4">
+          {/* Age Assessment */}
+          {conversationalAnalysis.visualAgeEstimator && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-medical-green" />
+                <h3 className="text-lg font-semibold">Visual Age Assessment</h3>
+                <Badge variant="outline" className="ml-auto">{ageRange}</Badge>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed">{conversationalAnalysis.visualAgeEstimator}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Facial Zone Analysis */}
+          {Object.keys(facialZones).length > 0 && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <User className="w-5 h-5 text-trust-blue" />
+                <h3 className="text-lg font-semibold">Facial Zone Analysis</h3>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.entries(facialZones).map(([zone, analysis]) => (
                   <Card key={zone} className="p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <User className="w-4 h-4 text-trust-blue" />
-                      <h3 className="font-semibold capitalize">{zone}</h3>
-                    </div>
+                    <h4 className="font-semibold capitalize text-trust-blue mb-3">{zone}</h4>
                     <div className="space-y-2 text-sm">
                       <div>
                         <span className="font-medium text-gray-600">Observation:</span>
@@ -100,260 +123,209 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
                   </Card>
                 ))}
               </div>
-            </TabsContent>
+            </div>
+          )}
 
-            <TabsContent value="deficiencies" className="space-y-4">
-              <div className="space-y-3">
-                {deficiencies.map((deficiency, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Pill className="w-4 h-4 text-medical-green" />
-                        <h3 className="font-semibold">{deficiency.deficiency}</h3>
-                      </div>
-                      <Badge className={`${getSeverityColor(deficiency.severity)} text-white`}>
-                        {deficiency.severity}
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-                      <div>
-                        <span className="font-medium text-gray-600">Visual Cue:</span>
-                        <p className="text-gray-800">{deficiency.visualCue}</p>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Likely Symptom:</span>
-                        <p className="text-gray-800">{deficiency.likelySymptom}</p>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Recommendation:</span>
-                        <p className="text-trust-blue">{deficiency.recommendation}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+          {/* Deficiency Analysis */}
+          {conversationalAnalysis.deficiencyDetector && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Apple className="w-5 h-5 text-warning-orange" />
+                <h3 className="text-lg font-semibold">Deficiency Analysis</h3>
               </div>
-            </TabsContent>
-
-            <TabsContent value="intolerances" className="space-y-4">
-              <div className="space-y-3">
-                {foodIntolerances.map((intolerance, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Utensils className="w-4 h-4 text-warning-orange" />
-                        <h3 className="font-semibold capitalize">{intolerance.type}</h3>
+              <div className="bg-orange-50 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed">{conversationalAnalysis.deficiencyDetector}</p>
+              </div>
+              {deficiencies.length > 0 && (
+                <div className="space-y-3">
+                  {deficiencies.map((deficiency, index) => (
+                    <Card key={index} className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Pill className="w-4 h-4 text-medical-green" />
+                          <h4 className="font-semibold">{deficiency.deficiency}</h4>
+                        </div>
+                        <Badge className={`${getSeverityColor(deficiency.severity)} text-white`}>
+                          {deficiency.severity}
+                        </Badge>
                       </div>
-                      <Badge className={getLikelihoodColor(intolerance.likelihood)}>
-                        {intolerance.likelihood} likelihood
-                      </Badge>
-                    </div>
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        <span className="font-medium text-gray-600">Visual Markers:</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {intolerance.visualMarkers.map((marker, i) => (
-                            <Badge key={i} variant="outline" className="text-xs">
-                              {marker}
-                            </Badge>
-                          ))}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-600">Visual Cue:</span>
+                          <p className="text-gray-800">{deficiency.visualCue}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Likely Symptom:</span>
+                          <p className="text-gray-800">{deficiency.likelySymptom}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Recommendation:</span>
+                          <p className="text-trust-blue">{deficiency.recommendation}</p>
                         </div>
                       </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Next Steps:</span>
-                        <p className="text-trust-blue">{intolerance.nextSteps}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="health-risks" className="space-y-4">
-              <div className="space-y-3">
-                {healthRisks.map((risk, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Shield className="w-4 h-4 text-error-red" />
-                      <h3 className="font-semibold">{risk.risk}</h3>
-                    </div>
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        <span className="font-medium text-gray-600">Visual Evidence:</span>
-                        <p className="text-gray-800">{risk.visualEvidence}</p>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Explanation:</span>
-                        <p className="text-gray-800">{risk.explanation}</p>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Action Steps:</span>
-                        <ul className="list-disc list-inside text-trust-blue space-y-1">
-                          {risk.actionSteps.map((step, i) => (
-                            <li key={i}>{step}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="emotional" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Brain className="w-4 h-4 text-purple-500" />
-                    <h3 className="font-semibold">Suppressed Emotions</h3>
-                  </div>
-                  <div className="space-y-2">
-                    {emotionalState.suppressedEmotions?.map((emotion, index) => (
-                      <Badge key={index} variant="outline" className="mr-2">
-                        {emotion}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
-
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Zap className="w-4 h-4 text-yellow-500" />
-                    <h3 className="font-semibold">Stress Patterns</h3>
-                  </div>
-                  <div className="space-y-2">
-                    {emotionalState.stressPatterns?.map((pattern, index) => (
-                      <Badge key={index} variant="outline" className="mr-2">
-                        {pattern}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
-              </div>
-
-              <Card className="p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Heart className="w-4 h-4 text-success-green" />
-                  <h3 className="font-semibold">Recommendations</h3>
-                </div>
-                <ul className="space-y-2 text-sm">
-                  {emotionalState.recommendations?.map((rec, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-success-green rounded-full mt-2 flex-shrink-0"></div>
-                      <span>{rec}</span>
-                    </li>
+                    </Card>
                   ))}
-                </ul>
-              </Card>
-            </TabsContent>
+                </div>
+              )}
+            </div>
+          )}
 
-            <TabsContent value="protocol" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Sparkles className="w-4 h-4 text-trust-blue" />
-                    <h3 className="font-semibold">Morning Routine</h3>
-                  </div>
-                  <ul className="space-y-1 text-sm">
-                    {dailyProtocol.morning?.map((item, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <div className="w-2 h-2 bg-trust-blue rounded-full mt-2 flex-shrink-0"></div>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Activity className="w-4 h-4 text-medical-green" />
-                    <h3 className="font-semibold">Mid-Day Optimization</h3>
-                  </div>
-                  <ul className="space-y-1 text-sm">
-                    {dailyProtocol.midday?.map((item, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <div className="w-2 h-2 bg-medical-green rounded-full mt-2 flex-shrink-0"></div>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Moon className="w-4 h-4 text-purple-500" />
-                    <h3 className="font-semibold">Evening Wind-Down</h3>
-                  </div>
-                  <ul className="space-y-1 text-sm">
-                    {dailyProtocol.evening?.map((item, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Heart className="w-4 h-4 text-success-green" />
-                    <h3 className="font-semibold">Weekly Practices</h3>
-                  </div>
-                  <ul className="space-y-1 text-sm">
-                    {dailyProtocol.weekly?.map((item, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <div className="w-2 h-2 bg-success-green rounded-full mt-2 flex-shrink-0"></div>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
+          {/* Food Intolerance Analysis */}
+          {conversationalAnalysis.foodIntoleranceIdentifier && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-error-red" />
+                <h3 className="text-lg font-semibold">Food Intolerance Analysis</h3>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Apple className="w-4 h-4 text-warning-orange" />
-                    <h3 className="font-semibold">Reset Foods</h3>
-                  </div>
-                  <div className="space-y-1">
-                    {dailyProtocol.resetFoods?.map((food, index) => (
-                      <Badge key={index} variant="outline" className="mr-1 mb-1">
-                        {food}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
-
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Pill className="w-4 h-4 text-medical-green" />
-                    <h3 className="font-semibold">Supplements</h3>
-                  </div>
-                  <div className="space-y-1">
-                    {dailyProtocol.supplements?.map((supplement, index) => (
-                      <Badge key={index} variant="outline" className="mr-1 mb-1">
-                        {supplement}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
-
-                <Card className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Brain className="w-4 h-4 text-purple-500" />
-                    <h3 className="font-semibold">Mindset Shifts</h3>
-                  </div>
-                  <div className="space-y-1">
-                    {dailyProtocol.mindsetShifts?.map((shift, index) => (
-                      <Badge key={index} variant="outline" className="mr-1 mb-1">
-                        {shift}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
+              <div className="bg-red-50 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed">{conversationalAnalysis.foodIntoleranceIdentifier}</p>
               </div>
-            </TabsContent>
-          </Tabs>
+              {foodIntolerances.length > 0 && (
+                <div className="space-y-3">
+                  {foodIntolerances.map((intolerance, index) => (
+                    <Card key={index} className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Utensils className="w-4 h-4 text-warning-orange" />
+                          <h4 className="font-semibold capitalize">{intolerance.type}</h4>
+                        </div>
+                        <Badge className={getLikelihoodColor(intolerance.likelihood)}>
+                          {intolerance.likelihood} likelihood
+                        </Badge>
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-600">Indicators:</span>
+                          <p className="text-gray-800">{intolerance.indicators}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Recommendation:</span>
+                          <p className="text-trust-blue">{intolerance.recommendation}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Health Risk Analysis */}
+          {conversationalAnalysis.healthRiskReader && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-trust-blue" />
+                <h3 className="text-lg font-semibold">Health Risk Assessment</h3>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed">{conversationalAnalysis.healthRiskReader}</p>
+              </div>
+              {healthRisks.length > 0 && (
+                <div className="space-y-3">
+                  {healthRisks.map((risk, index) => (
+                    <Card key={index} className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Shield className="w-4 h-4 text-error-red" />
+                          <h4 className="font-semibold">{risk.risk}</h4>
+                        </div>
+                        <Badge className={getLikelihoodColor(risk.likelihood)}>
+                          {risk.likelihood} risk
+                        </Badge>
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-600">Signs:</span>
+                          <p className="text-gray-800">{risk.signs}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Prevention:</span>
+                          <p className="text-trust-blue">{risk.prevention}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Emotional State Analysis */}
+          {conversationalAnalysis.emotionalStateScanner && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Brain className="w-5 h-5 text-purple-500" />
+                <h3 className="text-lg font-semibold">Emotional State Analysis</h3>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed">{conversationalAnalysis.emotionalStateScanner}</p>
+              </div>
+              {emotionalState.primaryMood && (
+                <Card className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="font-semibold text-purple-600 mb-2">Primary Mood</h4>
+                      <p className="text-gray-800">{emotionalState.primaryMood}</p>
+                    </div>
+                    {emotionalState.stressLevel && (
+                      <div>
+                        <h4 className="font-semibold text-purple-600 mb-2">Stress Level</h4>
+                        <div className="flex items-center gap-2">
+                          <Progress value={emotionalState.stressLevel} className="flex-1" />
+                          <span className="text-sm text-gray-600">{emotionalState.stressLevel}%</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {emotionalState.recommendation && (
+                    <div className="mt-4 pt-4 border-t">
+                      <h4 className="font-semibold text-purple-600 mb-2">Recommendation</h4>
+                      <p className="text-gray-800">{emotionalState.recommendation}</p>
+                    </div>
+                  )}
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* Self-Healing Protocol */}
+          {conversationalAnalysis.selfHealingStrategist && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-success-green" />
+                <h3 className="text-lg font-semibold">Self-Healing Protocol</h3>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="text-gray-800 leading-relaxed">{conversationalAnalysis.selfHealingStrategist}</p>
+              </div>
+              {dailyProtocol.morning && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Zap className="w-4 h-4 text-warning-orange" />
+                      <h4 className="font-semibold">Morning Routine</h4>
+                    </div>
+                    <p className="text-sm text-gray-800">{dailyProtocol.morning}</p>
+                  </Card>
+                  <Card className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Activity className="w-4 h-4 text-trust-blue" />
+                      <h4 className="font-semibold">Afternoon Activities</h4>
+                    </div>
+                    <p className="text-sm text-gray-800">{dailyProtocol.afternoon}</p>
+                  </Card>
+                  <Card className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Moon className="w-4 h-4 text-purple-500" />
+                      <h4 className="font-semibold">Evening Routine</h4>
+                    </div>
+                    <p className="text-sm text-gray-800">{dailyProtocol.evening}</p>
+                  </Card>
+                </div>
+              )}
+            </div>
+          )}
+
         </CardContent>
       </Card>
     </div>
