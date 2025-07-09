@@ -40,26 +40,22 @@ async function performFacialAnalysis(imagePath: string) {
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       temperature: 0.7,
-      timeout: 30000, // 30 second timeout
       messages: [
         {
           role: "system",
-          content: "You are a comprehensive health analyst combining expertise as a physiognomist, nutritionist, psychosomatic expert, and health specialist. Analyze facial features to provide deep insights about health, aging, deficiencies, emotional states, and provide personalized healing strategies. Respond with JSON in the exact format requested."
+          content: "You are a facial analysis expert specializing in physiognomy and wellness assessment. Analyze facial features to provide insights about general appearance, skin condition, and facial characteristics. Focus on observable features rather than medical diagnoses. Respond with JSON in the exact format requested."
         },
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: `Analyze this facial image comprehensively from multiple expert perspectives:
+              text: `Analyze this image and describe the general facial features you observe. Focus on:
 
-1. **Face Analyst**: Analyze like a physiognomist, nutritionist, psychosomatic expert, and health specialist
-2. **Visual Age Estimator**: Assess apparent age based on facial tone, skin texture, and symmetry
-3. **Deficiency Detector**: Identify nutrient deficiencies from skin tone, lips, eyes, jawline, and cheek fullness
-4. **Intolerance Identifier**: Look for signs of food intolerances or reactions
-5. **Health Risk Reader**: Highlight hormonal imbalances, sleep issues, or lifestyle concerns
-6. **Emotional State Scanner**: Decode tension, fatigue, or mood signals in the face
-7. **Self-Healing Strategist**: Provide holistic recommendations for diet, rest, stress, and mindset
+1. **Facial Structure**: General facial shape and symmetry
+2. **Skin Appearance**: Basic skin tone and texture observations
+3. **Age Assessment**: Estimated age range based on visible features
+4. **General Observations**: Overall facial characteristics
 
 Return JSON with this exact structure:
 {
