@@ -15,7 +15,7 @@ export default function ProcessingSection({ analysisId, onAnalysisComplete }: Pr
   const [currentStep, setCurrentStep] = useState(0);
 
   const { data: analysis, isLoading, error } = useQuery({
-    queryKey: ['/api/analysis', analysisId],
+    queryKey: [`/api/analysis/${analysisId}`],
     refetchInterval: 1000,
     enabled: !!analysisId,
   });
