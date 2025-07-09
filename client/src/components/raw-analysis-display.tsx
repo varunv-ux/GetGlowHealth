@@ -27,7 +27,7 @@ export default function RawAnalysisDisplay({ analysis }: RawAnalysisDisplayProps
             Raw AI Analysis
           </h4>
           <Badge variant="outline" className="text-trust-blue border-trust-blue">
-            OpenAI GPT-4o
+            OpenAI GPT-4.1
           </Badge>
         </div>
         
@@ -63,7 +63,7 @@ export default function RawAnalysisDisplay({ analysis }: RawAnalysisDisplayProps
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-gray-700">
             <Code className="w-4 h-4 text-trust-blue mr-2 inline" />
-            This raw analysis shows the complete, unfiltered response from OpenAI's GPT-4o vision model. 
+            This raw analysis shows the complete, unfiltered response from OpenAI's GPT-4.1 vision model. 
             No mock or placeholder data is used - all insights come directly from AI analysis of your image.
           </p>
         </div>
