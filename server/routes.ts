@@ -37,9 +37,9 @@ async function performFacialAnalysis(imagePath: string) {
     console.log("Making OpenAI API call...");
     console.log("API Key exists:", !!process.env.OPENAI_API_KEY);
     
-    // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+    // Using GPT-4.1 model for enhanced facial analysis capabilities
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       temperature: 0.7,
       messages: [
         {
@@ -217,7 +217,7 @@ Be extremely thorough and specific in your analysis. Provide detailed, actionabl
     
     // Add raw OpenAI response for transparency
     analysisResult.rawAnalysis = {
-      model: "gpt-4o",
+      model: "gpt-4.1",
       usage: response.usage,
       responseTime: new Date().toISOString(),
       fullResponse: responseContent
