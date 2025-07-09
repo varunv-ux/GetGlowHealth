@@ -43,7 +43,7 @@ async function performFacialAnalysis(imagePath: string) {
       messages: [
         {
           role: "system",
-          content: "You are a comprehensive facial analysis expert combining expertise from physiognomy, nutrition, psychosomatic medicine, and health specialization. Analyze facial features to provide deep insights about health, nutrition, emotional state, and wellness. Focus on observable features and provide both structured data and conversational analysis. Be thorough, specific, and actionable in your recommendations."
+          content: "You are a comprehensive facial analysis expert specializing in physiognomy, appearance assessment, and wellness insights. Analyze facial features to provide insights about general appearance, lifestyle factors, and well-being indicators. Focus on observable features and aesthetic analysis rather than medical diagnosis. Provide both structured data and conversational analysis."
         },
         {
           role: "user",
@@ -53,25 +53,25 @@ async function performFacialAnalysis(imagePath: string) {
               text: `Please analyze this face comprehensively from multiple expert perspectives:
 
 **1. Face Analyst (Physiognomist)**
-Analyze my face like a physiognomist, nutritionist, psychosomatic expert, and health specialist. Break down key features with insights from each perspective.
+Analyze facial features using physiognomy principles. Describe facial structure, proportions, bone structure, and general appearance characteristics. Focus on observable features and aesthetic qualities.
 
 **2. Visual Age Estimator**
-How old do I look based on facial tone, skin texture, and overall symmetry? Identify any signs of accelerated aging and possible causes.
+Estimate apparent age based on facial features, skin texture, and overall appearance. Note any signs of aging or youthful qualities visible in the face.
 
-**3. Deficiency Detector**
-What nutrient deficiencies can be spotted based on my skin tone, lips, eyes, jawline, and cheek fullness? Include possible symptoms and foods to fix them.
+**3. Appearance Assessment**
+Assess general appearance indicators like skin tone, facial symmetry, eye brightness, and overall complexion quality. Comment on skin texture and facial harmony.
 
-**4. Intolerance Identifier**
-Do you see visible signs of food intolerances or reactions? Look for inflammation, breakouts, or digestive clues that might show up in the face.
+**4. Expression Analysis**
+Analyze facial expressions, muscle tension patterns, and emotional indicators visible in the face. Note any signs of stress or relaxation.
 
-**5. Health Risk Reader**
-What should I be paying attention to in terms of health? Highlight hormonal imbalances, sleep issues, or lifestyle concerns I might be missing.
+**5. Lifestyle Indicators**
+Identify lifestyle factors that might be reflected in facial appearance, such as sleep patterns, stress levels, or general wellness habits.
 
-**6. Emotional State Scanner**
-What psycho-emotional states or stress patterns might be influencing my appearance? Decode any tension, fatigue, or mood signals showing on my face.
+**6. Wellness Observations**
+Note general wellness indicators visible in facial features, skin quality, and overall appearance. Focus on observable characteristics rather than medical conditions.
 
-**7. Self-Healing Strategist**
-Based on everything you see, what should I adjust in my diet, rest habits, stress levels, mindset, and inner dialogue to improve my health from the inside out?
+**7. Improvement Suggestions**
+Based on appearance analysis, suggest general lifestyle, skincare, or wellness approaches that might enhance overall appearance and well-being.
 
 Please provide your analysis in this JSON format, including both structured data AND a comprehensive conversational analysis:
 
@@ -84,13 +84,13 @@ Please provide your analysis in this JSON format, including both structured data
   "estimatedAge": number,
   "ageRange": "XX-XX years",
   "conversationalAnalysis": {
-    "faceAnalyst": "Detailed physiognomist analysis with specific observations about facial structure, proportions, and what they reveal about constitution and health patterns",
-    "visualAgeEstimator": "Comprehensive age assessment explaining what makes you look your age or older/younger, with specific aging signs and their causes",
-    "deficiencyDetector": "Detailed nutrient deficiency analysis based on skin, lips, eyes, jawline, and cheek observations with specific symptoms and food recommendations",
-    "intoleranceIdentifier": "Analysis of visible inflammation, breakouts, or digestive clues showing up in facial features with potential trigger identification",
-    "healthRiskReader": "Comprehensive health assessment highlighting hormonal patterns, sleep quality indicators, and lifestyle concerns visible in facial features",
-    "emotionalStateScanner": "Deep psycho-emotional analysis of stress patterns, tension areas, fatigue signals, and mood indicators reflected in facial expression and features",
-    "selfHealingStrategist": "Comprehensive healing strategy covering diet adjustments, rest optimization, stress management, mindset shifts, and inner dialogue improvements"
+    "faceAnalyst": "Detailed physiognomist analysis with specific observations about facial structure, proportions, bone structure, and aesthetic qualities",
+    "visualAgeEstimator": "Comprehensive age assessment explaining apparent age, aging signs, and youthful qualities visible in facial features",
+    "appearanceAssessment": "Detailed appearance analysis covering skin tone, facial symmetry, eye brightness, complexion quality, and overall facial harmony",
+    "expressionAnalysis": "Analysis of facial expressions, muscle tension patterns, and emotional indicators visible in the face",
+    "lifestyleIndicators": "Assessment of lifestyle factors reflected in facial appearance, including sleep patterns, stress levels, and wellness habits",
+    "wellnessObservations": "General wellness indicators visible in facial features, skin quality, and overall appearance characteristics",
+    "improvementSuggestions": "Comprehensive suggestions for lifestyle, skincare, and wellness approaches to enhance overall appearance and well-being"
   },
   "analysisData": {
     "facialMarkers": [
@@ -121,17 +121,17 @@ Please provide your analysis in this JSON format, including both structured data
       "overallTone": "even|slightly_uneven|uneven|very_uneven",
       "circulationPatterns": ["specific circulation observations"]
     },
-    "nutritionalInsights": {
-      "possibleDeficiencies": ["specific nutrient deficiencies with explanations"],
-      "recommendedNutrients": ["specific nutrients needed"],
-      "healingFoods": ["specific foods to incorporate"],
-      "deficiencySymptoms": ["visible symptoms of deficiencies"]
+    "lifestyleInsights": {
+      "appearanceIndicators": ["general appearance observations"],
+      "recommendedNutrients": ["nutrients that might support appearance"],
+      "beneficialFoods": ["foods that might support skin and appearance"],
+      "wellnessObservations": ["general wellness observations"]
     },
-    "intoleranceSignals": {
-      "inflammationSigns": ["specific inflammatory markers"],
-      "digestiveClues": ["digestive system indicators"],
-      "possibleTriggers": ["potential food/environmental triggers"],
-      "reactionPatterns": ["patterns of intolerance reactions"]
+    "skinObservations": {
+      "generalSigns": ["general skin observations"],
+      "textureNotes": ["skin texture observations"],
+      "appearanceFactors": ["factors that might influence appearance"],
+      "observationPatterns": ["patterns observed in skin appearance"]
     },
     "emotionalStateReading": {
       "stressPatterns": ["specific stress indicators"],
@@ -168,7 +168,7 @@ Please provide your analysis in this JSON format, including both structured data
   }
 }
 
-Be extremely thorough and specific in your analysis. Provide detailed, actionable insights that someone can immediately implement to improve their health and appearance.`
+Be extremely thorough and specific in your analysis. Provide detailed, actionable insights that someone can immediately implement to improve their appearance and general well-being.`
             },
             {
               type: "image_url",

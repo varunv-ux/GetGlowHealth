@@ -41,39 +41,39 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
       badge: ageRange
     },
     {
-      id: "deficiencyDetector",
-      title: "Deficiency Detection",
+      id: "appearanceAssessment",
+      title: "Appearance Assessment",
       icon: <Apple className="w-5 h-5" />,
       color: "bg-warning-orange",
-      content: conversationalAnalysis.deficiencyDetector
+      content: conversationalAnalysis.appearanceAssessment
     },
     {
-      id: "intoleranceIdentifier",
-      title: "Intolerance Identification",
+      id: "expressionAnalysis",
+      title: "Expression Analysis",
       icon: <AlertTriangle className="w-5 h-5" />,
       color: "bg-error-red",
-      content: conversationalAnalysis.intoleranceIdentifier
+      content: conversationalAnalysis.expressionAnalysis
     },
     {
-      id: "healthRiskReader",
-      title: "Health Risk Assessment",
+      id: "lifestyleIndicators",
+      title: "Lifestyle Indicators",
       icon: <Shield className="w-5 h-5" />,
       color: "bg-trust-blue",
-      content: conversationalAnalysis.healthRiskReader
+      content: conversationalAnalysis.lifestyleIndicators
     },
     {
-      id: "emotionalStateScanner",
-      title: "Emotional State Analysis",
+      id: "wellnessObservations",
+      title: "Wellness Observations",
       icon: <Brain className="w-5 h-5" />,
       color: "bg-purple-500",
-      content: conversationalAnalysis.emotionalStateScanner
+      content: conversationalAnalysis.wellnessObservations
     },
     {
-      id: "selfHealingStrategist",
-      title: "Self-Healing Strategy",
+      id: "improvementSuggestions",
+      title: "Improvement Suggestions",
       icon: <Heart className="w-5 h-5" />,
       color: "bg-success-green",
-      content: conversationalAnalysis.selfHealingStrategist
+      content: conversationalAnalysis.improvementSuggestions
     }
   ];
 
