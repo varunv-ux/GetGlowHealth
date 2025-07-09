@@ -288,6 +288,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Chat with AI about analysis
+  app.post("/api/analysis/:id/chat", async (req, res) => {
+    try {
+      const analysisId = parseInt(req.params.id);
+      const { message, context } = req.body;
+      
+      if (!message || !message.trim()) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+      
+      // Get the analysis data
+      const analysis = await storage.getAnalysis(analysisId);
+      if (!analysis) {
+        return res.status(404).json({ message: "Analysis not found" });
+      }
+      
+      // Build chat context with analysis data
+      const chatContext = `
+You are an expert AI health assistant analyzing a facial health assessment. Here is the complete analysis data:
+
+ANALYSIS RESULTS:
+- Overall Score: ${analysis.overallScore}%
+- Skin Health: ${analysis.skinHealth}%
+- Eye Health: ${analysis.eyeHealth}%
+- Circulation: ${analysis.circulation}%
+- Symmetry: ${analysis.symmetry}%
+
+DETAILED ANALYSIS DATA:
+${JSON.stringify(analysis.analysisData, null, 2)}
+
+RECOMMENDATIONS:
+${JSON.stringify(analysis.recommendations, null, 2)}
+
+PREVIOUS CONVERSATION:
+${context.previousMessages?.map((msg: any) => `${msg.role}: ${msg.content}`).join('\n') || 'No previous messages'}
+
+Please provide helpful, accurate, and personalized responses about this specific analysis. Be supportive and educational while staying within your expertise as an AI health assistant.
+      `;
+      
+      // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: chatContext
+          },
+          {
+            role: "user",
+            content: message
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      });
+      
+      const aiResponse = response.choices[0]?.message?.content;
+      if (!aiResponse) {
+        throw new Error("No response from AI");
+      }
+      
+      res.json({ 
+        response: aiResponse,
+        timestamp: new Date().toISOString()
+      });
+      
+    } catch (error) {
+      console.error("Chat error:", error);
+      res.status(500).json({ message: "Failed to process chat message" });
+    }
+  });
+
   // Serve uploaded images
   app.use('/uploads', (req, res, next) => {
     const filePath = path.join(process.cwd(), 'uploads', req.params[0] || req.url);
