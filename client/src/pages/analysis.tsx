@@ -96,38 +96,38 @@ export default function AnalysisPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 sm:p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
             <Link href="/history">
               <Button variant="outline" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to History
               </Button>
             </Link>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+              <Badge variant="outline" className="text-xs sm:text-sm">
                 Overall Score: {analysis.overallScore}%
               </Badge>
-              <Badge variant="secondary">
+              <Badge variant="secondary" className="text-xs sm:text-sm">
                 {formatDistanceToNow(new Date(analysis.createdAt), { addSuffix: true })}
               </Badge>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+            <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
               <img 
                 src={analysis.imageUrl} 
                 alt={analysis.fileName}
                 className="w-full h-full object-cover"
               />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{analysis.fileName}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-600">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{analysis.fileName}</h1>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
                 <div className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
                   <span>{formatDistanceToNow(new Date(analysis.createdAt), { addSuffix: true })}</span>
@@ -148,40 +148,40 @@ export default function AnalysisPage() {
           </div>
 
           {/* Health Scores Summary */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Sparkles className="h-4 w-4 text-trust-blue" />
-                <span className="text-sm font-medium text-gray-600">Skin Health</span>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <div className="text-center p-3 sm:p-4 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2">
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-trust-blue" />
+                <span className="text-xs sm:text-sm font-medium text-gray-600">Skin Health</span>
               </div>
-              <div className="text-2xl font-bold text-trust-blue">
+              <div className="text-lg sm:text-2xl font-bold text-trust-blue">
                 {analysis.skinHealth}%
               </div>
             </div>
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Eye className="h-4 w-4 text-medical-green" />
-                <span className="text-sm font-medium text-gray-600">Eye Health</span>
+            <div className="text-center p-3 sm:p-4 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2">
+                <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-medical-green" />
+                <span className="text-xs sm:text-sm font-medium text-gray-600">Eye Health</span>
               </div>
-              <div className="text-2xl font-bold text-medical-green">
+              <div className="text-lg sm:text-2xl font-bold text-medical-green">
                 {analysis.eyeHealth}%
               </div>
             </div>
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Droplets className="h-4 w-4 text-error-red" />
-                <span className="text-sm font-medium text-gray-600">Circulation</span>
+            <div className="text-center p-3 sm:p-4 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2">
+                <Droplets className="h-3 w-3 sm:h-4 sm:w-4 text-error-red" />
+                <span className="text-xs sm:text-sm font-medium text-gray-600">Circulation</span>
               </div>
-              <div className="text-2xl font-bold text-error-red">
+              <div className="text-lg sm:text-2xl font-bold text-error-red">
                 {analysis.circulation}%
               </div>
             </div>
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Heart className="h-4 w-4 text-purple-500" />
-                <span className="text-sm font-medium text-gray-600">Symmetry</span>
+            <div className="text-center p-3 sm:p-4 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-2">
+                <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-purple-500" />
+                <span className="text-xs sm:text-sm font-medium text-gray-600">Symmetry</span>
               </div>
-              <div className="text-2xl font-bold text-purple-500">
+              <div className="text-lg sm:text-2xl font-bold text-purple-500">
                 {analysis.symmetry}%
               </div>
             </div>

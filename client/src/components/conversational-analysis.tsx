@@ -90,17 +90,17 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
       </div>
 
       <Tabs defaultValue="faceAnalyst" className="w-full">
-        <div className="w-full overflow-x-auto">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 min-w-max">
+        <div className="w-full overflow-x-auto scrollbar-hide">
+          <TabsList className="flex w-max md:grid md:w-full md:grid-cols-4 lg:grid-cols-7 mb-4">
             {analysisCards.map((card) => (
               <TabsTrigger
                 key={card.id}
                 value={card.id}
-                className="text-xs md:text-sm px-1 md:px-2 py-1 whitespace-nowrap"
+                className="text-xs md:text-sm px-2 md:px-3 py-2 whitespace-nowrap flex-shrink-0"
               >
                 <div className="flex items-center space-x-1">
                   {card.icon}
-                  <span className="hidden md:inline lg:inline">{card.title.split(' ')[0]}</span>
+                  <span className="hidden sm:inline">{card.title.split(' ')[0]}</span>
                 </div>
               </TabsTrigger>
             ))}

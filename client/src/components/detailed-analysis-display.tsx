@@ -64,14 +64,14 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="facial-zones" className="w-full">
-            <div className="w-full overflow-x-auto">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-w-max">
-                <TabsTrigger value="facial-zones" className="text-xs md:text-sm whitespace-nowrap">Facial Zones</TabsTrigger>
-                <TabsTrigger value="deficiencies" className="text-xs md:text-sm whitespace-nowrap">Deficiencies</TabsTrigger>
-                <TabsTrigger value="intolerances" className="text-xs md:text-sm whitespace-nowrap">Food Issues</TabsTrigger>
-                <TabsTrigger value="health-risks" className="text-xs md:text-sm whitespace-nowrap">Health Risks</TabsTrigger>
-                <TabsTrigger value="emotional" className="text-xs md:text-sm whitespace-nowrap">Emotional</TabsTrigger>
-                <TabsTrigger value="protocol" className="text-xs md:text-sm whitespace-nowrap">Protocol</TabsTrigger>
+            <div className="w-full overflow-x-auto scrollbar-hide">
+              <TabsList className="flex w-max md:grid md:w-full md:grid-cols-3 lg:grid-cols-6 mb-4">
+                <TabsTrigger value="facial-zones" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Facial Zones</TabsTrigger>
+                <TabsTrigger value="deficiencies" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Deficiencies</TabsTrigger>
+                <TabsTrigger value="intolerances" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Food Issues</TabsTrigger>
+                <TabsTrigger value="health-risks" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Health Risks</TabsTrigger>
+                <TabsTrigger value="emotional" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Emotional</TabsTrigger>
+                <TabsTrigger value="protocol" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Protocol</TabsTrigger>
               </TabsList>
             </div>
 
