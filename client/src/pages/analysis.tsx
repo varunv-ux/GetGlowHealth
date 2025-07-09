@@ -21,7 +21,7 @@ import type { Analysis } from "@shared/schema";
 
 import HealthScoreCard from "@/components/health-score-card";
 import FacialAnalysisDisplay from "@/components/facial-analysis-display";
-
+import ConversationalAnalysis from "@/components/conversational-analysis";
 import DetailedReports from "@/components/detailed-reports";
 import DetailedAnalysisDisplay from "@/components/detailed-analysis-display";
 import RecommendationsSection from "@/components/recommendations-section";
@@ -196,7 +196,10 @@ export default function AnalysisPage() {
             <HealthScoreCard analysis={analysis} />
           </div>
           
-          {/* Comprehensive Analysis Report */}
+          {/* Conversational Analysis */}
+          <ConversationalAnalysis analysis={analysis} />
+          
+          {/* Detailed Analysis Display */}
           <DetailedAnalysisDisplay analysis={analysis} />
           
           {/* Detailed Reports */}
