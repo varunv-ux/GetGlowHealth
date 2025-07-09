@@ -29,11 +29,8 @@ export default function AnalysisChat({ analysis }: AnalysisChatProps) {
 
   const chatMutation = useMutation({
     mutationFn: async ({ message, context }: { message: string; context: any }) => {
-      return await apiRequest(`/api/analysis/${analysis.id}/chat`, {
-        method: 'POST',
-        body: JSON.stringify({ message, context }),
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await apiRequest('POST', `/api/analysis/${analysis.id}/chat`, { message, context });
+      return await response.json();
     },
     onSuccess: (response) => {
       const assistantMessage: Message = {
