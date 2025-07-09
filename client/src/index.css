@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(0, 0%, 13%);
+  --muted: hsl(0, 0%, 96%);
+  --muted-foreground: hsl(0, 0%, 46%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(0, 0%, 13%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(0, 0%, 13%);
+  --border: hsl(0, 0%, 90%);
+  --input: hsl(0, 0%, 90%);
+  --primary: hsl(122, 39%, 49%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(207, 90%, 54%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(0, 0%, 96%);
+  --accent-foreground: hsl(0, 0%, 13%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(0, 0%, 13%);
+  --radius: 0.5rem;
+  
+  /* Custom medical interface colors */
+  --medical-green: hsl(122, 39%, 49%);
+  --trust-blue: hsl(207, 90%, 54%);
+  --warning-orange: hsl(36, 100%, 50%);
+  --success-green: hsl(88, 50%, 53%);
+  --clean-white: hsl(0, 0%, 98%);
+  --dark-grey: hsl(0, 0%, 13%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 4%, 16%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --popover: hsl(240, 10%, 4%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 4%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 4%, 16%);
+  --input: hsl(240, 4%, 16%);
+  --primary: hsl(122, 39%, 49%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(207, 90%, 54%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 4%, 16%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 5%, 84%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-inter antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .medical-green {
+    color: var(--medical-green);
+  }
+  
+  .bg-medical-green {
+    background-color: var(--medical-green);
+  }
+  
+  .trust-blue {
+    color: var(--trust-blue);
+  }
+  
+  .bg-trust-blue {
+    background-color: var(--trust-blue);
+  }
+  
+  .warning-orange {
+    color: var(--warning-orange);
+  }
+  
+  .bg-warning-orange {
+    background-color: var(--warning-orange);
+  }
+  
+  .success-green {
+    color: var(--success-green);
+  }
+  
+  .bg-success-green {
+    background-color: var(--success-green);
+  }
+  
+  .clean-white {
+    color: var(--clean-white);
+  }
+  
+  .bg-clean-white {
+    background-color: var(--clean-white);
+  }
+  
+  .dark-grey {
+    color: var(--dark-grey);
+  }
+  
+  .bg-dark-grey {
+    background-color: var(--dark-grey);
+  }
+}
