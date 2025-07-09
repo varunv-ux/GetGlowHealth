@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, UserCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Shield, UserCheck, History, Home as HomeIcon, BarChart3 } from "lucide-react";
+import { Link } from "wouter";
 import UploadSection from "@/components/upload-section";
 import ProcessingSection from "@/components/processing-section";
 import ResultsSection from "@/components/results-section";
@@ -37,10 +39,19 @@ export default function Home() {
               <UserCheck className="text-medical-green w-8 h-8 mr-3" />
               <h1 className="text-xl font-bold text-dark-grey">FaceHealth Pro</h1>
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <a href="#" className="text-dark-grey hover:text-medical-green transition-colors">Dashboard</a>
-              <a href="#" className="text-dark-grey hover:text-medical-green transition-colors">Reports</a>
-              <a href="#" className="text-dark-grey hover:text-medical-green transition-colors">Settings</a>
+            <nav className="hidden md:flex space-x-6">
+              <Link href="/">
+                <Button variant="ghost" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors">
+                  <HomeIcon className="w-4 h-4" />
+                  <span>Analysis</span>
+                </Button>
+              </Link>
+              <Link href="/history">
+                <Button variant="ghost" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors">
+                  <History className="w-4 h-4" />
+                  <span>History</span>
+                </Button>
+              </Link>
             </nav>
             <div className="flex items-center space-x-4">
               <Shield className="text-trust-blue w-4 h-4" />

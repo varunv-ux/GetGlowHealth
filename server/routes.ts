@@ -7,6 +7,7 @@ import fs from "fs";
 import { insertAnalysisSchema } from "@shared/schema";
 import { z } from "zod";
 import OpenAI from "openai";
+import { processImage, formatFileSize, getImageFormat } from "./image-processor";
 
 const upload = multer({
   dest: 'uploads/',
@@ -253,14 +254,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No image file provided" });
       }
 
-      // Perform facial analysis using OpenAI
-      const analysisResults = await performFacialAnalysis(req.file.path);
+      const originalFile = req.file;
+      const originalFormat = getImageFormat(originalFile.originalname);
+      
+      // Generate processed filename
+      const processedFilename = `processed_${Date.now()}.${originalFormat}`;
+      const processedPath = path.join('uploads', processedFilename);
+      
+      // Process and optimize image
+      const imageProcessingResult = await processImage(
+        originalFile.path,
+        processedPath,
+        {
+          maxWidth: 1200,
+          maxHeight: 1200,
+          quality: 85,
+          format: originalFormat,
+          maxFileSize: 2 * 1024 * 1024 // 2MB
+        }
+      );
+      
+      console.log("Image processing result:", {
+        originalSize: formatFileSize(imageProcessingResult.originalSize),
+        processedSize: formatFileSize(imageProcessingResult.processedSize),
+        originalDimensions: imageProcessingResult.originalDimensions,
+        processedDimensions: imageProcessingResult.processedDimensions,
+        wasResized: imageProcessingResult.wasResized
+      });
+
+      // Perform facial analysis using OpenAI on processed image
+      const analysisResults = await performFacialAnalysis(processedPath);
       
       // Save analysis to storage
       const analysis = await storage.createAnalysis({
         userId: null, // For now, not associating with users
-        imageUrl: `/uploads/${req.file.filename}`,
-        fileName: req.file.originalname,
+        imageUrl: `/uploads/${processedFilename}`,
+        fileName: originalFile.originalname,
+        fileSize: imageProcessingResult.originalSize,
+        processedSize: imageProcessingResult.processedSize,
+        originalDimensions: imageProcessingResult.originalDimensions,
+        processedDimensions: imageProcessingResult.processedDimensions,
         overallScore: analysisResults.overallScore,
         skinHealth: analysisResults.skinHealth,
         eyeHealth: analysisResults.eyeHealth,
@@ -271,10 +304,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
           conversationalAnalysis: analysisResults.conversationalAnalysis,
           estimatedAge: analysisResults.estimatedAge,
           ageRange: analysisResults.ageRange,
-          rawAnalysis: analysisResults.rawAnalysis
+          rawAnalysis: analysisResults.rawAnalysis,
+          imageProcessing: {
+            wasResized: imageProcessingResult.wasResized,
+            originalSize: formatFileSize(imageProcessingResult.originalSize),
+            processedSize: formatFileSize(imageProcessingResult.processedSize),
+            compressionRatio: imageProcessingResult.originalSize > 0 ? 
+              (imageProcessingResult.processedSize / imageProcessingResult.originalSize * 100).toFixed(1) + '%' : '100%'
+          }
         },
         recommendations: analysisResults.recommendations,
       });
+
+      // Clean up original uploaded file if it was processed
+      if (imageProcessingResult.wasResized) {
+        fs.unlinkSync(originalFile.path);
+      }
 
       res.json(analysis);
     } catch (error) {
@@ -297,6 +342,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get analysis error:", error);
       res.status(500).json({ message: "Failed to retrieve analysis" });
+    }
+  });
+
+  // Get all analyses (history)
+  app.get("/api/history", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+      const analyses = await storage.getRecentAnalyses(limit);
+      
+      res.json(analyses);
+    } catch (error) {
+      console.error("Get history error:", error);
+      res.status(500).json({ message: "Failed to retrieve analysis history" });
+    }
+  });
+
+  // Get recent analyses
+  app.get("/api/recent", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
+      const analyses = await storage.getRecentAnalyses(limit);
+      
+      res.json(analyses);
+    } catch (error) {
+      console.error("Get recent analyses error:", error);
+      res.status(500).json({ message: "Failed to retrieve recent analyses" });
     }
   });
 

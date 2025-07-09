@@ -1,6 +1,6 @@
 import { users, analyses, type User, type InsertUser, type Analysis, type InsertAnalysis } from "@shared/schema";
 import { db } from "./db";
-import { eq, isNull } from "drizzle-orm";
+import { eq, isNull, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -10,6 +10,8 @@ export interface IStorage {
   createAnalysis(analysis: InsertAnalysis): Promise<Analysis>;
   getAnalysis(id: number): Promise<Analysis | undefined>;
   getUserAnalyses(userId: number | null): Promise<Analysis[]>;
+  getAllAnalyses(): Promise<Analysis[]>;
+  getRecentAnalyses(limit?: number): Promise<Analysis[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -46,9 +48,17 @@ export class DatabaseStorage implements IStorage {
 
   async getUserAnalyses(userId: number | null): Promise<Analysis[]> {
     if (userId === null) {
-      return await db.select().from(analyses).where(isNull(analyses.userId));
+      return await db.select().from(analyses).where(isNull(analyses.userId)).orderBy(desc(analyses.createdAt));
     }
-    return await db.select().from(analyses).where(eq(analyses.userId, userId));
+    return await db.select().from(analyses).where(eq(analyses.userId, userId)).orderBy(desc(analyses.createdAt));
+  }
+
+  async getAllAnalyses(): Promise<Analysis[]> {
+    return await db.select().from(analyses).orderBy(desc(analyses.createdAt));
+  }
+
+  async getRecentAnalyses(limit: number = 10): Promise<Analysis[]> {
+    return await db.select().from(analyses).orderBy(desc(analyses.createdAt)).limit(limit);
   }
 }
 

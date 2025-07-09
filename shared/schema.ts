@@ -13,6 +13,10 @@ export const analyses = pgTable("analyses", {
   userId: integer("user_id"),
   imageUrl: text("image_url").notNull(),
   fileName: text("file_name").notNull(),
+  fileSize: integer("file_size"), // Original file size in bytes
+  processedSize: integer("processed_size"), // Processed file size in bytes
+  originalDimensions: text("original_dimensions"), // "width x height"
+  processedDimensions: text("processed_dimensions"), // "width x height"
   overallScore: integer("overall_score").notNull(),
   skinHealth: integer("skin_health").notNull(),
   eyeHealth: integer("eye_health").notNull(),
