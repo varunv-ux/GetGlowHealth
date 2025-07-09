@@ -31,7 +31,7 @@ Preferred communication style: Simple, everyday language.
 - **Database Provider**: Neon Database (@neondatabase/serverless)
 - **ORM**: Drizzle ORM for type-safe database operations
 - **Schema Management**: Shared schema definitions between client and server
-- **Storage Interface**: Abstract storage interface with in-memory implementation for development
+- **Storage Interface**: Abstract storage interface with PostgreSQL implementation via DatabaseStorage class
 
 ## Key Components
 

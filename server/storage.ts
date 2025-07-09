@@ -1,4 +1,6 @@
 import { users, analyses, type User, type InsertUser, type Analysis, type InsertAnalysis } from "@shared/schema";
+import { db } from "./db";
+import { eq, isNull } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -10,56 +12,44 @@ export interface IStorage {
   getUserAnalyses(userId: number | null): Promise<Analysis[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private analyses: Map<number, Analysis>;
-  private currentUserId: number;
-  private currentAnalysisId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.analyses = new Map();
-    this.currentUserId = 1;
-    this.currentAnalysisId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async createAnalysis(insertAnalysis: InsertAnalysis): Promise<Analysis> {
-    const id = this.currentAnalysisId++;
-    const analysis: Analysis = {
-      ...insertAnalysis,
-      id,
-      createdAt: new Date(),
-    };
-    this.analyses.set(id, analysis);
+    const [analysis] = await db
+      .insert(analyses)
+      .values(insertAnalysis)
+      .returning();
     return analysis;
   }
 
   async getAnalysis(id: number): Promise<Analysis | undefined> {
-    return this.analyses.get(id);
+    const [analysis] = await db.select().from(analyses).where(eq(analyses.id, id));
+    return analysis || undefined;
   }
 
   async getUserAnalyses(userId: number | null): Promise<Analysis[]> {
-    return Array.from(this.analyses.values()).filter(
-      (analysis) => analysis.userId === userId
-    );
+    if (userId === null) {
+      return await db.select().from(analyses).where(isNull(analyses.userId));
+    }
+    return await db.select().from(analyses).where(eq(analyses.userId, userId));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
