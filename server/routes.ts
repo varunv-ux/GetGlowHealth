@@ -268,6 +268,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         symmetry: analysisResults.symmetry,
         analysisData: {
           ...analysisResults.analysisData,
+          conversationalAnalysis: analysisResults.conversationalAnalysis,
+          estimatedAge: analysisResults.estimatedAge,
+          ageRange: analysisResults.ageRange,
           rawAnalysis: analysisResults.rawAnalysis
         },
         recommendations: analysisResults.recommendations,
