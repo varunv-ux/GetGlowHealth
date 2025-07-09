@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   History, 
   Eye, 
@@ -14,21 +15,52 @@ import {
   FileImage,
   TrendingUp,
   Download,
-  RotateCcw
+  RotateCcw,
+  LogOut,
+  User,
+  Shield
 } from "lucide-react";
 import { Link } from "wouter";
 import { formatDistanceToNow } from "date-fns";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { isUnauthorizedError } from "@/lib/authUtils";
 import type { Analysis } from "@shared/schema";
 
 export default function HistoryPage() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
   const { data: analyses, isLoading, error } = useQuery({
     queryKey: ['/api/history'],
     queryFn: async () => {
       const res = await fetch('/api/history');
-      if (!res.ok) throw new Error('Failed to fetch history');
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error('401: Unauthorized');
+        }
+        throw new Error('Failed to fetch history');
+      }
       return res.json() as Analysis[];
     }
   });
+
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
+  };
+
+  // Handle unauthorized errors
+  if (error && isUnauthorizedError(error)) {
+    toast({
+      title: "Unauthorized",
+      description: "You are logged out. Logging in again...",
+      variant: "destructive",
+    });
+    setTimeout(() => {
+      window.location.href = "/api/login";
+    }, 500);
+    return null;
+  }
 
   if (isLoading) {
     return (

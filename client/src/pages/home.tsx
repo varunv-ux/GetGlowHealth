@@ -1,17 +1,24 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, UserCheck, History, Home as HomeIcon, BarChart3 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Shield, UserCheck, History, Home as HomeIcon, BarChart3, LogOut, User } from "lucide-react";
 import { Link } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
 import UploadSection from "@/components/upload-section";
 import ProcessingSection from "@/components/processing-section";
 import ResultsSection from "@/components/results-section";
 import type { Analysis } from "@shared/schema";
 
 export default function Home() {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState<'upload' | 'processing' | 'results'>('upload');
   const [analysisId, setAnalysisId] = useState<number | null>(null);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
+  };
 
   const handleUploadComplete = (id: number) => {
     setAnalysisId(id);
@@ -54,8 +61,31 @@ export default function Home() {
               </Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <Shield className="text-trust-blue w-4 h-4" />
-              <span className="text-sm text-gray-600">HIPAA Compliant</span>
+              {user && (
+                <div className="flex items-center space-x-3">
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage src={user.profileImageUrl} alt={user.firstName || 'User'} />
+                    <AvatarFallback>
+                      {user.firstName?.charAt(0) || user.email?.charAt(0) || <User className="w-4 h-4" />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-gray-700 hidden md:inline">
+                    {user.firstName || user.email}
+                  </span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={handleLogout}
+                    className="text-gray-600 hover:text-red-600 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+              <div className="flex items-center space-x-2">
+                <Shield className="text-trust-blue w-4 h-4" />
+                <span className="text-sm text-gray-600">HIPAA Compliant</span>
+              </div>
             </div>
           </div>
         </div>

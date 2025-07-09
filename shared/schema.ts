@@ -1,16 +1,34 @@
-import { pgTable, text, serial, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, jsonb, timestamp, varchar, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Session storage table.
+// (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User storage table.
+// (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  id: varchar("id").primaryKey().notNull(),
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const analyses = pgTable("analyses", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id"),
+  userId: varchar("user_id"),
   imageUrl: text("image_url").notNull(),
   fileName: text("file_name").notNull(),
   fileSize: integer("file_size"), // Original file size in bytes
@@ -28,8 +46,11 @@ export const analyses = pgTable("analyses", {
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+  id: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  profileImageUrl: true,
 });
 
 export const insertAnalysisSchema = createInsertSchema(analyses).omit({
@@ -37,7 +58,8 @@ export const insertAnalysisSchema = createInsertSchema(analyses).omit({
   createdAt: true,
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
+export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertAnalysis = z.infer<typeof insertAnalysisSchema>;
 export type Analysis = typeof analyses.$inferSelect;

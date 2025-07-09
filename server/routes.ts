@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -131,6 +132,21 @@ async function performFacialAnalysis(imagePath: string) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Auth middleware
+  await setupAuth(app);
+
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
   // Upload and analyze image
   app.post("/api/analyze", upload.single('image'), async (req, res) => {
     try {
@@ -169,9 +185,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Perform facial analysis using OpenAI on processed image
       const analysisResults = await performFacialAnalysis(processedPath);
       
+      // Get user ID from session if authenticated
+      const userId = req.isAuthenticated() ? (req.user as any).claims?.sub : null;
+      
       // Save analysis to storage
       const analysis = await storage.createAnalysis({
-        userId: null, // For now, not associating with users
+        userId: userId,
         imageUrl: `/uploads/${processedFilename}`,
         fileName: originalFile.originalname,
         fileSize: imageProcessingResult.originalSize,
@@ -229,16 +248,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all analyses (history)
-  app.get("/api/history", async (req, res) => {
+  // Get user-specific analyses (history) - protected route
+  app.get("/api/history", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+      const analyses = await storage.getUserAnalyses(userId);
+      
+      res.json(analyses.slice(0, limit));
+    } catch (error) {
+      console.error("Get history error:", error);
+      res.status(500).json({ message: "Failed to retrieve analysis history" });
+    }
+  });
+
+  // Get all analyses (admin route) - for now, public
+  app.get("/api/all-analyses", async (req, res) => {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
       const analyses = await storage.getRecentAnalyses(limit);
       
       res.json(analyses);
     } catch (error) {
-      console.error("Get history error:", error);
-      res.status(500).json({ message: "Failed to retrieve analysis history" });
+      console.error("Get all analyses error:", error);
+      res.status(500).json({ message: "Failed to retrieve all analyses" });
     }
   });
 
