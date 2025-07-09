@@ -52,19 +52,23 @@ Preferred communication style: Simple, everyday language.
 ### Image Processing Pipeline
 1. **Upload Validation**: File type and size validation (JPEG, PNG, WebP, 10MB limit)
 2. **Image Processing**: Client-side image resizing and optimization
-3. **Mock AI Analysis**: Simulated facial feature detection and health scoring
+3. **OpenAI Vision Analysis**: Real AI-powered facial analysis using GPT-4o vision model
 4. **Results Storage**: Analysis results stored with structured data
 
 ## Data Flow
 
 1. **Image Upload**: User uploads image through drag-and-drop interface
 2. **Client Processing**: Image validation and optional resizing
-3. **Server Analysis**: Mock AI processing generates health metrics
+3. **Server Analysis**: OpenAI GPT-4o analyzes facial image for health metrics
 4. **Database Storage**: Analysis results stored with user association
 5. **Real-time Updates**: Client polls for analysis completion
 6. **Results Display**: Comprehensive health dashboard with recommendations
 
 ## External Dependencies
+
+### AI Services
+- **OpenAI GPT-4o**: Vision model for real-time facial health analysis
+- **OpenAI SDK**: JavaScript client for API integration
 
 ### Development Tools
 - **Vite**: Development server and build tool
@@ -104,7 +108,7 @@ Preferred communication style: Simple, everyday language.
 - **Environment**: NODE_ENV=production configuration
 
 ### Configuration Management
-- **Environment Variables**: DATABASE_URL for database connection
+- **Environment Variables**: DATABASE_URL for database connection, OPENAI_API_KEY for AI analysis
 - **Build Scripts**: Separate dev/build/start commands
 - **Database Migrations**: Drizzle Kit push command for schema updates
 
@@ -112,7 +116,7 @@ Preferred communication style: Simple, everyday language.
 
 **Monorepo Structure**: Single repository with client/server/shared directories for code sharing and simplified deployment.
 
-**Mock AI Processing**: Simulated analysis results for rapid prototyping and development without external AI service dependencies.
+**OpenAI Vision Integration**: Real AI-powered facial health analysis using GPT-4o vision model for accurate health assessment and personalized recommendations.
 
 **JSONB Storage**: Flexible analysis data storage using PostgreSQL JSONB for complex health metrics and recommendations.
 

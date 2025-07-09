@@ -6,6 +6,7 @@ import path from "path";
 import fs from "fs";
 import { insertAnalysisSchema } from "@shared/schema";
 import { z } from "zod";
+import OpenAI from "openai";
 
 const upload = multer({
   dest: 'uploads/',
@@ -25,81 +26,92 @@ const upload = multer({
   }
 });
 
-// Mock facial analysis function
-function performFacialAnalysis(imagePath: string) {
-  // Simulate AI analysis with random but realistic values
-  const baseScore = 70 + Math.random() * 25; // 70-95
-  
-  return {
-    overallScore: Math.round(baseScore),
-    skinHealth: Math.round(baseScore + (Math.random() - 0.5) * 20),
-    eyeHealth: Math.round(baseScore + (Math.random() - 0.5) * 15),
-    circulation: Math.round(baseScore + (Math.random() - 0.5) * 18),
-    symmetry: Math.round(baseScore + (Math.random() - 0.5) * 12),
-    analysisData: {
-      facialMarkers: [
-        { x: 25, y: 33, type: "eye", status: "good" },
-        { x: 75, y: 33, type: "eye", status: "excellent" },
-        { x: 33, y: 25, type: "skin", status: "minor_issues" },
-        { x: 67, y: 50, type: "skin", status: "good" },
-        { x: 50, y: 67, type: "structure", status: "good" }
-      ],
-      skinAnalysis: {
-        hydration: "good",
-        pigmentation: "minor_spots",
-        texture: "smooth",
-        elasticity: "normal"
-      },
-      eyeAnalysis: {
-        underEyeCircles: "minimal",
-        puffiness: "none",
-        brightness: "high",
-        symmetry: "perfect"
-      },
-      circulationAnalysis: {
-        facialFlush: "normal",
-        lipColor: "healthy",
-        capillaryHealth: "good",
-        overallTone: "even"
-      }
+// Initialize OpenAI client
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// AI-powered facial analysis function using OpenAI GPT-4o
+async function performFacialAnalysis(imagePath: string) {
+  try {
+    // Read and encode image as base64
+    const imageBuffer = fs.readFileSync(imagePath);
+    const base64Image = imageBuffer.toString('base64');
+    
+    // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert dermatologist and facial health analyst. Analyze the facial image and provide comprehensive health assessment. Focus on skin health, eye condition, circulation indicators, and facial symmetry. Provide realistic scores (1-100) and detailed analysis. Respond with JSON in the exact format requested."
+        },
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Analyze this facial image for health indicators and provide a comprehensive assessment. Return JSON with this exact structure:
+{
+  "overallScore": number (1-100),
+  "skinHealth": number (1-100),
+  "eyeHealth": number (1-100),
+  "circulation": number (1-100),
+  "symmetry": number (1-100),
+  "analysisData": {
+    "facialMarkers": [
+      {"x": number, "y": number, "type": "eye|skin|structure", "status": "excellent|good|minor_issues|normal"}
+    ],
+    "skinAnalysis": {
+      "hydration": "excellent|good|normal|poor",
+      "pigmentation": "even|minor_spots|moderate_spots|significant_spots",
+      "texture": "smooth|slightly_rough|rough|very_rough",
+      "elasticity": "excellent|good|normal|poor"
     },
-    recommendations: {
-      immediate: [
-        {
-          icon: "fas fa-sun",
-          title: "Apply Sunscreen",
-          description: "Use broad-spectrum SPF 30+ daily to prevent further pigmentation"
-        },
-        {
-          icon: "fas fa-tint",
-          title: "Increase Hydration",
-          description: "Drink 8-10 glasses of water daily for better skin hydration"
-        },
-        {
-          icon: "fas fa-bed",
-          title: "Improve Sleep",
-          description: "Aim for 7-9 hours of quality sleep for better skin recovery"
+    "eyeAnalysis": {
+      "underEyeCircles": "none|minimal|moderate|significant",
+      "puffiness": "none|minimal|moderate|significant",
+      "brightness": "high|medium|low",
+      "symmetry": "perfect|good|slight_asymmetry|noticeable_asymmetry"
+    },
+    "circulationAnalysis": {
+      "facialFlush": "healthy|normal|pale|excessive",
+      "lipColor": "healthy|normal|pale|dark",
+      "capillaryHealth": "excellent|good|normal|poor",
+      "overallTone": "even|slightly_uneven|uneven|very_uneven"
+    }
+  },
+  "recommendations": {
+    "immediate": [
+      {"icon": "fas fa-icon", "title": "Action Title", "description": "Detailed description"}
+    ],
+    "longTerm": [
+      {"icon": "fas fa-icon", "title": "Action Title", "description": "Detailed description"}
+    ]
+  }
+}
+
+Provide specific, actionable recommendations based on the actual analysis of the face.`
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64,${base64Image}`
+              }
+            }
+          ]
         }
       ],
-      longTerm: [
-        {
-          icon: "fas fa-apple-alt",
-          title: "Balanced Nutrition",
-          description: "Include antioxidant-rich foods for skin health improvement"
-        },
-        {
-          icon: "fas fa-running",
-          title: "Regular Exercise",
-          description: "30 minutes of daily activity to boost circulation"
-        },
-        {
-          icon: "fas fa-user-md",
-          title: "Professional Consultation",
-          description: "Consider a dermatologist visit for personalized skincare routine"
-        }
-      ]
-    }
-  };
+      response_format: { type: "json_object" },
+      max_tokens: 2000
+    });
+
+    const analysisResult = JSON.parse(response.choices[0].message.content);
+    return analysisResult;
+    
+  } catch (error) {
+    console.error("OpenAI analysis error:", error);
+    // Fallback to basic analysis if OpenAI fails
+    throw new Error("Failed to analyze image with AI");
+  }
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -110,8 +122,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No image file provided" });
       }
 
-      // Perform facial analysis
-      const analysisResults = performFacialAnalysis(req.file.path);
+      // Perform facial analysis using OpenAI
+      const analysisResults = await performFacialAnalysis(req.file.path);
       
       // Save analysis to storage
       const analysis = await storage.createAnalysis({
