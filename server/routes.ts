@@ -144,6 +144,15 @@ Provide specific, actionable insights based on physiognomist principles and holi
     });
 
     const analysisResult = JSON.parse(response.choices[0].message.content);
+    
+    // Add raw OpenAI response for transparency
+    analysisResult.rawAnalysis = {
+      model: "gpt-4o",
+      usage: response.usage,
+      responseTime: new Date().toISOString(),
+      fullResponse: response.choices[0].message.content
+    };
+    
     return analysisResult;
     
   } catch (error) {
@@ -174,7 +183,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         eyeHealth: analysisResults.eyeHealth,
         circulation: analysisResults.circulation,
         symmetry: analysisResults.symmetry,
-        analysisData: analysisResults.analysisData,
+        analysisData: {
+          ...analysisResults.analysisData,
+          rawAnalysis: analysisResults.rawAnalysis
+        },
         recommendations: analysisResults.recommendations,
       });
 

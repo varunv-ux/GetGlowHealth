@@ -127,13 +127,6 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
               </span>
             </div>
           </div>
-          
-          <div className="mt-4 p-3 bg-orange-50 rounded-lg">
-            <p className="text-sm text-gray-700">
-              <Lightbulb className="w-4 h-4 text-warning-orange mr-2 inline" />
-              Consider using sunscreen daily to prevent further pigmentation.
-            </p>
-          </div>
         </CardContent>
       </Card>
 
@@ -143,8 +136,8 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
           <div className="flex items-center justify-between mb-4">
             <h5 className="text-lg font-semibold text-dark-grey">Eye Health</h5>
             <div className="flex items-center">
-              <CheckCircle className="w-4 h-4 text-success-green mr-1" />
-              <span className="text-sm font-medium text-success-green">Excellent</span>
+              <Info className="w-4 h-4 text-trust-blue mr-1" />
+              <span className="text-sm font-medium text-trust-blue">Analysis</span>
             </div>
           </div>
           
@@ -173,13 +166,17 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
                 {formatStatus(eyeAnalysis.symmetry)}
               </span>
             </div>
-          </div>
-          
-          <div className="mt-4 p-3 bg-green-50 rounded-lg">
-            <p className="text-sm text-gray-700">
-              <CheckCircle className="w-4 h-4 text-success-green mr-2 inline" />
-              Your eyes show excellent health indicators. Keep up the good work!
-            </p>
+            {eyeAnalysis.fatigueSignals && eyeAnalysis.fatigueSignals.length > 0 && (
+              <div className="mt-3">
+                <div className="text-sm text-gray-600 mb-2">Fatigue Signals:</div>
+                {eyeAnalysis.fatigueSignals.map((signal, index) => (
+                  <div key={index} className="flex items-center">
+                    <Info className="w-3 h-3 text-warning-orange mr-2" />
+                    <span className="text-sm">{signal}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

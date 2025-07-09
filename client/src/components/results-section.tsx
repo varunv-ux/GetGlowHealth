@@ -5,6 +5,7 @@ import FacialAnalysisDisplay from "./facial-analysis-display";
 import HealthScoreCard from "./health-score-card";
 import DetailedReports from "./detailed-reports";
 import RecommendationsSection from "./recommendations-section";
+import RawAnalysisDisplay from "./raw-analysis-display";
 import type { Analysis } from "@shared/schema";
 
 interface ResultsSectionProps {
@@ -38,6 +39,9 @@ export default function ResultsSection({ analysis, onNewAnalysis }: ResultsSecti
       
       {/* Recommendations */}
       <RecommendationsSection analysis={analysis} />
+      
+      {/* Raw AI Analysis */}
+      <RawAnalysisDisplay analysis={analysis} />
       
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
