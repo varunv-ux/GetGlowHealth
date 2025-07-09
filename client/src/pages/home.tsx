@@ -47,17 +47,13 @@ export default function Home() {
               <h1 className="text-xl font-bold text-dark-grey">FaceHealth Pro</h1>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <Link href="/">
-                <Button variant="ghost" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors">
-                  <HomeIcon className="w-4 h-4" />
-                  <span>Analysis</span>
-                </Button>
+              <Link href="/" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors px-3 py-2 rounded-md text-sm font-medium">
+                <HomeIcon className="w-4 h-4" />
+                <span>Analysis</span>
               </Link>
-              <Link href="/history">
-                <Button variant="ghost" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors">
-                  <History className="w-4 h-4" />
-                  <span>History</span>
-                </Button>
+              <Link href="/history" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors px-3 py-2 rounded-md text-sm font-medium">
+                <History className="w-4 h-4" />
+                <span>History</span>
               </Link>
             </nav>
             <div className="flex items-center space-x-4">

@@ -15,7 +15,7 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
   const emotionalStateReading = analysisData.emotionalStateReading || {};
   const healthRiskAssessment = analysisData.healthRiskAssessment || {};
   const intoleranceSignals = analysisData.intoleranceSignals || {};
-  const estimatedAge = analysisData.estimatedAge || analysis.estimatedAge;
+  const estimatedAge = analysisData.estimatedAge;
 
   const getStatusColor = (status: string | undefined) => {
     if (!status) return 'text-gray-500';
