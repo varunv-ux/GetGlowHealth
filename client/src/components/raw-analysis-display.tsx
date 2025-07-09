@@ -54,9 +54,9 @@ export default function RawAnalysisDisplay({ analysis }: RawAnalysisDisplayProps
         </div>
 
         <div className="bg-gray-50 rounded-lg p-4 border">
-          <h5 className="text-sm font-medium text-gray-700 mb-3">Complete OpenAI Response:</h5>
+          <h5 className="text-sm font-medium text-gray-700 mb-3">Complete AI Analysis Data:</h5>
           <pre className="text-xs text-gray-600 whitespace-pre-wrap overflow-x-auto max-h-96 overflow-y-auto">
-            {JSON.stringify(JSON.parse(rawAnalysis.fullResponse), null, 2)}
+            {JSON.stringify(analysis.analysisData, null, 2)}
           </pre>
         </div>
         
