@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Share2, Camera } from "lucide-react";
 import FacialAnalysisDisplay from "./facial-analysis-display";
 import HealthScoreCard from "./health-score-card";
+import ConversationalAnalysis from "./conversational-analysis";
 import DetailedReports from "./detailed-reports";
 import RecommendationsSection from "./recommendations-section";
 import RawAnalysisDisplay from "./raw-analysis-display";
@@ -33,6 +34,9 @@ export default function ResultsSection({ analysis, onNewAnalysis }: ResultsSecti
         <FacialAnalysisDisplay analysis={analysis} />
         <HealthScoreCard analysis={analysis} />
       </div>
+      
+      {/* Conversational Analysis */}
+      <ConversationalAnalysis analysis={analysis} />
       
       {/* Detailed Reports */}
       <DetailedReports analysis={analysis} />

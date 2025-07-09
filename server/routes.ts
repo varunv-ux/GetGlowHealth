@@ -43,21 +43,38 @@ async function performFacialAnalysis(imagePath: string) {
       messages: [
         {
           role: "system",
-          content: "You are a facial analysis expert specializing in physiognomy and wellness assessment. Analyze facial features to provide insights about general appearance, skin condition, and facial characteristics. Focus on observable features rather than medical diagnoses. Respond with JSON in the exact format requested."
+          content: "You are a comprehensive facial analysis expert combining expertise from physiognomy, nutrition, psychosomatic medicine, and health specialization. Analyze facial features to provide deep insights about health, nutrition, emotional state, and wellness. Focus on observable features and provide both structured data and conversational analysis. Be thorough, specific, and actionable in your recommendations."
         },
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: `Analyze this image and describe the general facial features you observe. Focus on:
+              text: `Please analyze this face comprehensively from multiple expert perspectives:
 
-1. **Facial Structure**: General facial shape and symmetry
-2. **Skin Appearance**: Basic skin tone and texture observations
-3. **Age Assessment**: Estimated age range based on visible features
-4. **General Observations**: Overall facial characteristics
+**1. Face Analyst (Physiognomist)**
+Analyze my face like a physiognomist, nutritionist, psychosomatic expert, and health specialist. Break down key features with insights from each perspective.
 
-Return JSON with this exact structure:
+**2. Visual Age Estimator**
+How old do I look based on facial tone, skin texture, and overall symmetry? Identify any signs of accelerated aging and possible causes.
+
+**3. Deficiency Detector**
+What nutrient deficiencies can be spotted based on my skin tone, lips, eyes, jawline, and cheek fullness? Include possible symptoms and foods to fix them.
+
+**4. Intolerance Identifier**
+Do you see visible signs of food intolerances or reactions? Look for inflammation, breakouts, or digestive clues that might show up in the face.
+
+**5. Health Risk Reader**
+What should I be paying attention to in terms of health? Highlight hormonal imbalances, sleep issues, or lifestyle concerns I might be missing.
+
+**6. Emotional State Scanner**
+What psycho-emotional states or stress patterns might be influencing my appearance? Decode any tension, fatigue, or mood signals showing on my face.
+
+**7. Self-Healing Strategist**
+Based on everything you see, what should I adjust in my diet, rest habits, stress levels, mindset, and inner dialogue to improve my health from the inside out?
+
+Please provide your analysis in this JSON format, including both structured data AND a comprehensive conversational analysis:
+
 {
   "overallScore": number (1-100),
   "skinHealth": number (1-100),
@@ -65,68 +82,93 @@ Return JSON with this exact structure:
   "circulation": number (1-100),
   "symmetry": number (1-100),
   "estimatedAge": number,
+  "ageRange": "XX-XX years",
+  "conversationalAnalysis": {
+    "faceAnalyst": "Detailed physiognomist analysis with specific observations about facial structure, proportions, and what they reveal about constitution and health patterns",
+    "visualAgeEstimator": "Comprehensive age assessment explaining what makes you look your age or older/younger, with specific aging signs and their causes",
+    "deficiencyDetector": "Detailed nutrient deficiency analysis based on skin, lips, eyes, jawline, and cheek observations with specific symptoms and food recommendations",
+    "intoleranceIdentifier": "Analysis of visible inflammation, breakouts, or digestive clues showing up in facial features with potential trigger identification",
+    "healthRiskReader": "Comprehensive health assessment highlighting hormonal patterns, sleep quality indicators, and lifestyle concerns visible in facial features",
+    "emotionalStateScanner": "Deep psycho-emotional analysis of stress patterns, tension areas, fatigue signals, and mood indicators reflected in facial expression and features",
+    "selfHealingStrategist": "Comprehensive healing strategy covering diet adjustments, rest optimization, stress management, mindset shifts, and inner dialogue improvements"
+  },
   "analysisData": {
     "facialMarkers": [
-      {"x": number, "y": number, "type": "eye|skin|structure", "status": "excellent|good|minor_issues|normal"}
+      {"x": number, "y": number, "type": "eye|skin|structure", "status": "excellent|good|minor_issues|normal", "insight": "specific observation about this marker"}
     ],
     "skinAnalysis": {
       "hydration": "excellent|good|normal|poor",
       "pigmentation": "even|minor_spots|moderate_spots|significant_spots",
       "texture": "smooth|slightly_rough|rough|very_rough",
       "elasticity": "excellent|good|normal|poor",
-      "agingSignsDetected": ["string"]
+      "agingSignsDetected": ["specific aging signs"],
+      "skinTone": "description of skin tone and what it reveals",
+      "inflammationSigns": ["specific inflammation indicators"]
     },
     "eyeAnalysis": {
       "underEyeCircles": "none|minimal|moderate|significant",
       "puffiness": "none|minimal|moderate|significant",
       "brightness": "high|medium|low",
       "symmetry": "perfect|good|slight_asymmetry|noticeable_asymmetry",
-      "fatigueSignals": ["string"]
+      "fatigueSignals": ["specific fatigue indicators"],
+      "eyeColor": "description and health implications",
+      "eyeClarity": "assessment of eye clarity and vitality"
     },
     "circulationAnalysis": {
       "facialFlush": "healthy|normal|pale|excessive",
       "lipColor": "healthy|normal|pale|dark",
       "capillaryHealth": "excellent|good|normal|poor",
-      "overallTone": "even|slightly_uneven|uneven|very_uneven"
+      "overallTone": "even|slightly_uneven|uneven|very_uneven",
+      "circulationPatterns": ["specific circulation observations"]
     },
     "nutritionalInsights": {
-      "possibleDeficiencies": ["string"],
-      "recommendedNutrients": ["string"],
-      "healingFoods": ["string"]
+      "possibleDeficiencies": ["specific nutrient deficiencies with explanations"],
+      "recommendedNutrients": ["specific nutrients needed"],
+      "healingFoods": ["specific foods to incorporate"],
+      "deficiencySymptoms": ["visible symptoms of deficiencies"]
     },
     "intoleranceSignals": {
-      "inflammationSigns": ["string"],
-      "digestiveClues": ["string"],
-      "possibleTriggers": ["string"]
+      "inflammationSigns": ["specific inflammatory markers"],
+      "digestiveClues": ["digestive system indicators"],
+      "possibleTriggers": ["potential food/environmental triggers"],
+      "reactionPatterns": ["patterns of intolerance reactions"]
     },
     "emotionalStateReading": {
-      "stressPatterns": ["string"],
-      "emotionalSignals": ["string"],
-      "tensionAreas": ["string"]
+      "stressPatterns": ["specific stress indicators"],
+      "emotionalSignals": ["mood and emotional state indicators"],
+      "tensionAreas": ["areas of physical tension"],
+      "energyLevel": "assessment of overall energy and vitality"
     },
     "healthRiskAssessment": {
-      "hormonalIndicators": ["string"],
-      "sleepQualityClues": ["string"],
-      "lifestyleConcerns": ["string"]
+      "hormonalIndicators": ["signs of hormonal imbalances"],
+      "sleepQualityClues": ["sleep quality indicators"],
+      "lifestyleConcerns": ["lifestyle factors affecting health"],
+      "systemicIssues": ["potential systemic health concerns"]
     }
   },
   "recommendations": {
     "immediate": [
-      {"icon": "fas fa-icon", "title": "Action Title", "description": "Detailed description"}
+      {"icon": "fas fa-icon", "title": "Immediate Action", "description": "Specific immediate steps to take", "timeframe": "within 24-48 hours"}
     ],
     "nutritional": [
-      {"icon": "fas fa-icon", "title": "Nutritional Strategy", "description": "Specific dietary recommendations"}
+      {"icon": "fas fa-icon", "title": "Nutritional Strategy", "description": "Specific dietary recommendations with foods and supplements", "timeframe": "within 1-2 weeks"}
     ],
     "lifestyle": [
-      {"icon": "fas fa-icon", "title": "Lifestyle Adjustment", "description": "Rest, stress, and mindset recommendations"}
+      {"icon": "fas fa-icon", "title": "Lifestyle Adjustment", "description": "Rest, stress, and mindset recommendations", "timeframe": "within 2-4 weeks"}
     ],
     "longTerm": [
-      {"icon": "fas fa-icon", "title": "Long-term Strategy", "description": "Comprehensive healing approach"}
+      {"icon": "fas fa-icon", "title": "Long-term Strategy", "description": "Comprehensive healing approach for sustained health", "timeframe": "3-6 months"}
+    ],
+    "supplements": [
+      {"icon": "fas fa-icon", "title": "Supplement Recommendation", "description": "Specific supplements to address deficiencies", "timeframe": "start within 1 week"}
+    ],
+    "mindset": [
+      {"icon": "fas fa-icon", "title": "Mindset Shift", "description": "Inner dialogue and emotional healing recommendations", "timeframe": "ongoing practice"}
     ]
   }
 }
 
-Provide specific, actionable insights based on physiognomist principles and holistic health analysis.`
+Be extremely thorough and specific in your analysis. Provide detailed, actionable insights that someone can immediately implement to improve their health and appearance.`
             },
             {
               type: "image_url",
@@ -138,7 +180,7 @@ Provide specific, actionable insights based on physiognomist principles and holi
         }
       ],
       response_format: { type: "json_object" },
-      max_tokens: 2000
+      max_tokens: 4000
     });
 
     console.log("OpenAI response received");
