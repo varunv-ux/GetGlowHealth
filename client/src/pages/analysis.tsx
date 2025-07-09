@@ -23,7 +23,10 @@ import HealthScoreCard from "@/components/health-score-card";
 import FacialAnalysisDisplay from "@/components/facial-analysis-display";
 import ConversationalAnalysis from "@/components/conversational-analysis";
 import DetailedReports from "@/components/detailed-reports";
+import DetailedAnalysisDisplay from "@/components/detailed-analysis-display";
 import RecommendationsSection from "@/components/recommendations-section";
+import ChatResponseDisplay from "@/components/chat-response-display";
+import RawAnalysisDisplay from "@/components/raw-analysis-display";
 
 export default function AnalysisPage() {
   const { id } = useParams<{ id: string }>();
@@ -185,21 +188,33 @@ export default function AnalysisPage() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Analysis */}
-          <div className="lg:col-span-2 space-y-6">
-            <HealthScoreCard analysis={analysis} />
+        <div className="space-y-8">
+          {/* Facial Analysis Display */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <FacialAnalysisDisplay analysis={analysis} />
-            <ConversationalAnalysis analysis={analysis} />
-            <DetailedReports analysis={analysis} />
+            <HealthScoreCard analysis={analysis} />
           </div>
-
-          {/* Right Column - Recommendations */}
-          <div className="space-y-6">
-            <RecommendationsSection analysis={analysis} />
-            
-            {/* Analysis Metadata */}
-            <Card>
+          
+          {/* Conversational Analysis */}
+          <ConversationalAnalysis analysis={analysis} />
+          
+          {/* Detailed Analysis Display */}
+          <DetailedAnalysisDisplay analysis={analysis} />
+          
+          {/* Detailed Reports */}
+          <DetailedReports analysis={analysis} />
+          
+          {/* Recommendations */}
+          <RecommendationsSection analysis={analysis} />
+          
+          {/* Chat Response Display */}
+          <ChatResponseDisplay analysis={analysis} />
+          
+          {/* Raw AI Analysis */}
+          <RawAnalysisDisplay analysis={analysis} />
+          
+          {/* Analysis Metadata */}
+          <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Analysis Details</CardTitle>
                 <CardDescription>Technical information about this analysis</CardDescription>
@@ -253,7 +268,6 @@ export default function AnalysisPage() {
                 )}
               </CardContent>
             </Card>
-          </div>
         </div>
       </div>
     </div>
