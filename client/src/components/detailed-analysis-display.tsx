@@ -64,14 +64,16 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="facial-zones" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
-              <TabsTrigger value="facial-zones">Facial Zones</TabsTrigger>
-              <TabsTrigger value="deficiencies">Deficiencies</TabsTrigger>
-              <TabsTrigger value="intolerances">Food Issues</TabsTrigger>
-              <TabsTrigger value="health-risks">Health Risks</TabsTrigger>
-              <TabsTrigger value="emotional">Emotional State</TabsTrigger>
-              <TabsTrigger value="protocol">Daily Protocol</TabsTrigger>
-            </TabsList>
+            <div className="w-full overflow-x-auto">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 min-w-max">
+                <TabsTrigger value="facial-zones" className="text-xs md:text-sm whitespace-nowrap">Facial Zones</TabsTrigger>
+                <TabsTrigger value="deficiencies" className="text-xs md:text-sm whitespace-nowrap">Deficiencies</TabsTrigger>
+                <TabsTrigger value="intolerances" className="text-xs md:text-sm whitespace-nowrap">Food Issues</TabsTrigger>
+                <TabsTrigger value="health-risks" className="text-xs md:text-sm whitespace-nowrap">Health Risks</TabsTrigger>
+                <TabsTrigger value="emotional" className="text-xs md:text-sm whitespace-nowrap">Emotional</TabsTrigger>
+                <TabsTrigger value="protocol" className="text-xs md:text-sm whitespace-nowrap">Protocol</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="facial-zones" className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
