@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   User, 
   Clock, 
@@ -24,49 +22,6 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
   const estimatedAge = analysis.analysisData?.estimatedAge || analysis.estimatedAge;
   const ageRange = analysis.analysisData?.ageRange || `${estimatedAge}-${estimatedAge + 5} years`;
 
-  const analysisCards = [
-    {
-      id: "facialAnalysis",
-      title: "Facial Analysis",
-      icon: <User className="w-5 h-5" />,
-      color: "bg-trust-blue",
-      content: {
-        facialFeatures: conversationalAnalysis.facialFeatureBreakdown,
-        visualAge: conversationalAnalysis.visualAgeEstimator,
-        deficiencies: conversationalAnalysis.deficiencyDetector
-      },
-      badge: ageRange
-    },
-    {
-      id: "foodIntoleranceIdentifier",
-      title: "Food Intolerance Identifier",
-      icon: <AlertTriangle className="w-5 h-5" />,
-      color: "bg-error-red",
-      content: conversationalAnalysis.foodIntoleranceIdentifier
-    },
-    {
-      id: "healthRiskReader",
-      title: "Health Risk Reader",
-      icon: <Shield className="w-5 h-5" />,
-      color: "bg-trust-blue",
-      content: conversationalAnalysis.healthRiskReader
-    },
-    {
-      id: "emotionalStateScanner",
-      title: "Emotional State Scanner",
-      icon: <Brain className="w-5 h-5" />,
-      color: "bg-purple-500",
-      content: conversationalAnalysis.emotionalStateScanner
-    },
-    {
-      id: "selfHealingStrategist",
-      title: "Self-Healing Strategist",
-      icon: <Heart className="w-5 h-5" />,
-      color: "bg-success-green",
-      content: conversationalAnalysis.selfHealingStrategist
-    }
-  ];
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -79,113 +34,156 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
         </Badge>
       </div>
 
-      <Tabs defaultValue="facialAnalysis" className="w-full">
-        <div className="w-full overflow-x-auto scrollbar-hide">
-          <TabsList className="flex w-max md:grid md:w-full md:grid-cols-3 lg:grid-cols-5 mb-4">
-            {analysisCards.map((card) => (
-              <TabsTrigger
-                key={card.id}
-                value={card.id}
-                className="text-xs md:text-sm px-2 md:px-3 py-2 whitespace-nowrap flex-shrink-0"
-              >
-                <div className="flex items-center space-x-1">
-                  {card.icon}
-                  <span className="hidden sm:inline">{card.title.split(' ')[0]}</span>
+      <div className="space-y-6">
+        {/* Facial Analysis Section */}
+        <Card className="shadow-lg border-l-4 border-l-blue-500">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center text-dark-grey">
+              <div className="p-2 rounded-full bg-trust-blue text-white mr-3">
+                <User className="w-5 h-5" />
+              </div>
+              Facial Analysis
+              {ageRange && (
+                <Badge variant="secondary" className="text-sm ml-auto">
+                  {ageRange}
+                </Badge>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {/* Facial Feature Breakdown */}
+              {conversationalAnalysis.facialFeatureBreakdown && (
+                <div>
+                  <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                    <User className="w-5 h-5 text-trust-blue mr-2" />
+                    Facial Feature Breakdown
+                  </h4>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {conversationalAnalysis.facialFeatureBreakdown}
+                    </p>
+                  </div>
                 </div>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
+              )}
+              
+              {/* Visual Age Assessment */}
+              {conversationalAnalysis.visualAgeEstimator && (
+                <div>
+                  <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                    <Clock className="w-5 h-5 text-medical-green mr-2" />
+                    Visual Age Assessment
+                  </h4>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {conversationalAnalysis.visualAgeEstimator}
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Deficiency Detection */}
+              {conversationalAnalysis.deficiencyDetector && (
+                <div>
+                  <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                    <Apple className="w-5 h-5 text-warning-orange mr-2" />
+                    Deficiency Detection
+                  </h4>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {conversationalAnalysis.deficiencyDetector}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-        {analysisCards.map((card) => (
-          <TabsContent key={card.id} value={card.id} className="mt-6">
-            <Card className="shadow-lg border-l-4" style={{ borderLeftColor: card.color.replace('bg-', '') }}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center text-dark-grey">
-                    <div className={`p-2 rounded-full ${card.color} text-white mr-3`}>
-                      {card.icon}
-                    </div>
-                    {card.title}
-                  </CardTitle>
-                  {card.badge && (
-                    <Badge variant="secondary" className="text-sm">
-                      {card.badge}
-                    </Badge>
-                  )}
+        {/* Food Intolerance Section */}
+        {conversationalAnalysis.foodIntoleranceIdentifier && (
+          <Card className="shadow-lg border-l-4 border-l-red-500">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center text-dark-grey">
+                <div className="p-2 rounded-full bg-error-red text-white mr-3">
+                  <AlertTriangle className="w-5 h-5" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[400px] pr-4">
-                  {card.id === 'facialAnalysis' ? (
-                    <div className="space-y-6">
-                      {/* Facial Feature Breakdown */}
-                      {card.content.facialFeatures && (
-                        <div>
-                          <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
-                            <User className="w-5 h-5 text-trust-blue mr-2" />
-                            Facial Feature Breakdown
-                          </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                              {card.content.facialFeatures}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Visual Age Assessment */}
-                      {card.content.visualAge && (
-                        <div>
-                          <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
-                            <Clock className="w-5 h-5 text-medical-green mr-2" />
-                            Visual Age Assessment
-                          </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                              {card.content.visualAge}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Deficiency Detection */}
-                      {card.content.deficiencies && (
-                        <div>
-                          <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
-                            <Apple className="w-5 h-5 text-warning-orange mr-2" />
-                            Deficiency Detection
-                          </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                              {card.content.deficiencies}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    card.content ? (
-                      <div className="prose prose-sm max-w-none">
-                        <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                          {card.content}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center h-32 text-gray-500">
-                        <div className="text-center">
-                          <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                          <p>Analysis not available for this section</p>
-                        </div>
-                      </div>
-                    )
-                  )}
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        ))}
-      </Tabs>
+                Food Intolerance Identifier
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm max-w-none">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {conversationalAnalysis.foodIntoleranceIdentifier}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Health Risk Section */}
+        {conversationalAnalysis.healthRiskReader && (
+          <Card className="shadow-lg border-l-4 border-l-blue-500">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center text-dark-grey">
+                <div className="p-2 rounded-full bg-trust-blue text-white mr-3">
+                  <Shield className="w-5 h-5" />
+                </div>
+                Health Risk Reader
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm max-w-none">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {conversationalAnalysis.healthRiskReader}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Emotional State Section */}
+        {conversationalAnalysis.emotionalStateScanner && (
+          <Card className="shadow-lg border-l-4 border-l-purple-500">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center text-dark-grey">
+                <div className="p-2 rounded-full bg-purple-500 text-white mr-3">
+                  <Brain className="w-5 h-5" />
+                </div>
+                Emotional State Scanner
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm max-w-none">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {conversationalAnalysis.emotionalStateScanner}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Self-Healing Section */}
+        {conversationalAnalysis.selfHealingStrategist && (
+          <Card className="shadow-lg border-l-4 border-l-green-500">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center text-dark-grey">
+                <div className="p-2 rounded-full bg-success-green text-white mr-3">
+                  <Heart className="w-5 h-5" />
+                </div>
+                Self-Healing Strategist
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm max-w-none">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {conversationalAnalysis.selfHealingStrategist}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
 
       <div className="mt-6 p-4 bg-gray-50 rounded-lg">
         <h4 className="font-semibold text-dark-grey mb-2 flex items-center">
@@ -193,9 +191,9 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
           How to Use This Analysis
         </h4>
         <p className="text-sm text-gray-600">
-          Each tab provides a different perspective on your facial health. Start with the Face Analysis for overall insights, 
-          then explore Deficiency Detection and Health Risk Assessment for actionable health improvements. 
-          The Self-Healing Strategy tab offers comprehensive recommendations for long-term wellness.
+          This comprehensive analysis provides a complete view of your facial health in one unified report. 
+          Start with the Facial Analysis for overall insights, review Food Intolerance and Health Risk assessments 
+          for immediate health improvements, and follow the Self-Healing Strategy for long-term wellness optimization.
         </p>
       </div>
     </div>
