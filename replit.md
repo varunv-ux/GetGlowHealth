@@ -10,9 +10,6 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
-- **July 2025**: Redesigned history page with tabbed interface (Summary/Admin) matching GetGlow design
-- **July 2025**: Implemented graceful image loading with fallback icons for missing files
-- **July 2025**: Fixed image storage issues with proper error handling across all components
 - **December 2024**: Implemented ultra-detailed prompt system with configurable analysis types
 - **December 2024**: Upgraded to GPT-4.1 model for enhanced analysis accuracy
 - **December 2024**: Added comprehensive analysis history system with image storage
