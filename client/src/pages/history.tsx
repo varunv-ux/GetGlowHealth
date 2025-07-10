@@ -386,7 +386,11 @@ export default function HistoryPage() {
                                 <span className="font-medium">Facial Feature Breakdown</span>
                               </div>
                               <p className="text-sm text-gray-600">
-                                {analysis.analysisData?.facialFeatures || 'Comprehensive analysis of facial structure and symmetry patterns.'}
+                                {typeof analysis.analysisData?.facialFeatures === 'string' 
+                                  ? analysis.analysisData.facialFeatures 
+                                  : typeof analysis.analysisData?.facialFeatures === 'object' && analysis.analysisData?.facialFeatures
+                                  ? JSON.stringify(analysis.analysisData.facialFeatures, null, 2)
+                                  : 'Comprehensive analysis of facial structure and symmetry patterns.'}
                               </p>
                             </div>
                             
@@ -396,7 +400,11 @@ export default function HistoryPage() {
                                 <span className="font-medium">Visual Age Assessment</span>
                               </div>
                               <p className="text-sm text-gray-600">
-                                {analysis.analysisData?.visualAge || 'Analysis of skin texture, elasticity, and age-related indicators.'}
+                                {typeof analysis.analysisData?.visualAge === 'string' 
+                                  ? analysis.analysisData.visualAge 
+                                  : typeof analysis.analysisData?.visualAge === 'object' && analysis.analysisData?.visualAge
+                                  ? JSON.stringify(analysis.analysisData.visualAge, null, 2)
+                                  : 'Analysis of skin texture, elasticity, and age-related indicators.'}
                               </p>
                             </div>
                             
@@ -406,7 +414,11 @@ export default function HistoryPage() {
                                 <span className="font-medium">Deficiency Detection</span>
                               </div>
                               <p className="text-sm text-gray-600">
-                                {analysis.analysisData?.deficiencies || 'Identification of potential nutritional deficiencies based on visible indicators.'}
+                                {typeof analysis.analysisData?.deficiencies === 'string' 
+                                  ? analysis.analysisData.deficiencies 
+                                  : typeof analysis.analysisData?.deficiencies === 'object' && analysis.analysisData?.deficiencies
+                                  ? JSON.stringify(analysis.analysisData.deficiencies, null, 2)
+                                  : 'Identification of potential nutritional deficiencies based on visible indicators.'}
                               </p>
                             </div>
                             
@@ -416,7 +428,11 @@ export default function HistoryPage() {
                                 <span className="font-medium">Food Intolerance</span>
                               </div>
                               <p className="text-sm text-gray-600">
-                                {analysis.analysisData?.foodIntolerance || 'Assessment of potential food sensitivities based on facial indicators.'}
+                                {typeof analysis.analysisData?.foodIntolerance === 'string' 
+                                  ? analysis.analysisData.foodIntolerance 
+                                  : typeof analysis.analysisData?.foodIntolerance === 'object' && analysis.analysisData?.foodIntolerance
+                                  ? JSON.stringify(analysis.analysisData.foodIntolerance, null, 2)
+                                  : 'Assessment of potential food sensitivities based on facial indicators.'}
                               </p>
                             </div>
                             
@@ -426,7 +442,11 @@ export default function HistoryPage() {
                                 <span className="font-medium">Health Risk</span>
                               </div>
                               <p className="text-sm text-gray-600">
-                                {analysis.analysisData?.healthRisk || 'Evaluation of potential health risks based on facial analysis.'}
+                                {typeof analysis.analysisData?.healthRisk === 'string' 
+                                  ? analysis.analysisData.healthRisk 
+                                  : typeof analysis.analysisData?.healthRisk === 'object' && analysis.analysisData?.healthRisk
+                                  ? JSON.stringify(analysis.analysisData.healthRisk, null, 2)
+                                  : 'Evaluation of potential health risks based on facial analysis.'}
                               </p>
                             </div>
                             
@@ -436,7 +456,11 @@ export default function HistoryPage() {
                                 <span className="font-medium">Emotional State</span>
                               </div>
                               <p className="text-sm text-gray-600">
-                                {analysis.analysisData?.emotionalState || 'Analysis of emotional indicators and stress patterns.'}
+                                {typeof analysis.analysisData?.emotionalState === 'string' 
+                                  ? analysis.analysisData.emotionalState 
+                                  : typeof analysis.analysisData?.emotionalState === 'object' && analysis.analysisData?.emotionalState
+                                  ? JSON.stringify(analysis.analysisData.emotionalState, null, 2)
+                                  : 'Analysis of emotional indicators and stress patterns.'}
                               </p>
                             </div>
                             
@@ -446,7 +470,11 @@ export default function HistoryPage() {
                                 <span className="font-medium">Self Healing</span>
                               </div>
                               <p className="text-sm text-gray-600">
-                                {analysis.analysisData?.selfHealing || 'Recommendations for natural healing and recovery processes.'}
+                                {typeof analysis.analysisData?.selfHealing === 'string' 
+                                  ? analysis.analysisData.selfHealing 
+                                  : typeof analysis.analysisData?.selfHealing === 'object' && analysis.analysisData?.selfHealing
+                                  ? JSON.stringify(analysis.analysisData.selfHealing, null, 2)
+                                  : 'Recommendations for natural healing and recovery processes.'}
                               </p>
                             </div>
                           </div>
