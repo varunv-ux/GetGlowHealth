@@ -29,18 +29,21 @@ import {
   Shield,
   UserCheck,
   Home as HomeIcon,
-  ChevronDown
+  ChevronDown,
+  ImageOff
 } from "lucide-react";
 import { Link } from "wouter";
 import { formatDistanceToNow } from "date-fns";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { useState } from "react";
 import type { Analysis } from "@shared/schema";
 
 export default function HistoryPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   
   const { data: analyses, isLoading, error } = useQuery({
     queryKey: ['/api/history'],
@@ -263,15 +266,17 @@ export default function HistoryPage() {
                   <div className="flex items-start gap-6">
                     {/* Analysis Image */}
                     <div className="flex-shrink-0">
-                      <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden">
-                        <img 
-                          src={analysis.imageUrl} 
-                          alt={analysis.fileName}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkgMTJDOS41NTIyOSAxMiAxMCAxMS41NTIzIDEwIDExQzEwIDEwLjQ0NzcgOS41NTIyOSAxMCA5IDEwQzguNDQ3NzEgMTAgOCAxMC40NDc3IDggMTFDOCAxMS41NTIzIDguNDQ3NzEgMTIgOSAxMloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTE1IDEyQzE1LjU1MjMgMTIgMTYgMTEuNTUyMyAxNiAxMUMxNiAxMC40NDc3IDE1LjU1MjMgMTAgMTUgMTBDMTQuNDQ3NyAxMCAxNCAxMC40NDc3IDE0IDExQzE0IDExLjU1MjMgMTQuNDQ3NyAxMiAxNSAxMloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTEyIDE2QzE0LjIwOTEgMTYgMTYgMTQuMjA5MSAxNiAxMkMxNiA5Ljc5MDg2IDE0LjIwOTEgOCAxMiA4QzkuNzkwODYgOCA4IDkuNzkwODYgOCAxMkM4IDE0LjIwOTEgOS43OTA4NiAxNiAxMiAxNloiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+';
-                          }}
-                        />
+                      <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                        {imageErrors[analysis.id] ? (
+                          <ImageOff className="w-8 h-8 text-gray-400" />
+                        ) : (
+                          <img 
+                            src={analysis.imageUrl} 
+                            alt={analysis.fileName}
+                            className="w-full h-full object-cover"
+                            onError={() => setImageErrors(prev => ({ ...prev, [analysis.id]: true }))}
+                          />
+                        )}
                       </div>
                     </div>
 

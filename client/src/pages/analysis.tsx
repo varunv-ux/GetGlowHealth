@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 import { 
   ArrowLeft, 
   Clock, 
@@ -14,7 +15,8 @@ import {
   Eye,
   Heart,
   Droplets,
-  Sparkles
+  Sparkles,
+  ImageOff
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { Analysis } from "@shared/schema";
@@ -31,6 +33,7 @@ import AnalysisChat from "@/components/analysis-chat";
 
 export default function AnalysisPage() {
   const { id } = useParams<{ id: string }>();
+  const [imageError, setImageError] = useState(false);
   
   const { data: analysis, isLoading, error } = useQuery({
     queryKey: ['/api/analysis', id],
@@ -118,12 +121,17 @@ export default function AnalysisPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-              <img 
-                src={analysis.imageUrl} 
-                alt={analysis.fileName}
-                className="w-full h-full object-cover"
-              />
+            <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+              {imageError ? (
+                <ImageOff className="w-8 h-8 text-gray-400" />
+              ) : (
+                <img 
+                  src={analysis.imageUrl} 
+                  alt={analysis.fileName}
+                  className="w-full h-full object-cover"
+                  onError={() => setImageError(true)}
+                />
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{analysis.fileName}</h1>
