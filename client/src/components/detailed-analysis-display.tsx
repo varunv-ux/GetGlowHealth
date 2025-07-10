@@ -18,7 +18,9 @@ import {
   Pill,
   Utensils,
   Moon,
-  Zap
+  Zap,
+  Calendar,
+  Target
 } from "lucide-react";
 import type { Analysis } from "@shared/schema";
 
@@ -34,6 +36,7 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
   const healthRisks = analysisData.healthRisks || [];
   const emotionalState = analysisData.emotionalState || {};
   const dailyProtocol = analysisData.dailyProtocol || {};
+  const recommendations = analysis.recommendations || {};
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -65,13 +68,14 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
         <CardContent>
           <Tabs defaultValue="facial-zones" className="w-full">
             <div className="w-full overflow-x-auto scrollbar-hide">
-              <TabsList className="flex w-max md:grid md:w-full md:grid-cols-3 lg:grid-cols-6 mb-4">
+              <TabsList className="flex w-max md:grid md:w-full md:grid-cols-4 lg:grid-cols-7 mb-4">
                 <TabsTrigger value="facial-zones" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Facial Zones</TabsTrigger>
                 <TabsTrigger value="deficiencies" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Deficiencies</TabsTrigger>
                 <TabsTrigger value="intolerances" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Food Issues</TabsTrigger>
                 <TabsTrigger value="health-risks" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Health Risks</TabsTrigger>
                 <TabsTrigger value="emotional" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Emotional</TabsTrigger>
                 <TabsTrigger value="protocol" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Protocol</TabsTrigger>
+                <TabsTrigger value="recommendations" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Personal Recommendations</TabsTrigger>
               </TabsList>
             </div>
 
@@ -348,6 +352,86 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
                       <Badge key={index} variant="outline" className="mr-1 mb-1">
                         {shift}
                       </Badge>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="recommendations" className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Immediate Actions */}
+                <Card className="p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Clock className="w-4 h-4 text-warning-orange" />
+                    <h3 className="font-semibold">Immediate Actions</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {recommendations.immediate?.map((item, index) => (
+                      <div key={index} className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-warning-orange rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                          <p className="font-medium text-sm">{item.title}</p>
+                          <p className="text-xs text-gray-600">{item.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Nutritional Strategies */}
+                <Card className="p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Apple className="w-4 h-4 text-success-green" />
+                    <h3 className="font-semibold">Nutritional Strategies</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {recommendations.nutritional?.map((item, index) => (
+                      <div key={index} className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-success-green rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                          <p className="font-medium text-sm">{item.title}</p>
+                          <p className="text-xs text-gray-600">{item.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Lifestyle Adjustments */}
+                <Card className="p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Heart className="w-4 h-4 text-trust-blue" />
+                    <h3 className="font-semibold">Lifestyle Adjustments</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {recommendations.lifestyle?.map((item, index) => (
+                      <div key={index} className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-trust-blue rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                          <p className="font-medium text-sm">{item.title}</p>
+                          <p className="text-xs text-gray-600">{item.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Long-term Healing Strategy */}
+                <Card className="p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Target className="w-4 h-4 text-medical-green" />
+                    <h3 className="font-semibold">Long-term Healing Strategy</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {recommendations.longTerm?.map((item, index) => (
+                      <div key={index} className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-medical-green rounded-full mt-2 flex-shrink-0"></div>
+                        <div>
+                          <p className="font-medium text-sm">{item.title}</p>
+                          <p className="text-xs text-gray-600">{item.description}</p>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </Card>
