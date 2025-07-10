@@ -26,26 +26,16 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
 
   const analysisCards = [
     {
-      id: "facialFeatureBreakdown",
-      title: "Facial Feature Breakdown",
+      id: "facialAnalysis",
+      title: "Facial Analysis",
       icon: <User className="w-5 h-5" />,
       color: "bg-trust-blue",
-      content: conversationalAnalysis.facialFeatureBreakdown
-    },
-    {
-      id: "visualAgeEstimator",
-      title: "Visual Age Assessment",
-      icon: <Clock className="w-5 h-5" />,
-      color: "bg-medical-green",
-      content: conversationalAnalysis.visualAgeEstimator,
+      content: {
+        facialFeatures: conversationalAnalysis.facialFeatureBreakdown,
+        visualAge: conversationalAnalysis.visualAgeEstimator,
+        deficiencies: conversationalAnalysis.deficiencyDetector
+      },
       badge: ageRange
-    },
-    {
-      id: "deficiencyDetector",
-      title: "Deficiency Detector",
-      icon: <Apple className="w-5 h-5" />,
-      color: "bg-warning-orange",
-      content: conversationalAnalysis.deficiencyDetector
     },
     {
       id: "foodIntoleranceIdentifier",
@@ -89,9 +79,9 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
         </Badge>
       </div>
 
-      <Tabs defaultValue="faceAnalyst" className="w-full">
+      <Tabs defaultValue="facialAnalysis" className="w-full">
         <div className="w-full overflow-x-auto scrollbar-hide">
-          <TabsList className="flex w-max md:grid md:w-full md:grid-cols-4 lg:grid-cols-7 mb-4">
+          <TabsList className="flex w-max md:grid md:w-full md:grid-cols-3 lg:grid-cols-5 mb-4">
             {analysisCards.map((card) => (
               <TabsTrigger
                 key={card.id}
@@ -127,19 +117,68 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[400px] pr-4">
-                  {card.content ? (
-                    <div className="prose prose-sm max-w-none">
-                      <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                        {card.content}
-                      </p>
+                  {card.id === 'facialAnalysis' ? (
+                    <div className="space-y-6">
+                      {/* Facial Feature Breakdown */}
+                      {card.content.facialFeatures && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                            <User className="w-5 h-5 text-trust-blue mr-2" />
+                            Facial Feature Breakdown
+                          </h4>
+                          <div className="prose prose-sm max-w-none">
+                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                              {card.content.facialFeatures}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Visual Age Assessment */}
+                      {card.content.visualAge && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                            <Clock className="w-5 h-5 text-medical-green mr-2" />
+                            Visual Age Assessment
+                          </h4>
+                          <div className="prose prose-sm max-w-none">
+                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                              {card.content.visualAge}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Deficiency Detection */}
+                      {card.content.deficiencies && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                            <Apple className="w-5 h-5 text-warning-orange mr-2" />
+                            Deficiency Detection
+                          </h4>
+                          <div className="prose prose-sm max-w-none">
+                            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                              {card.content.deficiencies}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center h-32 text-gray-500">
-                      <div className="text-center">
-                        <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        <p>Analysis not available for this section</p>
+                    card.content ? (
+                      <div className="prose prose-sm max-w-none">
+                        <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                          {card.content}
+                        </p>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex items-center justify-center h-32 text-gray-500">
+                        <div className="text-center">
+                          <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          <p>Analysis not available for this section</p>
+                        </div>
+                      </div>
+                    )
                   )}
                 </ScrollArea>
               </CardContent>
