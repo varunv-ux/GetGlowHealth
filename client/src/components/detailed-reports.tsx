@@ -133,85 +133,9 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
         </CardContent>
       </Card>
 
-      {/* Eye Health Card */}
-      <Card className="shadow-lg">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h5 className="text-lg font-semibold text-dark-grey">Eye Health</h5>
-            <div className="flex items-center">
-              <Info className="w-4 h-4 text-trust-blue mr-1" />
-              <span className="text-sm font-medium text-trust-blue">Analysis</span>
-            </div>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Under-eye Circles</span>
-              <span className={`text-sm font-medium ${getStatusColor(eyeAnalysis.underEyeCircles)}`}>
-                {formatStatus(eyeAnalysis.underEyeCircles)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Puffiness</span>
-              <span className={`text-sm font-medium ${getStatusColor(eyeAnalysis.puffiness)}`}>
-                {formatStatus(eyeAnalysis.puffiness)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Brightness</span>
-              <span className={`text-sm font-medium ${getStatusColor(eyeAnalysis.brightness)}`}>
-                {formatStatus(eyeAnalysis.brightness)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Symmetry</span>
-              <span className={`text-sm font-medium ${getStatusColor(eyeAnalysis.symmetry)}`}>
-                {formatStatus(eyeAnalysis.symmetry)}
-              </span>
-            </div>
-            {eyeAnalysis.fatigueSignals && eyeAnalysis.fatigueSignals.length > 0 && (
-              <div className="mt-3">
-                <div className="text-sm text-gray-600 mb-2">Fatigue Signals:</div>
-                {eyeAnalysis.fatigueSignals.map((signal, index) => (
-                  <div key={index} className="flex items-center">
-                    <Info className="w-3 h-3 text-warning-orange mr-2" />
-                    <span className="text-sm">{signal}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      
 
-      {/* Nutritional Insights Card */}
-      <Card className="shadow-lg">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h5 className="text-lg font-semibold text-dark-grey flex items-center">
-              <Apple className="w-5 h-5 text-success-green mr-2" />
-              Nutritional Insights
-            </h5>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="text-sm text-gray-600 mb-2">Possible Deficiencies:</div>
-            {nutritionalInsights.possibleDeficiencies?.map((deficiency, index) => (
-              <div key={index} className="flex items-center">
-                <AlertTriangle className="w-3 h-3 text-warning-orange mr-2" />
-                <span className="text-sm">{deficiency}</span>
-              </div>
-            ))}
-            <div className="text-sm text-gray-600 mb-2 mt-3">Healing Foods:</div>
-            {nutritionalInsights.healingFoods?.map((food, index) => (
-              <div key={index} className="flex items-center">
-                <CheckCircle className="w-3 h-3 text-success-green mr-2" />
-                <span className="text-sm">{food}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      
 
       {/* Emotional State Card */}
       <Card className="shadow-lg">
