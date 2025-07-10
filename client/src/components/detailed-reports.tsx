@@ -195,45 +195,7 @@ export default function DetailedReports({ analysis }: DetailedReportsProps) {
         </CardContent>
       </Card>
 
-      {/* Circulation Card */}
-      <Card className="shadow-lg">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h5 className="text-lg font-semibold text-dark-grey">Circulation</h5>
-            <div className="flex items-center">
-              <Info className="w-4 h-4 text-trust-blue mr-1" />
-              <span className="text-sm font-medium text-trust-blue">Analysis</span>
-            </div>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Facial Flush</span>
-              <span className={`text-sm font-medium ${getStatusColor(circulationAnalysis.facialFlush)}`}>
-                {formatStatus(circulationAnalysis.facialFlush)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Lip Color</span>
-              <span className={`text-sm font-medium ${getStatusColor(circulationAnalysis.lipColor)}`}>
-                {formatStatus(circulationAnalysis.lipColor)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Capillary Health</span>
-              <span className={`text-sm font-medium ${getStatusColor(circulationAnalysis.capillaryHealth)}`}>
-                {formatStatus(circulationAnalysis.capillaryHealth)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Overall Tone</span>
-              <span className={`text-sm font-medium ${getStatusColor(circulationAnalysis.overallTone)}`}>
-                {formatStatus(circulationAnalysis.overallTone)}
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      
     </div>
   );
 }
