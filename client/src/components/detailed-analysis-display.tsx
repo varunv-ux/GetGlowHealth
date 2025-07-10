@@ -66,11 +66,10 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="facial-zones" className="w-full">
+          <Tabs defaultValue="facial-analysis" className="w-full">
             <div className="w-full overflow-x-auto scrollbar-hide">
-              <TabsList className="flex w-max md:grid md:w-full md:grid-cols-4 lg:grid-cols-7 mb-4">
-                <TabsTrigger value="facial-zones" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Facial Zones</TabsTrigger>
-                <TabsTrigger value="deficiencies" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Deficiencies</TabsTrigger>
+              <TabsList className="flex w-max md:grid md:w-full md:grid-cols-3 lg:grid-cols-5 mb-4">
+                <TabsTrigger value="facial-analysis" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Facial Analysis</TabsTrigger>
                 <TabsTrigger value="intolerances" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Food Issues</TabsTrigger>
                 <TabsTrigger value="health-risks" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Health Risks</TabsTrigger>
                 <TabsTrigger value="emotional" className="text-xs md:text-sm whitespace-nowrap px-2 md:px-3 py-2 flex-shrink-0">Emotional</TabsTrigger>
@@ -79,62 +78,74 @@ export default function DetailedAnalysisDisplay({ analysis }: DetailedAnalysisDi
               </TabsList>
             </div>
 
-            <TabsContent value="facial-zones" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(facialZones).map(([zone, analysis]) => (
-                  <Card key={zone} className="p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <User className="w-4 h-4 text-trust-blue" />
-                      <h3 className="font-semibold capitalize">{zone}</h3>
-                    </div>
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        <span className="font-medium text-gray-600">Observation:</span>
-                        <p className="text-gray-800">{analysis.observation}</p>
+            <TabsContent value="facial-analysis" className="space-y-6">
+              {/* Facial Zones Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-dark-grey mb-4 flex items-center">
+                  <User className="w-5 h-5 text-trust-blue mr-2" />
+                  Facial Zone Analysis
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(facialZones).map(([zone, analysis]) => (
+                    <Card key={zone} className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-3 h-3 bg-trust-blue rounded-full"></div>
+                        <h4 className="font-semibold capitalize">{zone}</h4>
                       </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Interpretation:</span>
-                        <p className="text-gray-800">{analysis.interpretation}</p>
+                      <div className="space-y-2 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-600">Observation:</span>
+                          <p className="text-gray-800">{analysis.observation}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Interpretation:</span>
+                          <p className="text-gray-800">{analysis.interpretation}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Suggested Action:</span>
+                          <p className="text-trust-blue">{analysis.suggestedAction}</p>
+                        </div>
                       </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Suggested Action:</span>
-                        <p className="text-trust-blue">{analysis.suggestedAction}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </TabsContent>
 
-            <TabsContent value="deficiencies" className="space-y-4">
-              <div className="space-y-3">
-                {deficiencies.map((deficiency, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <Pill className="w-4 h-4 text-medical-green" />
-                        <h3 className="font-semibold">{deficiency.deficiency}</h3>
+              {/* Deficiencies Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-dark-grey mb-4 flex items-center">
+                  <Pill className="w-5 h-5 text-medical-green mr-2" />
+                  Nutrient Deficiencies
+                </h3>
+                <div className="space-y-3">
+                  {deficiencies.map((deficiency, index) => (
+                    <Card key={index} className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-medical-green rounded-full"></div>
+                          <h4 className="font-semibold">{deficiency.deficiency}</h4>
+                        </div>
+                        <Badge className={`${getSeverityColor(deficiency.severity)} text-white`}>
+                          {deficiency.severity}
+                        </Badge>
                       </div>
-                      <Badge className={`${getSeverityColor(deficiency.severity)} text-white`}>
-                        {deficiency.severity}
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-                      <div>
-                        <span className="font-medium text-gray-600">Visual Cue:</span>
-                        <p className="text-gray-800">{deficiency.visualCue}</p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-600">Visual Cue:</span>
+                          <p className="text-gray-800">{deficiency.visualCue}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Likely Symptom:</span>
+                          <p className="text-gray-800">{deficiency.likelySymptom}</p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-600">Recommendation:</span>
+                          <p className="text-trust-blue">{deficiency.recommendation}</p>
+                        </div>
                       </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Likely Symptom:</span>
-                        <p className="text-gray-800">{deficiency.likelySymptom}</p>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-600">Recommendation:</span>
-                        <p className="text-trust-blue">{deficiency.recommendation}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  ))}
+                </div>
               </div>
             </TabsContent>
 
