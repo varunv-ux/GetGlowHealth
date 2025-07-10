@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -30,7 +31,16 @@ import {
   UserCheck,
   Home as HomeIcon,
   ChevronDown,
-  ImageOff
+  ImageOff,
+  Brain,
+  Activity,
+  AlertTriangle,
+  Utensils,
+  Smile,
+  Zap,
+  Settings,
+  Code,
+  Database
 } from "lucide-react";
 import { Link } from "wouter";
 import { formatDistanceToNow } from "date-fns";
@@ -262,13 +272,13 @@ export default function HistoryPage() {
           <div className="space-y-6">
             {analyses.map((analysis) => (
               <Card key={analysis.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-6">
-                    {/* Analysis Image */}
-                    <div className="flex-shrink-0">
-                      <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                <CardContent className="p-0">
+                  <div className="flex">
+                    {/* Left sidebar with image and basic info */}
+                    <div className="w-72 bg-gray-50 p-6 border-r">
+                      <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                         {imageErrors[analysis.id] ? (
-                          <ImageOff className="w-8 h-8 text-gray-400" />
+                          <ImageOff className="w-12 h-12 text-gray-400" />
                         ) : (
                           <img 
                             src={analysis.imageUrl} 
@@ -278,93 +288,221 @@ export default function HistoryPage() {
                           />
                         )}
                       </div>
-                    </div>
-
-                    {/* Analysis Details */}
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-3">
+                      
+                      <div className="space-y-3">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                            {analysis.fileName}
-                          </h3>
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <h3 className="font-medium text-gray-900 mb-1">{analysis.fileName}</h3>
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
                             <Clock className="h-3 w-3" />
                             <span>{formatDistanceToNow(new Date(analysis.createdAt), { addSuffix: true })}</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">
-                            Overall Score: {analysis.overallScore}%
-                          </Badge>
-                          <Link href={`/analysis/${analysis.id}`}>
-                            <Button size="sm" variant="outline">
-                              <Eye className="h-3 w-3 mr-1" />
-                              View Details
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-
-                      {/* Health Scores */}
-                      <div className="grid grid-cols-4 gap-4 mb-4">
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            <Sparkles className="h-3 w-3 text-trust-blue" />
-                            <span className="text-xs text-gray-600">Skin</span>
-                          </div>
-                          <div className="text-sm font-medium text-trust-blue">
-                            {analysis.skinHealth}%
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            <Eye className="h-3 w-3 text-medical-green" />
-                            <span className="text-xs text-gray-600">Eyes</span>
-                          </div>
-                          <div className="text-sm font-medium text-medical-green">
-                            {analysis.eyeHealth}%
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            <Droplets className="h-3 w-3 text-error-red" />
-                            <span className="text-xs text-gray-600">Circulation</span>
-                          </div>
-                          <div className="text-sm font-medium text-error-red">
-                            {analysis.circulation}%
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 mb-1">
-                            <Heart className="h-3 w-3 text-purple-500" />
-                            <span className="text-xs text-gray-600">Symmetry</span>
-                          </div>
-                          <div className="text-sm font-medium text-purple-500">
-                            {analysis.symmetry}%
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* File Information */}
-                      {analysis.analysisData?.imageProcessing && (
-                        <div className="flex items-center gap-4 text-xs text-gray-500 pt-2 border-t">
-                          <span>
-                            Size: {analysis.analysisData.imageProcessing.originalSize}
-                            {analysis.analysisData.imageProcessing.wasResized && 
-                              ` → ${analysis.analysisData.imageProcessing.processedSize}`}
-                          </span>
-                          <span>
-                            Dimensions: {analysis.originalDimensions}
-                            {analysis.processedDimensions && analysis.processedDimensions !== analysis.originalDimensions && 
-                              ` → ${analysis.processedDimensions}`}
-                          </span>
-                          {analysis.analysisData.imageProcessing.wasResized && (
-                            <Badge variant="secondary" className="text-xs">
-                              Optimized
+                        
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-600">Health condition:</span>
+                            <Badge variant="outline" className="text-xs">
+                              {analysis.overallScore >= 80 ? 'Excellent' : 
+                               analysis.overallScore >= 60 ? 'Good' : 
+                               analysis.overallScore >= 40 ? 'Fair' : 'Poor'}
                             </Badge>
-                          )}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {formatDistanceToNow(new Date(analysis.createdAt), { addSuffix: true })}
+                          </div>
                         </div>
-                      )}
+                        
+                        <Link href={`/analysis/${analysis.id}`}>
+                          <Button size="sm" variant="outline" className="w-full">
+                            <Eye className="h-3 w-3 mr-1" />
+                            View Full Analysis
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Right content with tabs */}
+                    <div className="flex-1">
+                      <Tabs defaultValue="summary" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="summary">Summary</TabsTrigger>
+                          <TabsTrigger value="admin">Admin</TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="summary" className="p-6">
+                          {/* Overall Health Score */}
+                          <div className="mb-6">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-lg font-semibold">Overall Health Score</h4>
+                              <Badge variant="secondary" className="text-lg px-3 py-1">
+                                {analysis.overallScore}%
+                              </Badge>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="bg-medical-green h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${analysis.overallScore}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Health Scores Grid */}
+                          <div className="grid grid-cols-2 gap-4 mb-6">
+                            <div className="bg-blue-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Sparkles className="h-4 w-4 text-trust-blue" />
+                                <span className="text-sm font-medium">Skin Health</span>
+                              </div>
+                              <div className="text-2xl font-bold text-trust-blue">{analysis.skinHealth}%</div>
+                            </div>
+                            <div className="bg-green-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Eye className="h-4 w-4 text-medical-green" />
+                                <span className="text-sm font-medium">Eye Health</span>
+                              </div>
+                              <div className="text-2xl font-bold text-medical-green">{analysis.eyeHealth}%</div>
+                            </div>
+                            <div className="bg-red-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Droplets className="h-4 w-4 text-error-red" />
+                                <span className="text-sm font-medium">Circulation</span>
+                              </div>
+                              <div className="text-2xl font-bold text-error-red">{analysis.circulation}%</div>
+                            </div>
+                            <div className="bg-purple-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Heart className="h-4 w-4 text-purple-500" />
+                                <span className="text-sm font-medium">Symmetry</span>
+                              </div>
+                              <div className="text-2xl font-bold text-purple-500">{analysis.symmetry}%</div>
+                            </div>
+                          </div>
+
+                          {/* Analysis Sections */}
+                          <div className="space-y-4">
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Brain className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">Facial Feature Breakdown</span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {analysis.analysisData?.facialFeatures || 'Comprehensive analysis of facial structure and symmetry patterns.'}
+                              </p>
+                            </div>
+                            
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Activity className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">Visual Age Assessment</span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {analysis.analysisData?.visualAge || 'Analysis of skin texture, elasticity, and age-related indicators.'}
+                              </p>
+                            </div>
+                            
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <AlertTriangle className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">Deficiency Detection</span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {analysis.analysisData?.deficiencies || 'Identification of potential nutritional deficiencies based on visible indicators.'}
+                              </p>
+                            </div>
+                            
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Utensils className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">Food Intolerance</span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {analysis.analysisData?.foodIntolerance || 'Assessment of potential food sensitivities based on facial indicators.'}
+                              </p>
+                            </div>
+                            
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <AlertTriangle className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">Health Risk</span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {analysis.analysisData?.healthRisk || 'Evaluation of potential health risks based on facial analysis.'}
+                              </p>
+                            </div>
+                            
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Smile className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">Emotional State</span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {analysis.analysisData?.emotionalState || 'Analysis of emotional indicators and stress patterns.'}
+                              </p>
+                            </div>
+                            
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Zap className="h-4 w-4 text-gray-600" />
+                                <span className="font-medium">Self Healing</span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {analysis.analysisData?.selfHealing || 'Recommendations for natural healing and recovery processes.'}
+                              </p>
+                            </div>
+                          </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="admin" className="p-6">
+                          <div className="space-y-6">
+                            <div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <Code className="h-4 w-4 text-gray-600" />
+                                <h4 className="font-medium">AI Health Assessment</h4>
+                              </div>
+                              <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                                <pre className="whitespace-pre-wrap text-gray-700">
+                                  {analysis.analysisData?.aiAssessment || 'No AI assessment data available.'}
+                                </pre>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <Database className="h-4 w-4 text-gray-600" />
+                                <h4 className="font-medium">Raw AI Analysis</h4>
+                              </div>
+                              <div className="bg-gray-50 p-4 rounded-lg text-sm max-h-60 overflow-y-auto">
+                                <pre className="whitespace-pre-wrap text-gray-700">
+                                  {JSON.stringify(analysis.analysisData, null, 2)}
+                                </pre>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <Settings className="h-4 w-4 text-gray-600" />
+                                <h4 className="font-medium">Analysis Details</h4>
+                              </div>
+                              <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-2">
+                                <div><strong>Analysis ID:</strong> {analysis.id}</div>
+                                <div><strong>User ID:</strong> {analysis.userId}</div>
+                                <div><strong>Created:</strong> {new Date(analysis.createdAt).toLocaleString()}</div>
+                                <div><strong>Image URL:</strong> {analysis.imageUrl}</div>
+                                <div><strong>File Name:</strong> {analysis.fileName}</div>
+                                <div><strong>File Size:</strong> {analysis.fileSize} bytes</div>
+                                <div><strong>Processed Size:</strong> {analysis.processedSize} bytes</div>
+                                {analysis.analysisData?.imageProcessing && (
+                                  <>
+                                    <div><strong>Original Dimensions:</strong> {analysis.analysisData.imageProcessing.originalDimensions}</div>
+                                    <div><strong>Processed Dimensions:</strong> {analysis.analysisData.imageProcessing.processedDimensions}</div>
+                                    <div><strong>Was Resized:</strong> {analysis.analysisData.imageProcessing.wasResized ? 'Yes' : 'No'}</div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </TabsContent>
+                      </Tabs>
                     </div>
                   </div>
                 </CardContent>
