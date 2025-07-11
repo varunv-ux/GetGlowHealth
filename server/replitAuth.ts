@@ -8,7 +8,7 @@ import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 
-if (!process.env.REPLIT_DOMAINS) {
+if (!process.env.REPLIT_DOMAINS && process.env.NODE_ENV !== 'development') {
   throw new Error("Environment variable REPLIT_DOMAINS not provided");
 }
 
@@ -86,16 +86,33 @@ export async function setupAuth(app: Express) {
 
   for (const domain of process.env
     .REPLIT_DOMAINS!.split(",")) {
+    // Use HTTP for localhost, HTTPS for Replit domains
+    const protocol = domain.includes('127.0.0.1') || domain.includes('localhost') ? 'http' : 'https';
     const strategy = new Strategy(
       {
         name: `replitauth:${domain}`,
         config,
         scope: "openid email profile offline_access",
-        callbackURL: `https://${domain}/api/callback`,
+        callbackURL: `${protocol}://${domain}/api/callback`,
       },
       verify,
     );
     passport.use(strategy);
+    
+    // Also register strategy for hostname without port (for local development)
+    if (domain.includes(':')) {
+      const hostname = domain.split(':')[0];
+      const hostnameStrategy = new Strategy(
+        {
+          name: `replitauth:${hostname}`,
+          config,
+          scope: "openid email profile offline_access",
+          callbackURL: `${protocol}://${domain}/api/callback`,
+        },
+        verify,
+      );
+      passport.use(hostnameStrategy);
+    }
   }
 
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
@@ -117,10 +134,12 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/logout", (req, res) => {
     req.logout(() => {
+      const protocol = req.hostname.includes('127.0.0.1') || req.hostname.includes('localhost') ? 'http' : 'https';
+      const host = req.get('host') || req.hostname;
       res.redirect(
         client.buildEndSessionUrl(config, {
           client_id: process.env.REPL_ID!,
-          post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
+          post_logout_redirect_uri: `${protocol}://${host}`,
         }).href
       );
     });

@@ -29,7 +29,7 @@ import DetailedAnalysisDisplay from "@/components/detailed-analysis-display";
 import RecommendationsSection from "@/components/recommendations-section";
 import ChatResponseDisplay from "@/components/chat-response-display";
 import RawAnalysisDisplay from "@/components/raw-analysis-display";
-import AnalysisChat from "@/components/analysis-chat";
+
 
 export default function AnalysisPage() {
   const { id } = useParams<{ id: string }>();
@@ -222,8 +222,7 @@ export default function AnalysisPage() {
           {/* Raw AI Analysis */}
           <RawAnalysisDisplay analysis={analysis} />
           
-          {/* AI Chat Interface */}
-          <AnalysisChat analysis={analysis} />
+
           
           {/* Analysis Metadata */}
           <Card>

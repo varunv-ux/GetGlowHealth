@@ -9,7 +9,7 @@ import DetailedAnalysisDisplay from "./detailed-analysis-display";
 import RecommendationsSection from "./recommendations-section";
 import ChatResponseDisplay from "./chat-response-display";
 import RawAnalysisDisplay from "./raw-analysis-display";
-import AnalysisChat from "./analysis-chat";
+
 import type { Analysis } from "@shared/schema";
 
 interface ResultsSectionProps {
@@ -56,8 +56,7 @@ export default function ResultsSection({ analysis, onNewAnalysis }: ResultsSecti
       {/* Raw AI Analysis */}
       <RawAnalysisDisplay analysis={analysis} />
       
-      {/* AI Chat Interface */}
-      <AnalysisChat analysis={analysis} />
+
       
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">

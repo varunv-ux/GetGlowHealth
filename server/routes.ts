@@ -1,7 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
+import { setupAuth as setupReplitAuth, isAuthenticated as isReplitAuthenticated } from "./replitAuth";
+
+const setupAuth = process.env.NODE_ENV === 'development' ? setupLocalAuth : setupReplitAuth;
+const isAuthenticated = process.env.NODE_ENV === 'development' ? isLocalAuthenticated : isReplitAuthenticated;
 import multer from "multer";
 import path from "path";
 import fs from "fs";

@@ -7,6 +7,9 @@ export default {
     extend: {
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
+        'ibm-plex-sans': ['IBM Plex Sans', 'sans-serif'],
+        'ibm-plex-serif': ['IBM Plex Serif', 'serif'],
+        'es-rebond': ['ES Rebond Grotesque TRIAL', 'Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",

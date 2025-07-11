@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -10,16 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Shield, UserCheck, History, Home as HomeIcon, BarChart3, LogOut, User, Menu, ChevronDown } from "lucide-react";
+import { LogOut, User, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
-import UploadSection from "@/components/upload-section";
+import FigmaUploadSection from "@/components/figma-upload-section";
 import ProcessingSection from "@/components/processing-section";
 import ResultsSection from "@/components/results-section";
 import type { Analysis } from "@shared/schema";
 
+interface User {
+  firstName?: string;
+  email?: string;
+  profileImageUrl?: string;
+}
+
 export default function Home() {
   const { user } = useAuth();
+  const typedUser = user as User | undefined;
   const [currentStep, setCurrentStep] = useState<'upload' | 'processing' | 'results'>('upload');
   const [analysisId, setAnalysisId] = useState<number | null>(null);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
@@ -44,81 +50,98 @@ export default function Home() {
     setAnalysis(null);
   };
 
+  if (currentStep === 'processing' && analysisId) {
+    return (
+      <ProcessingSection 
+        analysisId={analysisId} 
+        onAnalysisComplete={handleAnalysisComplete}
+      />
+    );
+  }
+
+  if (currentStep === 'results' && analysis) {
+    return (
+      <ResultsSection 
+        analysis={analysis} 
+        onNewAnalysis={handleNewAnalysis}
+      />
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-clean-white">
+    <div 
+      className="bg-white flex flex-col min-h-screen rounded-[32px] overflow-hidden"
+      style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+    >
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14">
-            <div className="flex items-center">
-              <UserCheck className="text-medical-green w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3" />
-              <h1 className="text-lg sm:text-xl font-bold text-dark-grey">FaceHealth Pro</h1>
+      <div className="h-[66px] w-full relative">
+        <div className="flex flex-row items-center h-full">
+          <div className="flex flex-row items-center justify-between px-6 py-3 w-full h-[66px]">
+            {/* Logo */}
+            <div className="flex flex-row gap-2 items-center justify-center">
+              <div className="text-[24px] font-bold leading-[28px] text-[#0c0a09] font-es-rebond">
+                GetGlow
+              </div>
             </div>
             
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-6">
-              <Link href="/" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors px-3 py-2 rounded-md text-sm font-medium">
-                <HomeIcon className="w-4 h-4" />
-                <span>Analysis</span>
-              </Link>
-              <Link href="/history" className="flex items-center gap-2 text-dark-grey hover:text-medical-green transition-colors px-3 py-2 rounded-md text-sm font-medium">
-                <History className="w-4 h-4" />
-                <span>History</span>
-              </Link>
-            </nav>
-            
-            {/* Mobile Navigation + Profile */}
-            <div className="flex items-center space-x-2">
-              {user && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center space-x-2 p-2">
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage src={user.profileImageUrl} alt={user.firstName || 'User'} />
-                        <AvatarFallback>
-                          {user.firstName?.charAt(0) || user.email?.charAt(0) || <User className="w-4 h-4" />}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm text-gray-700 hidden sm:inline max-w-24 truncate">
-                        {user.firstName || user.email}
-                      </span>
-                      <ChevronDown className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuLabel>
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {user.firstName || 'User'}
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    
-                    {/* Mobile Navigation Items */}
-                    <div className="md:hidden">
-                      <Link href="/">
-                        <DropdownMenuItem>
-                          <HomeIcon className="w-4 h-4 mr-2" />
-                          Analysis
-                        </DropdownMenuItem>
-                      </Link>
-                      <Link href="/history">
-                        <DropdownMenuItem>
-                          <History className="w-4 h-4 mr-2" />
-                          History
-                        </DropdownMenuItem>
-                      </Link>
-                      <DropdownMenuSeparator />
+            {/* Navigation - Centered */}
+            <div className="absolute left-1/2 top-3 -translate-x-1/2 flex flex-row gap-3 items-center justify-start">
+              <div className="flex flex-col gap-2.5 items-start justify-start p-[3px] rounded-2xl border border-[#f5f5f4]">
+                <div className="flex flex-row items-center justify-start rounded-xl">
+                  <div className="bg-[#f5f5f4] flex flex-row gap-2.5 items-center justify-center px-3 py-2 rounded-xl">
+                                         <div className="text-[14px] leading-[20px] text-[#0c0a09] font-ibm-plex-sans">
+                       Analyze
+                     </div>
+                  </div>
+                  <Link href="/history">
+                    <div className="flex flex-row gap-2.5 items-center justify-center px-3 py-2 rounded-xl cursor-pointer hover:bg-[#f5f5f4]">
+                                             <div className="text-[14px] leading-[20px] text-[#a6a09b] font-ibm-plex-sans">
+                         Reports
+                       </div>
                     </div>
-                    
-                    <DropdownMenuItem>
-                      <Shield className="w-4 h-4 mr-2" />
-                      HIPAA Compliant
-                    </DropdownMenuItem>
+                  </Link>
+                </div>
+              </div>
+            </div>
+            
+            {/* Right side - Upgrade + Profile */}
+            <div className="flex flex-row gap-4 h-10 items-center justify-end">
+              {/* Upgrade Button */}
+              <div className="bg-[#f4f4f0] flex flex-row gap-0.5 h-10 items-center justify-start pl-2 pr-3 py-1 rounded-2xl opacity-80">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 2L10 6H14L11 9L12 14L8 11L4 14L5 9L2 6H6L8 2Z" fill="#57534d"/>
+                  </svg>
+                </div>
+                                 <div className="text-[12px] leading-[20px] text-[#57534d] font-ibm-plex-sans">
+                   Upgrade
+                 </div>
+              </div>
+              
+                             {/* Profile */}
+               {typedUser && (
+                 <DropdownMenu>
+                   <DropdownMenuTrigger asChild>
+                     <div className="w-10 h-10 cursor-pointer">
+                       <Avatar className="w-full h-full">
+                         <AvatarImage src={typedUser.profileImageUrl} alt={typedUser.firstName || 'User'} />
+                         <AvatarFallback className="bg-[#f4f4f0] text-[#57534d]">
+                           {typedUser.firstName?.charAt(0) || typedUser.email?.charAt(0) || <User className="w-4 h-4" />}
+                         </AvatarFallback>
+                       </Avatar>
+                     </div>
+                   </DropdownMenuTrigger>
+                   <DropdownMenuContent align="end" className="w-48">
+                     <DropdownMenuLabel>
+                       <div className="flex flex-col space-y-1">
+                         <p className="text-sm font-medium leading-none">
+                           {typedUser.firstName || 'User'}
+                         </p>
+                         <p className="text-xs leading-none text-muted-foreground">
+                           {typedUser.email}
+                         </p>
+                       </div>
+                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={handleLogout}
@@ -133,94 +156,69 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-dark-grey mb-4">AI-Powered Facial Health Analysis</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Upload your photo and receive comprehensive health insights based on advanced facial feature analysis and medical research.
-          </p>
-        </div>
-
-        {/* Dynamic Content Based on Step */}
-        {currentStep === 'upload' && (
-          <UploadSection onUploadComplete={handleUploadComplete} />
-        )}
-
-        {currentStep === 'processing' && analysisId && (
-          <ProcessingSection 
-            analysisId={analysisId} 
-            onAnalysisComplete={handleAnalysisComplete}
-          />
-        )}
-
-        {currentStep === 'results' && analysis && (
-          <ResultsSection 
-            analysis={analysis} 
-            onNewAnalysis={handleNewAnalysis}
-          />
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center mb-4">
-                <UserCheck className="text-medical-green w-6 h-6 mr-2" />
-                <span className="font-bold text-dark-grey">FaceHealth Pro</span>
+      <div className="flex-1 w-full">
+        <div className="flex flex-col items-center justify-center h-full">
+                     <div className="flex flex-col gap-10 items-center justify-center px-4 sm:px-8 md:px-16 lg:px-[411px] py-8 sm:py-16 md:py-24 lg:py-[180px] w-full h-full">
+                         <div className="flex flex-col gap-8 items-center justify-start p-[20px] w-full max-w-[393px]">
+              {/* Content Container */}
+              <div className="w-full">
+                <div className="flex flex-col items-center">
+                  <div className="flex flex-col gap-4 items-center justify-start px-6 py-0 w-full">
+                                         {/* Face Video */}
+                     <div className="w-[200px] h-[200px] relative overflow-hidden rounded-full">
+                       <video
+                         autoPlay
+                         loop
+                         muted
+                         playsInline
+                         className="w-full h-full object-cover"
+                       >
+                         <source src="/Facevideo.mp4" type="video/mp4" />
+                         <img
+                           alt="AI Face Analysis"
+                           className="w-full h-full object-cover"
+                           src="/face-analysis-video.png"
+                         />
+                       </video>
+                     </div>
+                    
+                                         {/* Title */}
+                     <div className="text-[28px] leading-[32px] text-center text-black font-semibold whitespace-nowrap font-es-rebond">
+                       AI powered facial
+                     </div>
+                     <div className="text-[28px] leading-[32px] text-center text-black font-semibold whitespace-nowrap -mt-1 font-es-rebond">
+                       health analysis
+                     </div>
+                     
+                     {/* Description */}
+                     <div className="text-[16px] leading-[24px] text-center text-[#79716b] max-w-[350px] font-ibm-plex-sans">
+                       Get comprehensive health insights, recommendations to improve your health
+                     </div>
+                  </div>
+                </div>
               </div>
-              <p className="text-sm text-gray-600">Advanced AI-powered facial health analysis for better wellness insights.</p>
-            </div>
-            
-            <div>
-              <h6 className="font-semibold text-dark-grey mb-3">Features</h6>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-medical-green transition-colors">AI Analysis</a></li>
-                <li><a href="#" className="hover:text-medical-green transition-colors">Health Reports</a></li>
-                <li><a href="#" className="hover:text-medical-green transition-colors">Recommendations</a></li>
-                <li><a href="#" className="hover:text-medical-green transition-colors">Progress Tracking</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h6 className="font-semibold text-dark-grey mb-3">Support</h6>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-medical-green transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-medical-green transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-medical-green transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-medical-green transition-colors">Terms of Service</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h6 className="font-semibold text-dark-grey mb-3">Compliance</h6>
-              <div className="space-y-2 text-sm text-gray-600">
-                <div className="flex items-center">
-                  <Shield className="text-trust-blue w-4 h-4 mr-2" />
-                  <span>HIPAA Compliant</span>
-                </div>
-                <div className="flex items-center">
-                  <Shield className="text-trust-blue w-4 h-4 mr-2" />
-                  <span>FDA Guidelines</span>
-                </div>
-                <div className="flex items-center">
-                  <Shield className="text-trust-blue w-4 h-4 mr-2" />
-                  <span>SOC 2 Certified</span>
-                </div>
+              
+              {/* Button Container */}
+              <div className="flex flex-col gap-6 items-center justify-start w-full">
+                                 {/* Upload Button */}
+                 <div className="flex flex-row gap-4 items-start justify-start w-full">
+                   <FigmaUploadSection onUploadComplete={handleUploadComplete} />
+                 </div>
+                
+                                 {/* Photo Guidelines Button */}
+                 <div className="bg-white flex flex-row gap-2 items-center justify-center px-3 py-2 rounded-2xl border border-[#f5f5f4]">
+                   <div className="text-[12px] leading-[16px] text-[#a6a09b] font-ibm-plex-sans">
+                     Photo guidelines
+                   </div>
+                 </div>
               </div>
             </div>
           </div>
-          
-          <div className="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-600">
-            <p>&copy; 2024 FaceHealth Pro. All rights reserved. This tool provides general health insights and should not replace professional medical advice.</p>
-          </div>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
