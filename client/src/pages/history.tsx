@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import type { Analysis } from "@shared/schema";
@@ -51,6 +51,10 @@ export default function HistoryPage() {
     selectedFromUrl ? parseInt(selectedFromUrl) : null
   );
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [analysisToDelete, setAnalysisToDelete] = useState<number | null>(null);
+  
+  const queryClient = useQueryClient();
   
   const { data: analyses, isLoading, error } = useQuery({
     queryKey: ['/api/history'],
@@ -62,6 +66,52 @@ export default function HistoryPage() {
       return res.json();
     }
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await fetch(`/api/analysis/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (!res.ok) {
+        throw new Error('Failed to delete analysis');
+      }
+      return res.json();
+    },
+    onSuccess: (_, deletedId) => {
+      // Invalidate and refetch history
+      queryClient.invalidateQueries({ queryKey: ['/api/history'] });
+      
+      // If the deleted analysis was selected, select the first available one
+      if (selectedAnalysisId === deletedId) {
+        const remainingAnalyses = analyses?.filter((a: any) => a.id !== deletedId);
+        if (remainingAnalyses && remainingAnalyses.length > 0) {
+          setSelectedAnalysisId(remainingAnalyses[0].id);
+        } else {
+          setSelectedAnalysisId(null);
+        }
+      }
+      
+      setShowDeleteModal(false);
+      setAnalysisToDelete(null);
+    },
+    onError: (error) => {
+      console.error('Delete error:', error);
+      alert('Failed to delete analysis. Please try again.');
+    }
+  });
+
+  const handleDeleteClick = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent selecting the analysis
+    setAnalysisToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (analysisToDelete) {
+      deleteMutation.mutate(analysisToDelete);
+    }
+  };
 
   const { data: selectedAnalysis } = useQuery({
     queryKey: ['/api/analysis', selectedAnalysisId],
@@ -233,17 +283,19 @@ export default function HistoryPage() {
                                     </div>
                                   </div>
                                   
-                                  {/* More Button */}
-                                  <div className="flex flex-row gap-3 items-start justify-start opacity-80">
-                                    <div className="flex flex-row gap-2.5 items-center justify-start overflow-clip p-[10px] rounded-xl">
-                                      <div className="size-5">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                          <circle cx="10" cy="4" r="1.5" fill="currentColor"/>
-                                          <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
-                                          <circle cx="10" cy="16" r="1.5" fill="currentColor"/>
+                                  {/* Delete Button */}
+                                  <div className="flex flex-row gap-3 items-start justify-start">
+                                    <button
+                                      onClick={(e) => handleDeleteClick(analysis.id, e)}
+                                      className="flex flex-row gap-2.5 items-center justify-start overflow-clip p-[10px] rounded-xl hover:bg-red-50 transition-colors group"
+                                      title="Delete analysis"
+                                    >
+                                      <div className="size-5 text-[#a6a09b] group-hover:text-red-500 transition-colors">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M3 5h14M8 5V3h4v2M8 9v6M12 9v6M16 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                       </div>
-                                    </div>
+                                    </button>
                                   </div>
                                 </div>
                               </div>
@@ -316,6 +368,37 @@ export default function HistoryPage() {
           </div>
           </div>
         </div>
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
+            <div className="bg-white rounded-3xl p-6 max-w-md w-full mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+              <div className="flex flex-col gap-4">
+                <div className="text-[24px] font-bold leading-[28px] text-[#0c0a09] font-es-rebond">
+                  Delete Analysis?
+                </div>
+                <div className="text-[14px] leading-[20px] text-[#57534d] font-ibm-plex-sans">
+                  Are you sure you want to delete Analysis #{analysisToDelete}? This action cannot be undone.
+                </div>
+                <div className="flex flex-row gap-3 items-center justify-end mt-2">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="px-4 py-2 rounded-xl text-[14px] font-medium text-[#57534d] bg-[#f4f4f0] hover:bg-[#e7e5e4] transition-colors font-ibm-plex-sans"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    disabled={deleteMutation.isPending}
+                    className="px-4 py-2 rounded-xl text-[14px] font-medium text-white bg-red-500 hover:bg-red-600 disabled:bg-red-300 transition-colors font-ibm-plex-sans"
+                  >
+                    {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

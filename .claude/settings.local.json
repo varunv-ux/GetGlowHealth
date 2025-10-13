@@ -5,7 +5,8 @@
       "Bash(curl:*)",
       "Bash(lsof:*)",
       "Bash(awk:*)",
-      "Bash(node -e \"const schema = require(''./shared/schema''); console.log(''Schema loaded successfully'');\")"
+      "Bash(node -e \"const schema = require(''./shared/schema''); console.log(''Schema loaded successfully'');\")",
+      "Read(//Users/varunvarshney/Library/CloudStorage/Dropbox/**)"
     ],
     "deny": [],
     "ask": []

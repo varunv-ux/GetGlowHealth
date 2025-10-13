@@ -22,6 +22,7 @@ export interface IStorage {
   getUserAnalyses(userId: string | null): Promise<Analysis[]>;
   getAllAnalyses(): Promise<Analysis[]>;
   getRecentAnalyses(limit?: number): Promise<Analysis[]>;
+  deleteAnalysis(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -82,6 +83,10 @@ export class DatabaseStorage implements IStorage {
 
   async getRecentAnalyses(limit: number = 10): Promise<Analysis[]> {
     return await db.select().from(analyses).orderBy(desc(analyses.createdAt)).limit(limit);
+  }
+
+  async deleteAnalysis(id: number): Promise<void> {
+    await db.delete(analyses).where(eq(analyses.id, id));
   }
 }
 

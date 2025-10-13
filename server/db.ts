@@ -1,3 +1,10 @@
+import { config } from 'dotenv';
+
+// Load .env only in development (local). Vercel provides env vars directly.
+if (process.env.NODE_ENV !== 'production') {
+  config();
+}
+
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";

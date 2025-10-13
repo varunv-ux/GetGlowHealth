@@ -405,6 +405,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .then(async (analysisResults) => {
           // Update the analysis with AI results
           const updatedAnalysis = await storage.updateAnalysis(analysisId, {
+            status: 'completed',  // ✅ Set status in database for polling
             overallScore: analysisResults.overallScore,
             skinHealth: analysisResults.skinHealth,
             eyeHealth: analysisResults.eyeHealth,
@@ -438,10 +439,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .catch(async (error) => {
           console.error(`❌ Analysis failed for ID: ${analysisId}`, error);
 
-          // Get current analysis state
-          const failedAnalysis = await storage.getAnalysis(analysisId);
+          // Update database with failed status for polling
+          const failedAnalysis = await storage.updateAnalysis(analysisId, {
+            status: 'failed',
+            analysisData: {
+              errorMessage: error.message || 'Unknown error during analysis'
+            }
+          });
 
-          // Notify clients of failure via SSE (with virtual status)
+          // Notify clients of failure via SSE (backward compatible)
           const failedWithStatus = {
             ...failedAnalysis,
             status: 'failed',
@@ -488,13 +494,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/history", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+      // No limit - return all analyses for this user
       const analyses = await storage.getUserAnalyses(userId);
       
-      res.json(analyses.slice(0, limit));
+      res.json(analyses);
     } catch (error) {
       console.error("Get history error:", error);
       res.status(500).json({ message: "Failed to retrieve analysis history" });
+    }
+  });
+
+  // Delete an analysis - protected route
+  app.delete("/api/analysis/:id", isAuthenticated, async (req: any, res) => {
+    try {
+      const analysisId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      
+      // Verify the analysis belongs to the user
+      const analysis = await storage.getAnalysis(analysisId);
+      if (!analysis) {
+        return res.status(404).json({ message: "Analysis not found" });
+      }
+      
+      if (analysis.userId !== userId && analysis.userId !== null) {
+        return res.status(403).json({ message: "Not authorized to delete this analysis" });
+      }
+      
+      // Delete the analysis
+      await storage.deleteAnalysis(analysisId);
+      console.log(`✅ Deleted analysis #${analysisId} by user ${userId}`);
+      
+      res.json({ message: "Analysis deleted successfully" });
+    } catch (error) {
+      console.error("Delete analysis error:", error);
+      res.status(500).json({ message: "Failed to delete analysis" });
     }
   });
 
