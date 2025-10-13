@@ -38,16 +38,28 @@ async function initializeApp() {
 
 export default async function handler(req: Request, res: Response) {
   try {
-    console.log(`${req.method} ${req.url}`);
+    console.log(`[HANDLER] ${req.method} ${req.url}`);
+    console.log('[HANDLER] Environment check:', {
+      hasDatabase: !!process.env.DATABASE_URL,
+      hasOpenAI: !!process.env.OPENAI_API_KEY,
+      hasR2Account: !!process.env.R2_ACCOUNT_ID,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
     const expressApp = await initializeApp();
+    console.log('[HANDLER] App initialized, processing request...');
     return expressApp(req, res);
   } catch (error: any) {
-    console.error('Handler error:', error);
-    console.error('Stack:', error.stack);
-    return res.status(500).json({ 
-      error: 'Internal Server Error',
-      message: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
+    console.error('[HANDLER ERROR]', error);
+    console.error('[HANDLER ERROR STACK]', error.stack);
+    
+    // Make sure response hasn't been sent already
+    if (!res.headersSent) {
+      return res.status(500).json({ 
+        error: 'Internal Server Error',
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
+    }
   }
 }
