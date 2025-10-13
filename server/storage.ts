@@ -18,6 +18,7 @@ export interface IStorage {
   
   // Analysis operations
   createAnalysis(analysis: InsertAnalysis): Promise<Analysis>;
+  updateAnalysis(id: number, data: Partial<InsertAnalysis>): Promise<Analysis>;
   getAnalysis(id: number): Promise<Analysis | undefined>;
   getUserAnalyses(userId: string | null): Promise<Analysis[]>;
   getAllAnalyses(): Promise<Analysis[]>;
@@ -53,6 +54,15 @@ export class DatabaseStorage implements IStorage {
     const [analysis] = await db
       .insert(analyses)
       .values(insertAnalysis)
+      .returning();
+    return analysis;
+  }
+
+  async updateAnalysis(id: number, data: Partial<InsertAnalysis>): Promise<Analysis> {
+    const [analysis] = await db
+      .update(analyses)
+      .set(data)
+      .where(eq(analyses.id, id))
       .returning();
     return analysis;
   }

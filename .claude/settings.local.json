@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(awk:*)",
+      "Bash(node -e \"const schema = require(''./shared/schema''); console.log(''Schema loaded successfully'');\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

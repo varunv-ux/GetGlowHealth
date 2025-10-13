@@ -33,8 +33,10 @@ export async function setupAuth(app: Express) {
   const localUser = await storage.upsertUser({
     id: "local-dev-user",
     email: "dev@localhost.com",
+    name: "Local Developer",
     firstName: "Local",
     lastName: "Developer",
+    image: null,
     profileImageUrl: null,
   });
 

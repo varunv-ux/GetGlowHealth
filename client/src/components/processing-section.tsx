@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { useQuery } from "@tanstack/react-query";
-import { Check, RotateCcw, ClipboardList } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import type { Analysis } from "@shared/schema";
+import { useSSE } from "@/hooks/useSSE";
 
 interface ProcessingSectionProps {
   analysisId: number;
@@ -11,128 +10,68 @@ interface ProcessingSectionProps {
 }
 
 export default function ProcessingSection({ analysisId, onAnalysisComplete }: ProcessingSectionProps) {
-  const [progress, setProgress] = useState(0);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [loadingText, setLoadingText] = useState("Analyzing your photo...");
+  const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
 
-  const { data: analysis, isLoading, error } = useQuery({
-    queryKey: [`/api/analysis/${analysisId}`],
-    refetchInterval: 1000,
+  // Use SSE instead of polling
+  const { data: analysis, error } = useSSE<Analysis>({
+    url: `/api/analysis/${analysisId}/stream`,
     enabled: !!analysisId,
+    onMessage: (data) => {
+      console.log('Received analysis update:', data.status);
+    }
   });
 
   useEffect(() => {
-    if (analysis) {
-      // Complete the progress animation
-      setProgress(100);
-      setCurrentStep(3);
-      
-      // Delay before showing results
-      setTimeout(() => {
-        onAnalysisComplete(analysis);
-      }, 2000);
+    // Check if analysis is complete
+    if (analysis && analysis.status === 'completed') {
+      // Navigate to the specific report once analysis is complete
+      queryClient.invalidateQueries({ queryKey: ['/api/history'] });
+      setLocation(`/history?selected=${analysisId}`);
     }
-  }, [analysis, onAnalysisComplete]);
+  }, [analysis, analysisId, setLocation, queryClient]);
 
   useEffect(() => {
-    // Simulate progress animation
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 90) return prev;
-        return prev + Math.random() * 10;
-      });
-    }, 500);
-
-    // Update steps
-    const stepInterval = setInterval(() => {
-      setCurrentStep((prev) => {
-        if (prev >= 2) return prev;
-        return prev + 1;
-      });
-    }, 2000);
-
+    // Progressive text - each step happens once in sequence
+    setLoadingText("Analyzing your photo...");
+    
+    const timer1 = setTimeout(() => setLoadingText("Running health analysis..."), 3000);
+    const timer2 = setTimeout(() => setLoadingText("Detecting patterns..."), 6000);
+    const timer3 = setTimeout(() => setLoadingText("Generating insights..."), 9000);
+    const timer4 = setTimeout(() => setLoadingText("Adding finishing touches..."), 12000);
+    
     return () => {
-      clearInterval(interval);
-      clearInterval(stepInterval);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      clearTimeout(timer4);
     };
   }, []);
 
-  const steps = [
-    {
-      title: "Image Processing",
-      description: "Enhancing image quality and detecting facial features",
-      icon: Check,
-    },
-    {
-      title: "AI Analysis",
-      description: "Analyzing facial features for health indicators",
-      icon: RotateCcw,
-    },
-    {
-      title: "Report Generation",
-      description: "Compiling comprehensive health insights",
-      icon: ClipboardList,
-    },
-  ];
-
-  if (error) {
+  // Show error if analysis failed or SSE connection failed
+  if (error || (analysis && analysis.status === 'failed')) {
     return (
-      <Card className="shadow-lg mb-12">
-        <CardContent className="p-8">
-          <div className="text-center text-red-600">
-            <p className="text-lg font-semibold mb-2">Analysis Error</p>
-            <p className="text-sm">There was an error processing your image. Please try again.</p>
+      <div className="bg-[#f4f4f0] h-[200px] w-full rounded-[32px] border-2 border-dashed border-[#d6d3d1] opacity-80 relative">
+        <div className="flex flex-col items-center justify-center h-full px-6 py-2.5">
+          <div className="text-[16px] leading-[24px] text-red-600 font-ibm-plex-sans">
+            Analysis failed. {analysis?.errorMessage || 'Please try again.'}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
-
+  
   return (
-    <Card className="shadow-lg mb-12">
-      <CardContent className="p-8">
-        <h3 className="text-xl font-semibold text-dark-grey mb-6">Analyzing Your Photo</h3>
-        
-        <div className="space-y-6">
-          {steps.map((step, index) => {
-            const isActive = currentStep === index;
-            const isCompleted = currentStep > index;
-            const IconComponent = step.icon;
-            
-            return (
-              <div key={index} className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 ${
-                  isCompleted 
-                    ? 'bg-medical-green' 
-                    : isActive 
-                      ? 'bg-trust-blue' 
-                      : 'bg-gray-300'
-                }`}>
-                  {isCompleted ? (
-                    <Check className="w-4 h-4 text-white" />
-                  ) : isActive ? (
-                    <IconComponent className={`w-4 h-4 text-white ${isActive ? 'animate-spin' : ''}`} />
-                  ) : (
-                    <IconComponent className="w-4 h-4 text-gray-600" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <h4 className={`font-medium ${isCompleted || isActive ? 'text-dark-grey' : 'text-gray-500'}`}>
-                    {step.title}
-                  </h4>
-                  <p className={`text-sm ${isCompleted || isActive ? 'text-gray-600' : 'text-gray-400'}`}>
-                    {step.description}
-                  </p>
-                  {isActive && index === 1 && (
-                    <div className="mt-2">
-                      <Progress value={progress} className="h-2" />
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+    <div className="bg-[#f4f4f0] h-[200px] w-full rounded-[32px] border-2 border-dashed border-[#d6d3d1] opacity-80 relative">
+      <div className="flex flex-col items-center justify-center h-full px-6 py-2.5">
+        <div className="w-12 h-12 mb-3 relative">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#57534d]"></div>
         </div>
-      </CardContent>
-    </Card>
+        <div className="text-[16px] leading-[24px] text-[#57534d] font-ibm-plex-sans">
+          {loadingText}
+        </div>
+      </div>
+    </div>
   );
 }

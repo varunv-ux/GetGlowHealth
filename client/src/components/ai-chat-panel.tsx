@@ -82,10 +82,10 @@ export default function AIChatPanel({ analysis, onClose }: AIChatPanelProps) {
   };
 
   return (
-    <div className="bg-white flex flex-col flex-1 h-full items-center justify-start max-w-[1000px] min-w-[504px] overflow-clip rounded-3xl">
+    <div className="bg-white flex flex-col flex-1 h-full items-center justify-start max-w-[1000px] min-w-[504px] overflow-hidden rounded-3xl">
       
       {/* Header */}
-      <div className="w-full border-b border-[#f4f4f0]">
+      <div className="w-full border-b border-[#f4f4f0] flex-shrink-0">
         <div className="flex flex-row items-center justify-between p-5">
           <div className="flex items-center gap-3">
             <Bot className="w-6 h-6 text-[#0c0a09]" />
@@ -108,7 +108,7 @@ export default function AIChatPanel({ analysis, onClose }: AIChatPanelProps) {
       </div>
 
       {/* Chat Messages */}
-      <div className="w-full flex-1 min-h-0">
+      <div className="w-full flex-1 overflow-hidden">
         <ScrollArea className="h-full w-full">
           <div className="p-5 space-y-4">
             {messages.length === 0 ? (
@@ -175,7 +175,7 @@ export default function AIChatPanel({ analysis, onClose }: AIChatPanelProps) {
       </div>
 
       {/* Input Area */}
-      <div className="w-full border-t border-[#f4f4f0] p-5">
+      <div className="w-full border-t border-[#f4f4f0] p-5 flex-shrink-0">
         <div className="space-y-4">
           {/* Input Field */}
           <div className="flex gap-3">

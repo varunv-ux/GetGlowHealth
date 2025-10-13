@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Analysis } from "@shared/schema";
 import { formatDistanceToNow } from "date-fns";
 import AIChatPanel from "@/components/ai-chat-panel";
@@ -42,8 +42,14 @@ function ChatSparkle({ size = "20", theme = "Regular" }: ChatSparkleProps) {
 }
 
 export default function HistoryPage() {
+  // Get the 'selected' query parameter from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const selectedFromUrl = urlParams.get('selected');
+  
   const [activeTab, setActiveTab] = useState("summary");
-  const [selectedAnalysisId, setSelectedAnalysisId] = useState<number | null>(null);
+  const [selectedAnalysisId, setSelectedAnalysisId] = useState<number | null>(
+    selectedFromUrl ? parseInt(selectedFromUrl) : null
+  );
   const [showAIChat, setShowAIChat] = useState(false);
   
   const { data: analyses, isLoading, error } = useQuery({
@@ -70,10 +76,18 @@ export default function HistoryPage() {
     enabled: !!selectedAnalysisId
   });
 
-  // Auto-select first analysis if none selected
-  if (analyses && analyses.length > 0 && !selectedAnalysisId) {
+  // Auto-select first analysis if none selected and no URL parameter
+  if (analyses && analyses.length > 0 && !selectedAnalysisId && !selectedFromUrl) {
     setSelectedAnalysisId(analyses[0].id);
   }
+
+  // Update URL when selectedAnalysisId changes
+  useEffect(() => {
+    if (selectedAnalysisId) {
+      const newUrl = `/history?selected=${selectedAnalysisId}`;
+      window.history.pushState({}, '', newUrl);
+    }
+  }, [selectedAnalysisId]);
 
   const tabs = [
     { id: "summary", label: "Summary" },
@@ -97,9 +111,9 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="bg-white box-border flex flex-col min-h-screen overflow-clip rounded-[32px]">
+    <div className="bg-white box-border flex flex-col h-screen overflow-hidden rounded-[32px]">
       {/* Header */}
-      <div className="h-[66px] w-full">
+      <div className="h-[66px] w-full flex-shrink-0">
         <div className="flex flex-row items-center size-full">
           <div className="box-border flex flex-row h-[66px] items-center justify-between px-6 py-3 w-full">
             {/* Logo */}
@@ -140,15 +154,15 @@ export default function HistoryPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-[#f4f4f0] rounded-[32px] min-h-0">
+      <div className="flex-1 bg-[#f4f4f0] rounded-[32px] overflow-hidden">
         <div className="flex flex-col items-center justify-start size-full">
           <div className="flex flex-col gap-5 items-center justify-start p-[20px] size-full">
-            <div className="flex-1 flex flex-row gap-5 items-start justify-center min-h-0 w-full">
+            <div className="flex-1 flex flex-row gap-5 items-start justify-center overflow-hidden w-full">
               
               {/* Left Sidebar - Reports List */}
-              <div className="bg-white h-full max-w-[393px] min-w-[360px] rounded-3xl">
-                <div className="max-w-inherit min-w-inherit overflow-clip size-full">
-                  <div className="flex flex-col gap-6 items-start justify-start max-w-inherit min-w-inherit p-[20px] size-full">
+              <div className="bg-white h-full max-w-[393px] min-w-[360px] rounded-3xl flex flex-col overflow-hidden">
+                <div className="max-w-inherit min-w-inherit overflow-hidden size-full flex flex-col">
+                  <div className="flex flex-col gap-6 items-start justify-start max-w-inherit min-w-inherit p-[20px] h-full overflow-hidden">
                     
                     {/* Sidebar Header */}
                     <div className="flex flex-row items-center justify-between w-full">
@@ -169,7 +183,7 @@ export default function HistoryPage() {
                     </div>
 
                     {/* Reports List */}
-                    <div className="flex flex-col gap-6 items-start justify-start w-full">
+                    <div className="flex flex-col gap-6 items-start justify-start w-full flex-1 overflow-y-auto">
                       <div className="flex flex-col gap-3 items-start justify-start w-full">
                                                  {analyses?.map((analysis: any, index: number) => (
                           <div
@@ -200,10 +214,18 @@ export default function HistoryPage() {
                                         Analysis #{analysis.id}
                                       </div>
                                                                              <div className="text-[12px] leading-[16px] text-[#57534d] font-normal font-inter w-full text-ellipsis overflow-hidden whitespace-nowrap">
-                                         Health condition: {analysis.overallScore ? 
-                                           (analysis.overallScore >= 80 ? 'Excellent' :
-                                            analysis.overallScore >= 60 ? 'Good' : 'Fair') : 'Unknown'
-                                         }
+                                         {analysis.status === 'completed' ? (
+                                           `Health condition: ${
+                                             analysis.overallScore >= 80 ? 'Excellent' :
+                                             analysis.overallScore >= 60 ? 'Good' : 'Fair'
+                                           }`
+                                         ) : analysis.status === 'failed' ? (
+                                           'Analysis Failed'
+                                         ) : analysis.status === 'processing' ? (
+                                           'Processing...'
+                                         ) : (
+                                           'Pending...'
+                                         )}
                                       </div>
                                       <div className="text-[12px] leading-[16px] text-[#57534d] font-normal font-inter w-full">
                                         {formatDistanceToNow(new Date(analysis.createdAt), { addSuffix: true })}
@@ -235,10 +257,10 @@ export default function HistoryPage() {
               </div>
 
               {/* Right Content Area */}
-              <div className="bg-white flex flex-col flex-1 h-full items-center justify-start max-w-[1000px] min-w-[504px] overflow-clip rounded-3xl">
+              <div className="bg-white flex flex-col flex-1 h-full items-center justify-start max-w-[1000px] min-w-[504px] overflow-hidden rounded-3xl">
                 
                 {/* Tabs Container */}
-                <div className="w-full">
+                <div className="w-full flex-shrink-0">
                   <div className="size-full">
                     <div className="flex flex-col gap-2.5 items-start justify-start pb-4 pt-6 px-5 w-full">
                       <div className="flex flex-row gap-3 items-center justify-start overflow-x-auto">
@@ -263,9 +285,9 @@ export default function HistoryPage() {
                 </div>
 
                 {/* Content Area */}
-                <div className="w-full flex-1 min-h-0">
+                <div className="w-full flex-1 overflow-y-auto">
                   <div className="size-full">
-                    <div className="flex flex-col gap-5 items-stretch justify-start px-5 py-0 w-full h-full overflow-y-auto">
+                    <div className="flex flex-col gap-5 items-stretch justify-start px-5 py-0 w-full">
                       {selectedAnalysis && (
                         <>
                           {activeTab === "summary" && <SummaryTab analysis={selectedAnalysis} />}

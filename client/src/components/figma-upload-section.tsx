@@ -1,14 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
 interface FigmaUploadSectionProps {
-  onUploadComplete: (analysisId: number) => void;
+  onUploadComplete: (analysisId: number, imageUrl: string) => void;
 }
 
 export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSectionProps) {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [loadingText, setLoadingText] = useState("Uploading image...");
   const { toast } = useToast();
 
   const uploadMutation = useMutation({
@@ -16,13 +17,13 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
       const formData = new FormData();
       formData.append('image', file);
       
-      const response = await fetch('/api/analyze', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
       
       if (!response.ok) {
-        throw new Error('Failed to upload and analyze image');
+        throw new Error('Failed to upload image');
       }
       
       return response.json();
@@ -30,9 +31,9 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
     onSuccess: (data) => {
       toast({
         title: "Upload Successful",
-        description: "Your photo has been uploaded and analysis is starting.",
+        description: "Your photo has been uploaded successfully.",
       });
-      onUploadComplete(data.id);
+      onUploadComplete(data.id, data.imageUrl);
     },
     onError: (error) => {
       toast({
@@ -42,6 +43,21 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
       });
     },
   });
+
+  useEffect(() => {
+    if (uploadMutation.isPending) {
+      // Progressive loading text - each step happens once
+      setLoadingText("Uploading image...");
+      
+      const timer1 = setTimeout(() => setLoadingText("Processing image..."), 800);
+      const timer2 = setTimeout(() => setLoadingText("Starting analysis..."), 1600);
+      
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
+    }
+  }, [uploadMutation.isPending]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -71,7 +87,7 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#57534d]"></div>
           </div>
           <div className="text-[16px] leading-[24px] text-[#57534d] font-ibm-plex-sans">
-            Analyzing...
+            {loadingText}
           </div>
         </div>
       </div>

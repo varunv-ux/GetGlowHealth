@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -9,12 +7,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User, ChevronDown } from "lucide-react";
-import { Link } from "wouter";
+import { LogOut, User } from "lucide-react";
+import { Link, useLocation, useSearch } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import FigmaUploadSection from "@/components/figma-upload-section";
 import ProcessingSection from "@/components/processing-section";
-import ResultsSection from "@/components/results-section";
+import UploadedPhotoSection from "@/components/uploaded-photo-section";
+import AnalyzingSection from "@/components/analyzing-section";
 import type { Analysis } from "@shared/schema";
 
 interface User {
@@ -26,47 +25,60 @@ interface User {
 export default function Home() {
   const { user } = useAuth();
   const typedUser = user as User | undefined;
-  const [currentStep, setCurrentStep] = useState<'upload' | 'processing' | 'results'>('upload');
-  const [analysisId, setAnalysisId] = useState<number | null>(null);
-  const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  
+  const [, setLocation] = useLocation();
+  const search = useSearch();
+
+  // Get analysisId from URL instead of local state
+  const params = new URLSearchParams(search);
+  const analysisId = params.get('analysisId') ? parseInt(params.get('analysisId')!) : null;
+
   const handleLogout = () => {
     window.location.href = "/api/logout";
   };
 
-  const handleUploadComplete = (id: number) => {
-    setAnalysisId(id);
-    setCurrentStep('processing');
+  const handleUploadComplete = (id: number, imageUrl: string) => {
+    // Update URL with both analysisId and imageUrl
+    setLocation(`/?analysisId=${id}&imageUrl=${encodeURIComponent(imageUrl)}`);
   };
 
-  const handleAnalysisComplete = (analysisData: Analysis) => {
-    setAnalysis(analysisData);
-    setCurrentStep('results');
+  const handleAnalysisComplete = (_analysisData: Analysis) => {
+    // This will be handled by ProcessingSection redirecting to history page
   };
 
   const handleNewAnalysis = () => {
-    setCurrentStep('upload');
-    setAnalysisId(null);
-    setAnalysis(null);
+    // Clear URL params to reset to upload state
+    setLocation('/');
   };
 
-  if (currentStep === 'processing' && analysisId) {
-    return (
-      <ProcessingSection 
-        analysisId={analysisId} 
-        onAnalysisComplete={handleAnalysisComplete}
-      />
-    );
-  }
+  const handleStartAnalysis = async () => {
+    if (!analysisId) return;
+    
+    // Update URL to show analyzing state
+    setLocation(`/?analysisId=${analysisId}&imageUrl=${params.get('imageUrl')}&analyzing=true`);
+    
+    // Start the actual analysis on the server
+    try {
+      await fetch(`/api/analysis/${analysisId}/start`, {
+        method: 'POST',
+      });
+    } catch (error) {
+      console.error('Failed to start analysis:', error);
+    }
+  };
 
-  if (currentStep === 'results' && analysis) {
-    return (
-      <ResultsSection 
-        analysis={analysis} 
-        onNewAnalysis={handleNewAnalysis}
-      />
-    );
-  }
+  const handleRemovePhoto = () => {
+    // Clear URL params to reset to upload state
+    setLocation('/');
+  };
+
+  const handleStopAnalysis = () => {
+    // Go back to uploaded state
+    setLocation(`/?analysisId=${analysisId}&imageUrl=${params.get('imageUrl')}`);
+  };
+
+  // Get imageUrl and analyzing state from URL
+  const imageUrl = params.get('imageUrl') || null;
+  const isAnalyzing = params.get('analyzing') === 'true';
 
   return (
     <div 
@@ -167,22 +179,54 @@ export default function Home() {
               <div className="w-full">
                 <div className="flex flex-col items-center">
                   <div className="flex flex-col gap-4 items-center justify-start px-6 py-0 w-full">
-                                         {/* Face Video */}
-                     <div className="w-[200px] h-[200px] relative overflow-hidden rounded-full">
-                       <video
-                         autoPlay
-                         loop
-                         muted
-                         playsInline
-                         className="w-full h-full object-cover"
-                       >
-                         <source src="/Facevideo.mp4" type="video/mp4" />
-                         <img
-                           alt="AI Face Analysis"
-                           className="w-full h-full object-cover"
-                           src="/face-analysis-video.png"
-                         />
-                       </video>
+                                         {/* Face Video or Uploaded Photo */}
+                     <div className="w-[200px] h-[200px] relative rounded-full">
+                       {isAnalyzing ? (
+                         // Show circular loader with user photo during analysis
+                         <div className="relative w-full h-full">
+                           {/* Circular loader ring - positioned outside */}
+                           <div className="absolute inset-[-6px]">
+                             <div 
+                               className="w-full h-full rounded-full border-[3px] border-transparent border-t-[#0c0a09] animate-spin"
+                             />
+                           </div>
+                           {/* User photo with white background */}
+                           <div className="w-full h-full rounded-full overflow-hidden bg-white">
+                             <img
+                               alt="Uploaded face"
+                               className="w-full h-full object-cover"
+                               src={imageUrl || ''}
+                             />
+                           </div>
+                         </div>
+                       ) : imageUrl ? (
+                         // Show uploaded photo
+                         <div className="w-full h-full rounded-full overflow-hidden">
+                           <img
+                             alt="Uploaded face"
+                             className="w-full h-full object-cover"
+                             src={imageUrl}
+                           />
+                         </div>
+                       ) : (
+                         // Show default video
+                         <div className="w-full h-full rounded-full overflow-hidden">
+                           <video
+                             autoPlay
+                             loop
+                             muted
+                             playsInline
+                             className="w-full h-full object-cover"
+                           >
+                             <source src="/Facevideo.mp4" type="video/mp4" />
+                             <img
+                               alt="AI Face Analysis"
+                               className="w-full h-full object-cover"
+                               src="/face-analysis-video.png"
+                             />
+                           </video>
+                         </div>
+                       )}
                      </div>
                     
                                          {/* Title */}
@@ -203,9 +247,34 @@ export default function Home() {
               
               {/* Button Container */}
               <div className="flex flex-col gap-6 items-center justify-start w-full">
-                                 {/* Upload Button */}
+                                 {/* Upload/Processing Section */}
                  <div className="flex flex-row gap-4 items-start justify-start w-full">
-                   <FigmaUploadSection onUploadComplete={handleUploadComplete} />
+                   {isAnalyzing && analysisId && imageUrl ? (
+                     // Show analyzing state with glow animation
+                     <>
+                       <AnalyzingSection
+                         imageUrl={imageUrl}
+                         onStop={handleStopAnalysis}
+                       />
+                       {/* Hidden processing section to track actual analysis */}
+                       <div className="hidden">
+                         <ProcessingSection
+                           analysisId={analysisId}
+                           onAnalysisComplete={handleAnalysisComplete}
+                         />
+                       </div>
+                     </>
+                   ) : analysisId && imageUrl ? (
+                     // Show uploaded photo with Start/Remove buttons
+                     <UploadedPhotoSection
+                       imageUrl={imageUrl}
+                       onStartAnalysis={handleStartAnalysis}
+                       onRemovePhoto={handleRemovePhoto}
+                     />
+                   ) : (
+                     // Show upload section
+                     <FigmaUploadSection onUploadComplete={handleUploadComplete} />
+                   )}
                  </div>
                 
                                  {/* Photo Guidelines Button */}
