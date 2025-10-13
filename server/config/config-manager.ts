@@ -8,7 +8,11 @@ export class ConfigManager {
   private currentConfig: PromptConfig;
 
   private constructor() {
-    this.configPath = path.join(process.cwd(), 'server', 'config', 'active-prompt.json');
+    // Use /tmp for serverless environments (Vercel), otherwise use local path
+    const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+    this.configPath = isServerless 
+      ? path.join('/tmp', 'active-prompt.json')
+      : path.join(process.cwd(), 'server', 'config', 'active-prompt.json');
     this.currentConfig = this.loadConfig();
   }
 
@@ -65,14 +69,18 @@ export class ConfigManager {
   private saveConfig(): void {
     try {
       const configDir = path.dirname(this.configPath);
-      if (!fs.existsSync(configDir)) {
+      
+      // Only create directory if it doesn't exist and it's not /tmp (which always exists)
+      if (configDir !== '/tmp' && !fs.existsSync(configDir)) {
         fs.mkdirSync(configDir, { recursive: true });
       }
       
       fs.writeFileSync(this.configPath, JSON.stringify(this.currentConfig, null, 2));
-      console.log('Prompt configuration saved successfully');
+      console.log('Prompt configuration saved successfully to:', this.configPath);
     } catch (error) {
-      console.error('Failed to save config:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Failed to save config (this is normal in serverless environments):', errorMessage);
+      // Don't throw - just log the warning and continue
     }
   }
 

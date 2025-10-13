@@ -19,8 +19,11 @@ import { uploadToR2, isR2Configured, getMimeType } from "./r2-storage";
 import sharp from "sharp";
 import { sseManager } from "./sse-manager";
 
+// Use /tmp for serverless environments (Vercel), otherwise use local uploads/
+const uploadDir = process.env.VERCEL ? '/tmp' : 'uploads/';
+
 const upload = multer({
-  dest: 'uploads/',
+  dest: uploadDir,
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB limit
   }
