@@ -64,14 +64,17 @@ export async function uploadToR2(
     );
     
     // Construct public URL
-    // Option 1: Using R2 public domain (if configured)
+    // Use R2_PUBLIC_URL from environment (with account ID)
     let url: string;
-    if (process.env.R2_PUBLIC_DOMAIN) {
+    if (process.env.R2_PUBLIC_URL) {
+      // R2_PUBLIC_URL should include the full base URL
+      url = `${process.env.R2_PUBLIC_URL}/${key}`;
+    } else if (process.env.R2_PUBLIC_DOMAIN) {
+      // Fallback to custom domain if configured
       url = `https://${process.env.R2_PUBLIC_DOMAIN}/${key}`;
     } else {
-      // Option 2: Using custom domain (recommended for production)
-      // You'll configure this in Cloudflare dashboard
-      url = `https://${bucketName}.r2.cloudflarestorage.com/${key}`;
+      // Final fallback: construct URL with account ID
+      url = `https://${bucketName}.${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
     }
     
     console.log(`✅ Uploaded to R2: ${key} (${(buffer.length / 1024).toFixed(2)} KB)`);
