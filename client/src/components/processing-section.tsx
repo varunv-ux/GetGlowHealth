@@ -14,22 +14,27 @@ export default function ProcessingSection({ analysisId, onAnalysisComplete }: Pr
   const queryClient = useQueryClient();
 
   // Use polling instead of SSE for serverless compatibility
-  const { data: analysis, error } = useQuery<Analysis>({
+  const { data: analysis, error, isLoading } = useQuery<Analysis>({
     queryKey: [`/api/analysis/${analysisId}`],
     queryFn: async () => {
+      console.log('🔄 Polling for analysis:', analysisId);
       const response = await fetch(`/api/analysis/${analysisId}`, {
         credentials: 'include',
       });
       if (!response.ok) {
+        console.error('❌ Failed to fetch analysis:', response.status, response.statusText);
         throw new Error('Failed to fetch analysis');
       }
-      return response.json();
+      const data = await response.json();
+      console.log('📊 Analysis status:', data.status);
+      return data;
     },
     enabled: !!analysisId,
     refetchInterval: (query) => {
       // Stop polling when analysis is complete or failed
       const data = query.state.data;
       if (data?.status === 'completed' || data?.status === 'failed') {
+        console.log('✅ Polling stopped. Final status:', data.status);
         return false;
       }
       return 2000; // Poll every 2 seconds
@@ -39,9 +44,12 @@ export default function ProcessingSection({ analysisId, onAnalysisComplete }: Pr
   useEffect(() => {
     // Check if analysis is complete
     if (analysis && analysis.status === 'completed') {
+      console.log('🎉 Analysis complete! Redirecting to history...');
       // Navigate to the specific report once analysis is complete
       queryClient.invalidateQueries({ queryKey: ['/api/history'] });
       setLocation(`/history?selected=${analysisId}`);
+    } else if (analysis) {
+      console.log('⏳ Analysis in progress. Status:', analysis.status);
     }
   }, [analysis, analysisId, setLocation, queryClient]);
 
