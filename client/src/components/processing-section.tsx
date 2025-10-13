@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import type { Analysis } from "@shared/schema";
-import { useSSE } from "@/hooks/useSSE";
 
 interface ProcessingSectionProps {
   analysisId: number;
@@ -14,13 +13,27 @@ export default function ProcessingSection({ analysisId, onAnalysisComplete }: Pr
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
 
-  // Use SSE instead of polling
-  const { data: analysis, error } = useSSE<Analysis>({
-    url: `/api/analysis/${analysisId}/stream`,
+  // Use polling instead of SSE for serverless compatibility
+  const { data: analysis, error } = useQuery<Analysis>({
+    queryKey: [`/api/analysis/${analysisId}`],
+    queryFn: async () => {
+      const response = await fetch(`/api/analysis/${analysisId}`, {
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch analysis');
+      }
+      return response.json();
+    },
     enabled: !!analysisId,
-    onMessage: (data) => {
-      console.log('Received analysis update:', data.status);
-    }
+    refetchInterval: (query) => {
+      // Stop polling when analysis is complete or failed
+      const data = query.state.data;
+      if (data?.status === 'completed' || data?.status === 'failed') {
+        return false;
+      }
+      return 2000; // Poll every 2 seconds
+    },
   });
 
   useEffect(() => {
@@ -49,13 +62,13 @@ export default function ProcessingSection({ analysisId, onAnalysisComplete }: Pr
     };
   }, []);
 
-  // Show error if analysis failed or SSE connection failed
+  // Show error if analysis failed or fetch failed
   if (error || (analysis && analysis.status === 'failed')) {
     return (
       <div className="bg-[#f4f4f0] h-[200px] w-full rounded-[32px] border-2 border-dashed border-[#d6d3d1] opacity-80 relative">
         <div className="flex flex-col items-center justify-center h-full px-6 py-2.5">
           <div className="text-[16px] leading-[24px] text-red-600 font-ibm-plex-sans">
-            Analysis failed. {analysis?.errorMessage || 'Please try again.'}
+            Analysis failed. Please try again.
           </div>
         </div>
       </div>
