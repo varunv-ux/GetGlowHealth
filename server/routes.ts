@@ -4,9 +4,11 @@ import { storage } from "./storage";
 import { setupAuth as setupLocalAuth, isAuthenticated as isLocalAuthenticated } from "./localAuth";
 import { setupAuth as setupNextAuth, isAuthenticated as isNextAuthenticated } from "./nextAuth";
 
-// Use NextAuth for production, local auth for development
-const setupAuth = process.env.NODE_ENV === 'development' ? setupLocalAuth : setupNextAuth;
-const isAuthenticated = process.env.NODE_ENV === 'development' ? isLocalAuthenticated : isNextAuthenticated;
+// Use local auth for now (can switch to NextAuth OAuth later when configured)
+// To enable NextAuth OAuth: set USE_NEXTAUTH=true and configure OAuth providers
+const useNextAuth = process.env.USE_NEXTAUTH === 'true';
+const setupAuth = useNextAuth ? setupNextAuth : setupLocalAuth;
+const isAuthenticated = useNextAuth ? isNextAuthenticated : isLocalAuthenticated;
 import multer from "multer";
 import path from "path";
 import fs from "fs";
