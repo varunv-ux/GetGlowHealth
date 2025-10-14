@@ -30,8 +30,5 @@
         }
       ]
     }
-  ],
-  "limits": {
-    "maxRequestBodySize": "10mb"
-  }
+  ]
 }
