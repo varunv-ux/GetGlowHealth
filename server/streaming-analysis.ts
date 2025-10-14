@@ -100,24 +100,36 @@ export async function performStreamingAnalysis(
       console.error("❌ Content preview (first 500):", fullContent.substring(0, 500));
       console.error("❌ Content preview (last 500):", fullContent.substring(fullContent.length - 500));
       
-      // Try to fix common JSON issues
+      // Try to fix incomplete JSON by closing it
       try {
-        // Remove any control characters and trim
-        let fixedContent = fullContent
-          .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
-          .trim();
+        let fixedContent = fullContent.trim();
         
-        // Try parsing again
+        // Count open/close braces and brackets
+        const openBraces = (fixedContent.match(/{/g) || []).length;
+        const closeBraces = (fixedContent.match(/}/g) || []).length;
+        const openBrackets = (fixedContent.match(/\[/g) || []).length;
+        const closeBrackets = (fixedContent.match(/]/g) || []).length;
+        
+        console.log(`📊 Braces: ${openBraces} open, ${closeBraces} close | Brackets: ${openBrackets} open, ${closeBrackets} close`);
+        
+        // Try to close incomplete JSON
+        for (let i = 0; i < (openBrackets - closeBrackets); i++) {
+          fixedContent += ']';
+        }
+        for (let i = 0; i < (openBraces - closeBraces); i++) {
+          fixedContent += '}';
+        }
+        
         analysisResult = JSON.parse(fixedContent);
-        console.log("✅ Fixed JSON parsing after cleanup");
+        console.log("✅ Fixed incomplete JSON by closing missing brackets/braces");
       } catch (retryError) {
         // Send error to client
         res.write(`event: error\ndata: ${JSON.stringify({
-          message: "Failed to parse AI response. The analysis may have generated invalid JSON.",
-          details: parseError.message
+          message: "AI response was incomplete. Try again or simplify your image.",
+          details: `Response was ${fullContent.length} characters, parsing failed`
         })}\n\n`);
         res.end();
-        throw new Error(`JSON parsing failed: ${parseError.message}`);
+        throw new Error(`JSON parsing failed after retry: ${parseError.message}`);
       }
     }
 
