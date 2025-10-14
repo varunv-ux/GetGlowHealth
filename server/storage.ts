@@ -57,12 +57,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateAnalysis(id: number, data: Partial<InsertAnalysis>): Promise<Analysis> {
-    const [analysis] = await db
-      .update(analyses)
-      .set(data)
-      .where(eq(analyses.id, id))
-      .returning();
-    return analysis;
+    try {
+      console.log(`🔄 Updating analysis #${id} with:`, JSON.stringify({ ...data, analysisData: '...', recommendations: '...' }, null, 2));
+      const [analysis] = await db
+        .update(analyses)
+        .set(data)
+        .where(eq(analyses.id, id))
+        .returning();
+      console.log(`✅ Updated analysis #${id}, status:`, analysis?.status);
+      return analysis;
+    } catch (error) {
+      console.error(`❌ Failed to update analysis #${id}:`, error);
+      throw error;
+    }
   }
 
   async getAnalysis(id: number): Promise<Analysis | undefined> {
