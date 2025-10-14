@@ -14,8 +14,91 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
+      // Compress image if it's larger than 4MB (Vercel limit on Hobby plan)
+      let fileToUpload = file;
+      const maxSize = 4 * 1024 * 1024; // 4MB
+      
+      if (file.size > maxSize) {
+        setLoadingText("Compressing image...");
+        
+        // Create a canvas to compress the image
+        const img = new Image();
+        const reader = new FileReader();
+        
+        fileToUpload = await new Promise<File>((resolve, reject) => {
+          reader.onload = (e) => {
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              let width = img.width;
+              let height = img.height;
+              
+              // Scale down if too large
+              const maxDimension = 2048;
+              if (width > maxDimension || height > maxDimension) {
+                if (width > height) {
+                  height = (height / width) * maxDimension;
+                  width = maxDimension;
+                } else {
+                  width = (width / height) * maxDimension;
+                  height = maxDimension;
+                }
+              }
+              
+              canvas.width = width;
+              canvas.height = height;
+              
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                reject(new Error('Failed to get canvas context'));
+                return;
+              }
+              
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              // Try different quality levels until under size limit
+              let quality = 0.8;
+              const tryCompress = () => {
+                canvas.toBlob(
+                  (blob) => {
+                    if (!blob) {
+                      reject(new Error('Failed to compress image'));
+                      return;
+                    }
+                    
+                    // If still too large and quality can be reduced, try again
+                    if (blob.size > maxSize && quality > 0.3) {
+                      quality -= 0.1;
+                      tryCompress();
+                      return;
+                    }
+                    
+                    const compressedFile = new File([blob], file.name, {
+                      type: 'image/jpeg',
+                      lastModified: Date.now(),
+                    });
+                    resolve(compressedFile);
+                  },
+                  'image/jpeg',
+                  quality
+                );
+              };
+              
+              tryCompress();
+            };
+            
+            img.onerror = () => reject(new Error('Failed to load image'));
+            img.src = e.target?.result as string;
+          };
+          
+          reader.onerror = () => reject(new Error('Failed to read file'));
+          reader.readAsDataURL(file);
+        });
+        
+        setLoadingText("Uploading image...");
+      }
+      
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('image', fileToUpload);
       
       // Step 1: Upload image
       const response = await fetch('/api/upload', {
@@ -130,7 +213,7 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
       if (rejection?.errors[0]?.code === 'file-too-large') {
         toast({
           title: "File Too Large",
-          description: `Image must be under 10MB. Your file is ${(rejection.file.size / (1024 * 1024)).toFixed(1)}MB.`,
+          description: `Image must be under 10MB. Your file is ${(rejection.file.size / (1024 * 1024)).toFixed(1)}MB. Large files will be automatically compressed.`,
           variant: "destructive",
         });
       } else if (rejection?.errors[0]?.code === 'file-invalid-type') {
