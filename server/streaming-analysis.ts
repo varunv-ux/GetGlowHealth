@@ -123,7 +123,7 @@ export async function performStreamingAnalysis(
 
     // Add metadata
     analysisResult.rawAnalysis = {
-      model: "gpt-4.1",
+      model: "gpt-4o",
       responseTime: new Date().toISOString(),
       fullResponse: fullContent.substring(0, 1000) // Only store first 1000 chars to avoid DB issues
     };

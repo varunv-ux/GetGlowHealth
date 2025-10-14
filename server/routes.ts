@@ -53,10 +53,10 @@ async function performFacialAnalysis(imagePath: string) {
     console.log("Making OpenAI API call...");
     console.log("API Key exists:", !!process.env.OPENAI_API_KEY);
     
-    // Using GPT-4.1 model for enhanced facial analysis capabilities
+    // Using GPT-4o model for enhanced facial analysis capabilities with vision
     const promptConfig = configManager.getActivePrompt();
     const response = await openai.chat.completions.create({
-      model: "gpt-4.1",
+      model: "gpt-4o",
       temperature: promptConfig.temperature,
       max_tokens: promptConfig.maxTokens,
       messages: [
@@ -116,7 +116,7 @@ async function performFacialAnalysis(imagePath: string) {
     
     // Add raw OpenAI response for transparency
     analysisResult.rawAnalysis = {
-      model: "gpt-4.1",
+      model: "gpt-4o",
       usage: response.usage,
       responseTime: new Date().toISOString(),
       fullResponse: responseContent
