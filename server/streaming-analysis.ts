@@ -32,14 +32,15 @@ export async function performStreamingAnalysis(
     const promptConfig = configManager.getActivePrompt();
 
     // Call OpenAI with streaming enabled
+    // Note: Using gpt-4o instead of gpt-4.1 as it's more stable for JSON streaming
     const stream = await openai.chat.completions.create({
-      model: "gpt-4.1",
+      model: "gpt-4o", // Changed from gpt-4.1 for better JSON reliability
       temperature: promptConfig.temperature,
       max_tokens: promptConfig.maxTokens,
       messages: [
         {
           role: "system",
-          content: promptConfig.systemPrompt
+          content: promptConfig.systemPrompt + "\n\nIMPORTANT: Ensure all JSON strings are properly escaped. Use \\\" for quotes inside strings, \\n for newlines."
         },
         {
           role: "user",
@@ -81,14 +82,50 @@ export async function performStreamingAnalysis(
       }
     }
 
-    // Parse final result
-    const analysisResult = JSON.parse(fullContent);
+    // Parse final result with better error handling
+    let analysisResult;
+    try {
+      // Clean up the content before parsing
+      const cleanedContent = fullContent.trim();
+      
+      // Log the content for debugging
+      console.log(`📝 Received ${cleanedContent.length} characters from OpenAI`);
+      console.log(`📝 First 200 chars: ${cleanedContent.substring(0, 200)}`);
+      console.log(`📝 Last 200 chars: ${cleanedContent.substring(cleanedContent.length - 200)}`);
+      
+      analysisResult = JSON.parse(cleanedContent);
+    } catch (parseError: any) {
+      console.error("❌ JSON parse error:", parseError.message);
+      console.error("❌ Content length:", fullContent.length);
+      console.error("❌ Content preview (first 500):", fullContent.substring(0, 500));
+      console.error("❌ Content preview (last 500):", fullContent.substring(fullContent.length - 500));
+      
+      // Try to fix common JSON issues
+      try {
+        // Remove any control characters and trim
+        let fixedContent = fullContent
+          .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+          .trim();
+        
+        // Try parsing again
+        analysisResult = JSON.parse(fixedContent);
+        console.log("✅ Fixed JSON parsing after cleanup");
+      } catch (retryError) {
+        // Send error to client
+        res.write(`event: error\ndata: ${JSON.stringify({
+          message: "Failed to parse AI response. The analysis may have generated invalid JSON.",
+          details: parseError.message
+        })}\n\n`);
+        res.end();
+        throw new Error(`JSON parsing failed: ${parseError.message}`);
+      }
+    }
 
     // Add metadata
     analysisResult.rawAnalysis = {
       model: "gpt-4.1",
       responseTime: new Date().toISOString(),
-      fullResponse: fullContent
+      fullResponse: fullContent.substring(0, 1000) // Only store first 1000 chars to avoid DB issues
     };
 
     // Send completion event

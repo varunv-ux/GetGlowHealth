@@ -904,13 +904,14 @@ data: ${JSON.stringify({ status: "Starting analysis..." })}
     const { configManager: configManager2 } = await Promise.resolve().then(() => (init_config_manager(), config_manager_exports));
     const promptConfig = configManager2.getActivePrompt();
     const stream = await openai.chat.completions.create({
-      model: "gpt-4.1",
+      model: "gpt-4o",
+      // Changed from gpt-4.1 for better JSON reliability
       temperature: promptConfig.temperature,
       max_tokens: promptConfig.maxTokens,
       messages: [
         {
           role: "system",
-          content: promptConfig.systemPrompt
+          content: promptConfig.systemPrompt + '\n\nIMPORTANT: Ensure all JSON strings are properly escaped. Use \\" for quotes inside strings, \\n for newlines.'
         },
         {
           role: "user",
@@ -950,11 +951,39 @@ data: ${JSON.stringify({
         }
       }
     }
-    const analysisResult = JSON.parse(fullContent);
+    let analysisResult;
+    try {
+      const cleanedContent = fullContent.trim();
+      console.log(`\u{1F4DD} Received ${cleanedContent.length} characters from OpenAI`);
+      console.log(`\u{1F4DD} First 200 chars: ${cleanedContent.substring(0, 200)}`);
+      console.log(`\u{1F4DD} Last 200 chars: ${cleanedContent.substring(cleanedContent.length - 200)}`);
+      analysisResult = JSON.parse(cleanedContent);
+    } catch (parseError) {
+      console.error("\u274C JSON parse error:", parseError.message);
+      console.error("\u274C Content length:", fullContent.length);
+      console.error("\u274C Content preview (first 500):", fullContent.substring(0, 500));
+      console.error("\u274C Content preview (last 500):", fullContent.substring(fullContent.length - 500));
+      try {
+        let fixedContent = fullContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim();
+        analysisResult = JSON.parse(fixedContent);
+        console.log("\u2705 Fixed JSON parsing after cleanup");
+      } catch (retryError) {
+        res.write(`event: error
+data: ${JSON.stringify({
+          message: "Failed to parse AI response. The analysis may have generated invalid JSON.",
+          details: parseError.message
+        })}
+
+`);
+        res.end();
+        throw new Error(`JSON parsing failed: ${parseError.message}`);
+      }
+    }
     analysisResult.rawAnalysis = {
       model: "gpt-4.1",
       responseTime: (/* @__PURE__ */ new Date()).toISOString(),
-      fullResponse: fullContent
+      fullResponse: fullContent.substring(0, 1e3)
+      // Only store first 1000 chars to avoid DB issues
     };
     res.write(`event: complete
 data: ${JSON.stringify(analysisResult)}
