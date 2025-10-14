@@ -125,6 +125,22 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
     },
     maxSize: 10 * 1024 * 1024, // 10MB
     multiple: false,
+    onDropRejected: (fileRejections) => {
+      const rejection = fileRejections[0];
+      if (rejection?.errors[0]?.code === 'file-too-large') {
+        toast({
+          title: "File Too Large",
+          description: `Image must be under 10MB. Your file is ${(rejection.file.size / (1024 * 1024)).toFixed(1)}MB.`,
+          variant: "destructive",
+        });
+      } else if (rejection?.errors[0]?.code === 'file-invalid-type') {
+        toast({
+          title: "Invalid File Type",
+          description: "Please upload a JPG, PNG, or WebP image.",
+          variant: "destructive",
+        });
+      }
+    },
   });
 
   if (uploadMutation.isPending) {
@@ -163,7 +179,7 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
           Upload Photo
         </div>
         <div className="text-[12px] leading-[18px] text-[#57534d]/60 font-ibm-plex-sans mt-1">
-          or paste from clipboard (⌘V)
+          or paste from clipboard (⌘V) • Max 10MB
         </div>
       </div>
     </div>
