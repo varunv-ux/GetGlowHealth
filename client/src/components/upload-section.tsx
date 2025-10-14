@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CloudUpload, Check, Lock, ShieldQuestion, Trash2, Award } from "lucide-react";
 
 interface UploadSectionProps {
-  onUploadComplete: (analysisId: number) => void;
+  onUploadComplete: (analysisId: number, imageUrl: string) => void;
 }
 
 export default function UploadSection({ onUploadComplete }: UploadSectionProps) {
@@ -18,24 +18,38 @@ export default function UploadSection({ onUploadComplete }: UploadSectionProps) 
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('image', file);
-      
-      const response = await fetch('/api/analyze', {
+
+      // Step 1: Upload image to get ID
+      const uploadResponse = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
+        credentials: 'include',
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to upload and analyze image');
+
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload image');
       }
-      
-      return response.json();
+
+      const uploadData = await uploadResponse.json();
+
+      // Step 2: Start analysis
+      const analysisResponse = await fetch(`/api/analysis/${uploadData.id}/start`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!analysisResponse.ok) {
+        throw new Error('Failed to start analysis');
+      }
+
+      return uploadData;
     },
     onSuccess: (data) => {
       toast({
         title: "Upload Successful",
         description: "Your photo has been uploaded and analysis is starting.",
       });
-      onUploadComplete(data.id);
+      onUploadComplete(data.id, data.imageUrl);
     },
     onError: (error) => {
       toast({

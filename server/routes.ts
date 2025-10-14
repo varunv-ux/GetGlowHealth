@@ -123,23 +123,31 @@ async function performFacialAnalysis(imagePath: string) {
     
     return analysisResult;
     
-  } catch (error) {
+  } catch (error: any) {
     console.error("OpenAI analysis error:", error);
-    
-    // Check if it's an OpenAI API error
-    if (error.response) {
-      console.error("OpenAI API error response:", error.response.status, error.response.data);
+
+    // Check if it's an OpenAI API error (SDK v5+ structure)
+    if (error?.error) {
+      console.error("OpenAI API error:", JSON.stringify(error.error, null, 2));
     }
-    
+
+    // Log full error for debugging
+    console.error("Full error object:", JSON.stringify(error, null, 2));
+
+    // Extract error message
+    const errorMessage = error?.error?.message || error.message || 'Unknown error';
+
     // Provide more specific error message
-    if (error.message.includes("Invalid JSON")) {
+    if (errorMessage.includes("model") || errorMessage.includes("Model")) {
+      throw new Error(`Invalid OpenAI model: ${errorMessage}`);
+    } else if (errorMessage.includes("Invalid JSON")) {
       throw new Error("OpenAI returned invalid JSON format");
-    } else if (error.message.includes("rate limit")) {
+    } else if (errorMessage.includes("rate limit")) {
       throw new Error("OpenAI rate limit exceeded. Please try again later.");
-    } else if (error.message.includes("insufficient_quota")) {
+    } else if (errorMessage.includes("quota") || errorMessage.includes("insufficient_quota")) {
       throw new Error("OpenAI quota exceeded. Please check your API key.");
     } else {
-      throw new Error("Failed to analyze image with AI: " + error.message);
+      throw new Error(`Failed to analyze image with AI: ${errorMessage}`);
     }
   }
 }
@@ -370,12 +378,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/analysis/:id/start", async (req, res) => {
     try {
       const analysisId = parseInt(req.params.id);
-      
+
       // Get the analysis
       const analysis = await storage.getAnalysis(analysisId);
       if (!analysis) {
         return res.status(404).json({ message: "Analysis not found" });
       }
+
+      // Update status to 'processing' in database immediately
+      await storage.updateAnalysis(analysisId, {
+        status: 'processing'
+      });
 
       // Return immediately
       res.json({ id: analysisId, status: 'processing' });
@@ -391,13 +404,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let imagePath: string;
       if (analysis.imageUrl.startsWith('http')) {
         // R2 URL - need to download temporarily
+        console.log(`📥 Downloading image from R2: ${analysis.imageUrl}`);
         const response = await fetch(analysis.imageUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to download image from R2: ${response.statusText}`);
+        }
         const buffer = await response.arrayBuffer();
-        imagePath = path.join('uploads', `temp_${analysisId}.jpg`);
+
+        // Use /tmp for serverless environments (Vercel), otherwise use local uploads/
+        const tempDir = process.env.VERCEL ? '/tmp' : uploadDir;
+        imagePath = path.join(tempDir, `temp_${analysisId}.jpg`);
         fs.writeFileSync(imagePath, Buffer.from(buffer));
+        console.log(`✅ Downloaded to: ${imagePath}`);
       } else {
         // Local path
         imagePath = path.join(process.cwd(), analysis.imageUrl);
+        console.log(`📂 Using local file: ${imagePath}`);
       }
 
       // Perform facial analysis asynchronously in the background
