@@ -167,7 +167,7 @@ Please provide your analysis in this JSON format:
 Be extremely thorough and specific in your analysis. Provide detailed, actionable insights that someone can immediately implement to improve their appearance and general well-being.`,
 
   temperature: 0.7,
-  maxTokens: 4000
+  maxTokens: 2500  // Reduced from 4000 to speed up response (~40% faster)
 };
 
 export const ALTERNATIVE_PROMPTS = {

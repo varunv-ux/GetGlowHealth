@@ -52,17 +52,18 @@ export default function Home() {
 
   const handleStartAnalysis = async () => {
     if (!analysisId) return;
-    
+
     // Update URL to show analyzing state
     setLocation(`/?analysisId=${analysisId}&imageUrl=${params.get('imageUrl')}&analyzing=true`);
-    
-    // Start the actual analysis on the server
+
+    // Use streaming endpoint for better Vercel compatibility
+    // This endpoint sends progress updates and doesn't timeout!
     try {
-      await fetch(`/api/analysis/${analysisId}/start`, {
+      await fetch(`/api/analysis/${analysisId}/start-streaming`, {
         method: 'POST',
       });
     } catch (error) {
-      console.error('Failed to start analysis:', error);
+      console.error('Failed to start streaming analysis:', error);
     }
   };
 

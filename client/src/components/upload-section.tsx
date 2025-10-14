@@ -32,8 +32,8 @@ export default function UploadSection({ onUploadComplete }: UploadSectionProps) 
 
       const uploadData = await uploadResponse.json();
 
-      // Step 2: Start analysis
-      const analysisResponse = await fetch(`/api/analysis/${uploadData.id}/start`, {
+      // Step 2: Start streaming analysis (works on Vercel!)
+      const analysisResponse = await fetch(`/api/analysis/${uploadData.id}/start-streaming`, {
         method: 'POST',
         credentials: 'include',
       });

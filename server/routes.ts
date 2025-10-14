@@ -20,6 +20,7 @@ import { configManager } from "./config/config-manager";
 import { uploadToR2, isR2Configured, getMimeType } from "./r2-storage";
 import sharp from "sharp";
 import { sseManager } from "./sse-manager";
+import { performStreamingAnalysis } from "./streaming-analysis";
 
 // Use /tmp for serverless environments (Vercel), otherwise use local uploads/
 const uploadDir = process.env.VERCEL ? '/tmp' : 'uploads/';
@@ -374,7 +375,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Start analysis for an uploaded image
+  // Start analysis with STREAMING (works on Vercel Hobby! No timeout!)
+  app.post("/api/analysis/:id/start-streaming", async (req, res) => {
+    try {
+      const analysisId = parseInt(req.params.id);
+
+      // Get the analysis
+      const analysis = await storage.getAnalysis(analysisId);
+      if (!analysis) {
+        return res.status(404).json({ message: "Analysis not found" });
+      }
+
+      // Update status to 'processing' in database immediately
+      await storage.updateAnalysis(analysisId, {
+        status: 'processing'
+      });
+
+      // Get the image path for analysis
+      let imagePath: string;
+      if (analysis.imageUrl.startsWith('http')) {
+        // R2 URL - need to download temporarily
+        console.log(`📥 Downloading image from R2: ${analysis.imageUrl}`);
+        const response = await fetch(analysis.imageUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to download image from R2: ${response.statusText}`);
+        }
+        const buffer = await response.arrayBuffer();
+
+        // Use /tmp for serverless environments (Vercel), otherwise use local uploads/
+        const tempDir = process.env.VERCEL ? '/tmp' : uploadDir;
+        imagePath = path.join(tempDir, `temp_${analysisId}.jpg`);
+        fs.writeFileSync(imagePath, Buffer.from(buffer));
+        console.log(`✅ Downloaded to: ${imagePath}`);
+      } else {
+        // Local path
+        imagePath = path.join(process.cwd(), analysis.imageUrl);
+        console.log(`📂 Using local file: ${imagePath}`);
+      }
+
+      // Perform streaming analysis (NO TIMEOUT - chunks sent continuously!)
+      await performStreamingAnalysis(imagePath, res, async (analysisResults) => {
+        // Save results to database when complete
+        await storage.updateAnalysis(analysisId, {
+          status: 'completed',
+          overallScore: analysisResults.overallScore,
+          skinHealth: analysisResults.skinHealth,
+          eyeHealth: analysisResults.eyeHealth,
+          circulation: analysisResults.circulation,
+          symmetry: analysisResults.symmetry,
+          analysisData: {
+            ...analysisResults.analysisData,
+            conversationalAnalysis: analysisResults.conversationalAnalysis,
+            estimatedAge: analysisResults.estimatedAge,
+            ageRange: analysisResults.ageRange,
+            rawAnalysis: analysisResults.rawAnalysis,
+            imageProcessing: (analysis.analysisData as any)?.imageProcessing || {}
+          },
+          recommendations: analysisResults.recommendations,
+        });
+
+        console.log(`✅ Streaming analysis completed for ID: ${analysisId}`);
+
+        // Cleanup temp file
+        try {
+          if (imagePath.includes('temp_') && fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+          }
+        } catch (cleanupError) {
+          console.error('Error cleaning up files:', cleanupError);
+        }
+      });
+
+    } catch (error: any) {
+      console.error("Start streaming analysis error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Failed to start streaming analysis" });
+      }
+    }
+  });
+
+  // Start analysis for an uploaded image (non-streaming - may timeout on Vercel)
   app.post("/api/analysis/:id/start", async (req, res) => {
     try {
       const analysisId = parseInt(req.params.id);
