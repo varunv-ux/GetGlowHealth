@@ -96,13 +96,13 @@ Please provide your analysis in this JSON format:
   "estimatedAge": number,
   "ageRange": "XX-XX years",
   "conversationalAnalysis": {
-    "facialFeatureBreakdown": "WRITE 3-5 SENTENCES: Summarize key facial observations from physiognomy, nutrition, and health perspectives.",
-    "visualAgeEstimator": "WRITE 2-3 SENTENCES: Estimate age and identify top age-accelerating factors with reversal tips.",
-    "deficiencyDetector": "WRITE 2-3 SENTENCES: List most likely deficiencies and top supplement recommendations.",
-    "foodIntoleranceIdentifier": "WRITE 2-3 SENTENCES: Identify probable food intolerances from visual markers.",
-    "healthRiskReader": "WRITE 3-4 SENTENCES: Highlight main health risks and top action steps.",
-    "emotionalStateScanner": "WRITE 2-3 SENTENCES: Describe tension patterns and key mindset recommendations.",
-    "selfHealingStrategist": "WRITE 3-5 SENTENCES: Provide essential daily protocol highlights."
+    "facialFeatureBreakdown": "Write 2-3 concise sentences summarizing key facial observations.",
+    "visualAgeEstimator": "Write 1-2 sentences with age estimate and main aging factors.",
+    "deficiencyDetector": "Write 1-2 sentences listing top 2-3 deficiencies.",
+    "foodIntoleranceIdentifier": "Write 1-2 sentences identifying probable intolerances.",
+    "healthRiskReader": "Write 2 sentences highlighting main risks.",
+    "emotionalStateScanner": "Write 1-2 sentences on tension patterns.",
+    "selfHealingStrategist": "Write 2 sentences with top daily protocol items."
   },
   "analysisData": {
     "facialMarkers": [
@@ -166,12 +166,12 @@ Please provide your analysis in this JSON format:
 
 CRITICAL INSTRUCTIONS:
 1. NEVER use placeholder or example text - provide actual specific observations
-2. Be concise - 1-2 sentences per field
-3. Focus on the most important actionable insights
-4. Write complete sentences with personalized analysis`,
+2. Be VERY concise - 1 sentence per field maximum
+3. Focus only on the most critical insights
+4. Keep responses brief but actionable`,
 
   temperature: 0.7,
-  maxTokens: 5000  // Optimized for speed while maintaining quality
+  maxTokens: 2500  // Reduced for faster completion under 60s Vercel limit
 };
 
 export const ALTERNATIVE_PROMPTS = {
