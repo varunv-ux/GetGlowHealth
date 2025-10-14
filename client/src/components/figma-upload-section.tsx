@@ -100,7 +100,7 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
       const formData = new FormData();
       formData.append('image', fileToUpload);
       
-      // Step 1: Upload image
+      // Only upload - don't start analysis automatically
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -111,22 +111,12 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
       }
       
       const uploadData = await response.json();
-      
-      // Step 2: Start streaming analysis immediately
-      const analysisResponse = await fetch(`/api/analysis/${uploadData.id}/start-streaming`, {
-        method: 'POST',
-      });
-      
-      if (!analysisResponse.ok) {
-        throw new Error('Failed to start analysis');
-      }
-      
       return uploadData;
     },
     onSuccess: (data) => {
       toast({
         title: "Upload Successful",
-        description: "Your photo has been uploaded and analysis is starting.",
+        description: "Photo uploaded successfully. Click 'Start analysis' to begin.",
       });
       onUploadComplete(data.id, data.imageUrl);
     },
@@ -145,11 +135,9 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
       setLoadingText("Uploading image...");
       
       const timer1 = setTimeout(() => setLoadingText("Processing image..."), 800);
-      const timer2 = setTimeout(() => setLoadingText("Starting analysis..."), 1600);
       
       return () => {
         clearTimeout(timer1);
-        clearTimeout(timer2);
       };
     }
   }, [uploadMutation.isPending]);
