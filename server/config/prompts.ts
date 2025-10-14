@@ -96,13 +96,13 @@ Please provide your analysis in this JSON format:
   "estimatedAge": number,
   "ageRange": "XX-XX years",
   "conversationalAnalysis": {
-    "facialFeatureBreakdown": "Detailed analysis of each facial zone from physiognomy, nutrition, psychosomatic, and health perspectives",
-    "visualAgeEstimator": "Age estimation with skin analysis, symmetry assessment, and age-accelerating pattern identification",
-    "deficiencyDetector": "Vitamin, mineral, and hydration deficiency analysis with severity ratings and supplement recommendations",
-    "foodIntoleranceIdentifier": "Visual markers of inflammation, water retention, histamine sensitivity, and food-related congestion",
-    "healthRiskReader": "Potential internal health risks based on facial cues with visual evidence and focused action steps",
-    "emotionalStateScanner": "Facial tension and emotional suppression analysis with mindset and therapeutic recommendations",
-    "selfHealingStrategist": "Personalized daily protocol for mind, body, and spirit optimization with routines and practices"
+    "facialFeatureBreakdown": "FULL DETAILED MULTI-PARAGRAPH TEXT: Analyze each facial zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck) from physiognomy, nutrition, psychosomatic, and health perspectives. Provide specific observations, interpretations, and suggested actions for each zone.",
+    "visualAgeEstimator": "FULL DETAILED MULTI-PARAGRAPH TEXT: Provide age estimation with detailed skin analysis, symmetry assessment, and identification of age-accelerating patterns with causes and reversal strategies.",
+    "deficiencyDetector": "FULL DETAILED MULTI-PARAGRAPH TEXT: Analyze vitamin, mineral, and hydration deficiencies with severity ratings, symptoms, and specific supplement recommendations.",
+    "foodIntoleranceIdentifier": "FULL DETAILED MULTI-PARAGRAPH TEXT: Identify visual markers of inflammation, water retention, histamine sensitivity, and food-related congestion with next steps.",
+    "healthRiskReader": "FULL DETAILED MULTI-PARAGRAPH TEXT: Describe potential internal health risks based on facial cues with visual evidence and 3 focused action steps for each.",
+    "emotionalStateScanner": "FULL DETAILED MULTI-PARAGRAPH TEXT: Analyze facial tension and emotional suppression patterns with specific mindset shifts and therapeutic recommendations.",
+    "selfHealingStrategist": "FULL DETAILED MULTI-PARAGRAPH TEXT: Provide a personalized daily protocol for mind, body, and spirit optimization including morning/midday/evening routines and weekly practices."
   },
   "analysisData": {
     "facialMarkers": [
