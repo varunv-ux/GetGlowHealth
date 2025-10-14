@@ -96,13 +96,13 @@ Please provide your analysis in this JSON format:
   "estimatedAge": number,
   "ageRange": "XX-XX years",
   "conversationalAnalysis": {
-    "facialFeatureBreakdown": "WRITE 1-2 PARAGRAPHS: Analyze key facial zones with specific observations and interpretations from physiognomy, nutrition, and health perspectives.",
-    "visualAgeEstimator": "WRITE 1 PARAGRAPH: Estimate age with skin analysis, identifying age-accelerating patterns and reversal strategies.",
-    "deficiencyDetector": "WRITE 1 PARAGRAPH: Identify vitamin/mineral deficiencies with visual evidence and specific supplement recommendations.",
-    "foodIntoleranceIdentifier": "WRITE 1 PARAGRAPH: Spot inflammation markers and likely food intolerances with next steps.",
-    "healthRiskReader": "WRITE 1-2 PARAGRAPHS: Highlight potential health risks from facial cues with action steps.",
-    "emotionalStateScanner": "WRITE 1 PARAGRAPH: Decode facial tension patterns and recommend mindset shifts or therapeutic practices.",
-    "selfHealingStrategist": "WRITE 1-2 PARAGRAPHS: Synthesize findings into a personalized daily protocol for optimization."
+    "facialFeatureBreakdown": "WRITE 3-5 SENTENCES: Summarize key facial observations from physiognomy, nutrition, and health perspectives.",
+    "visualAgeEstimator": "WRITE 2-3 SENTENCES: Estimate age and identify top age-accelerating factors with reversal tips.",
+    "deficiencyDetector": "WRITE 2-3 SENTENCES: List most likely deficiencies and top supplement recommendations.",
+    "foodIntoleranceIdentifier": "WRITE 2-3 SENTENCES: Identify probable food intolerances from visual markers.",
+    "healthRiskReader": "WRITE 3-4 SENTENCES: Highlight main health risks and top action steps.",
+    "emotionalStateScanner": "WRITE 2-3 SENTENCES: Describe tension patterns and key mindset recommendations.",
+    "selfHealingStrategist": "WRITE 3-5 SENTENCES: Provide essential daily protocol highlights."
   },
   "analysisData": {
     "facialMarkers": [
@@ -166,12 +166,12 @@ Please provide your analysis in this JSON format:
 
 CRITICAL INSTRUCTIONS:
 1. NEVER use placeholder or example text - provide actual specific observations
-2. Be thorough but concise - 2-3 sentences per field is sufficient
-3. Focus on actionable insights the person can immediately implement
-4. Write in complete sentences with personalized analysis for this specific face`,
+2. Be concise - 1-2 sentences per field
+3. Focus on the most important actionable insights
+4. Write complete sentences with personalized analysis`,
 
   temperature: 0.7,
-  maxTokens: 8000  // Balanced for comprehensive but efficient analysis
+  maxTokens: 5000  // Optimized for speed while maintaining quality
 };
 
 export const ALTERNATIVE_PROMPTS = {
