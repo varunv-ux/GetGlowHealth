@@ -17,6 +17,7 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
       const formData = new FormData();
       formData.append('image', file);
       
+      // Step 1: Upload image
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -26,12 +27,23 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
         throw new Error('Failed to upload image');
       }
       
-      return response.json();
+      const uploadData = await response.json();
+      
+      // Step 2: Start streaming analysis immediately
+      const analysisResponse = await fetch(`/api/analysis/${uploadData.id}/start-streaming`, {
+        method: 'POST',
+      });
+      
+      if (!analysisResponse.ok) {
+        throw new Error('Failed to start analysis');
+      }
+      
+      return uploadData;
     },
     onSuccess: (data) => {
       toast({
         title: "Upload Successful",
-        description: "Your photo has been uploaded successfully.",
+        description: "Your photo has been uploaded and analysis is starting.",
       });
       onUploadComplete(data.id, data.imageUrl);
     },
