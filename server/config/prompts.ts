@@ -96,13 +96,13 @@ Please provide your analysis in this JSON format:
   "estimatedAge": number,
   "ageRange": "XX-XX years",
   "conversationalAnalysis": {
-    "facialFeatureBreakdown": "FULL DETAILED MULTI-PARAGRAPH TEXT: Analyze each facial zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck) from physiognomy, nutrition, psychosomatic, and health perspectives. Provide specific observations, interpretations, and suggested actions for each zone.",
-    "visualAgeEstimator": "FULL DETAILED MULTI-PARAGRAPH TEXT: Provide age estimation with detailed skin analysis, symmetry assessment, and identification of age-accelerating patterns with causes and reversal strategies.",
-    "deficiencyDetector": "FULL DETAILED MULTI-PARAGRAPH TEXT: Analyze vitamin, mineral, and hydration deficiencies with severity ratings, symptoms, and specific supplement recommendations.",
-    "foodIntoleranceIdentifier": "FULL DETAILED MULTI-PARAGRAPH TEXT: Identify visual markers of inflammation, water retention, histamine sensitivity, and food-related congestion with next steps.",
-    "healthRiskReader": "FULL DETAILED MULTI-PARAGRAPH TEXT: Describe potential internal health risks based on facial cues with visual evidence and 3 focused action steps for each.",
-    "emotionalStateScanner": "FULL DETAILED MULTI-PARAGRAPH TEXT: Analyze facial tension and emotional suppression patterns with specific mindset shifts and therapeutic recommendations.",
-    "selfHealingStrategist": "FULL DETAILED MULTI-PARAGRAPH TEXT: Provide a personalized daily protocol for mind, body, and spirit optimization including morning/midday/evening routines and weekly practices."
+    "facialFeatureBreakdown": "WRITE 1-2 PARAGRAPHS: Analyze key facial zones with specific observations and interpretations from physiognomy, nutrition, and health perspectives.",
+    "visualAgeEstimator": "WRITE 1 PARAGRAPH: Estimate age with skin analysis, identifying age-accelerating patterns and reversal strategies.",
+    "deficiencyDetector": "WRITE 1 PARAGRAPH: Identify vitamin/mineral deficiencies with visual evidence and specific supplement recommendations.",
+    "foodIntoleranceIdentifier": "WRITE 1 PARAGRAPH: Spot inflammation markers and likely food intolerances with next steps.",
+    "healthRiskReader": "WRITE 1-2 PARAGRAPHS: Highlight potential health risks from facial cues with action steps.",
+    "emotionalStateScanner": "WRITE 1 PARAGRAPH: Decode facial tension patterns and recommend mindset shifts or therapeutic practices.",
+    "selfHealingStrategist": "WRITE 1-2 PARAGRAPHS: Synthesize findings into a personalized daily protocol for optimization."
   },
   "analysisData": {
     "facialMarkers": [
@@ -165,16 +165,13 @@ Please provide your analysis in this JSON format:
 }
 
 CRITICAL INSTRUCTIONS:
-1. Be extremely thorough and specific in your analysis
-2. Provide detailed, actionable insights that someone can immediately implement
-3. NEVER use placeholder text like "string" or generic descriptions
-4. ALWAYS provide actual, specific observations and recommendations based on the face you're analyzing
-5. Write in complete sentences with real analysis, not template text
-6. Each field should contain unique, personalized content for this specific individual
-7. Aim for 2-4 sentences minimum per text field to provide comprehensive insights`,
+1. NEVER use placeholder or example text - provide actual specific observations
+2. Be thorough but concise - 2-3 sentences per field is sufficient
+3. Focus on actionable insights the person can immediately implement
+4. Write in complete sentences with personalized analysis for this specific face`,
 
   temperature: 0.7,
-  maxTokens: 16000  // Increased to allow for comprehensive detailed analysis
+  maxTokens: 8000  // Balanced for comprehensive but efficient analysis
 };
 
 export const ALTERNATIVE_PROMPTS = {
