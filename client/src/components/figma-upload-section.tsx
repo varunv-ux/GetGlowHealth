@@ -71,6 +71,42 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
     }
   }, [uploadMutation.isPending]);
 
+  // Handle paste from clipboard
+  useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        
+        // Check if the item is an image
+        if (item.type.indexOf('image') !== -1) {
+          e.preventDefault();
+          const blob = item.getAsFile();
+          
+          if (blob) {
+            // Convert blob to File with a proper name
+            const file = new File([blob], `pasted-image-${Date.now()}.png`, {
+              type: blob.type,
+            });
+            
+            setUploadedFile(file);
+            uploadMutation.mutate(file);
+          }
+          break;
+        }
+      }
+    };
+
+    // Add paste event listener
+    window.addEventListener('paste', handlePaste);
+    
+    return () => {
+      window.removeEventListener('paste', handlePaste);
+    };
+  }, [uploadMutation]);
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
@@ -125,6 +161,9 @@ export default function FigmaUploadSection({ onUploadComplete }: FigmaUploadSect
         </div>
         <div className="text-[16px] leading-[24px] text-[#57534d] font-ibm-plex-sans">
           Upload Photo
+        </div>
+        <div className="text-[12px] leading-[18px] text-[#57534d]/60 font-ibm-plex-sans mt-1">
+          or paste from clipboard (⌘V)
         </div>
       </div>
     </div>
