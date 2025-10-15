@@ -18,72 +18,43 @@ Deliver a deep, structured, and practical analysis based on the uploaded face im
 
 Be specific, don't generalize. Act as a trusted functional medicine specialist and holistic coach - expert yet empowering.`,
 
-  analysisPrompt: `Analyze this face image and provide a comprehensive health analysis.
-
-Analyze this face comprehensively from multiple expert perspectives:
+  analysisPrompt: `Analyze this face image comprehensively using the following 7-part framework:
 
 **1. Facial Feature Breakdown**
-Analyze each zone: forehead, eyes, nose, cheeks, lips, jawline, chin, neck
-From the perspective of:
-• 🧠 Physiognomy: personality/energy imprints
-• 🥗 Nutritionist: dietary imbalances or organ stress signs
-• 😖 Psychosomatic expert: emotional tension zones, psychosomatic markers
-• 🧬 Health specialist: hormones, reproductive system cues, vitality
-
-For each zone: Observation → Interpretation → Suggested Action or Test
+Analyze each zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck) from:
+• Physiognomy perspective (personality/energy imprints)
+• Nutrition perspective (dietary imbalances, organ stress signs)
+• Psychosomatic perspective (emotional tension zones, psychosomatic markers)
+• Health perspective (hormones, reproductive system cues, vitality)
+For each zone: Observation → Interpretation → Suggested Action
 
 **2. Visual Age Estimator**
-Estimate perceived age based on:
-• Skin tone, elasticity, wrinkle depth, volume loss
-• Facial symmetry and posture
-• Muscle tension or sagging
-
-Identify age-accelerating patterns, their causes, and how to reverse or slow them (collagen boosters, sleep, anti-inflammatory diet).
+Estimate perceived age based on skin tone, elasticity, wrinkles, symmetry, and facial posture.
+Identify age-accelerating patterns, their causes, and how to reverse/slow them.
 
 **3. Deficiency Detector**
-From face features (skin, lips, under-eyes, hairline, mouth corners):
-• Detect vitamin, mineral, or hydration deficiencies
-• Rate severity (low/moderate/high)
-• Link to symptoms (fatigue, low immunity, etc.)
-• Recommend foods/supplements to restore balance
+Identify vitamin, mineral, or hydration deficiencies visible in facial features.
+Rate severity (low/moderate/high), link to symptoms, and recommend foods/supplements.
 
 **4. Food Intolerance Identifier**
-Spot visual markers of:
-• Inflammation (puffiness, redness, acne)
-• Water retention
-• Histamine sensitivity
-• Dairy/gluten/sugar-related congestion
-
-Flag likely intolerances with next steps (elimination trial, GI tests).
+Spot visual markers of inflammation (puffiness, redness, acne), water retention, histamine sensitivity, and common intolerances (dairy/gluten/sugar).
+Flag likely intolerances with next steps.
 
 **5. Health Risk Reader**
-Highlight potential internal risks based on facial cues:
-• Hormonal imbalance
-• Sleep debt
-• Adrenal fatigue
-• Gut dysbiosis
-• Chronic stress or burnout
-
-For each: give visual evidence, short explanation, 3 focused steps to address.
+Highlight potential risks: hormonal imbalance, sleep debt, adrenal fatigue, gut dysbiosis, chronic stress.
+For each: provide visual evidence, explanation, and 3 focused action steps.
 
 **6. Emotional State Scanner**
-Decode facial tension and expression to identify:
-• Chronic emotional suppression (grief, resentment, fear, pressure)
-• Stress-pattern storage (tight jaw, drooping eyes, clenched lips)
-
-Recommend mindset shifts, journaling prompts, breathwork, somatic releases, or therapy styles.
+Decode facial tension patterns to identify chronic emotional suppression (grief, resentment, fear) and stress storage (tight jaw, furrowed brow, clenched lips).
+Recommend mindset shifts, journaling prompts, breathwork, or therapy approaches.
 
 **7. Self-Healing Strategist**
-Synthesize all findings into a personalized daily protocol to optimize mind, body, and spirit:
+Synthesize findings into a personalized daily protocol:
 • Morning routine (nutrition, skincare, mindset)
-• Mid-day optimization (hydration, movement, stress release)
+• Midday optimization (hydration, movement, stress release)
 • Evening wind-down (sleep prep, emotional reset)
-• Weekly healing practices (sauna, lymphatic massage, gratitude reset)
-
-Include:
-• A reset food list
-• 3 supplements to consider
-• Top 1–2 mindset shifts
+• Weekly practices (sauna, lymphatic massage, gratitude)
+Include: reset food list, 3 supplements, and top 1-2 mindset shifts
 
 Please provide your analysis in this JSON format:
 
