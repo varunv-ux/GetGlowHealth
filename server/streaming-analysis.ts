@@ -31,8 +31,13 @@ export async function performStreamingAnalysis(
     const { configManager } = await import('./config/config-manager');
     const promptConfig = configManager.getActivePrompt();
 
+    console.log("📋 Using prompt (first 150 chars):", promptConfig.analysisPrompt.substring(0, 150));
+    console.log("📋 System prompt (first 100 chars):", promptConfig.systemPrompt.substring(0, 100));
+
     // Call OpenAI with streaming enabled
     // Note: Using gpt-4o with optimized parameters for high-quality analysis
+    console.log("🚀 Calling OpenAI streaming API...");
+    const startTime = Date.now();
     const stream = await openai.chat.completions.create({
       model: "gpt-4o",
       temperature: 0.4, // Lower for more consistent, factual responses (was 0.7)
@@ -68,6 +73,8 @@ export async function performStreamingAnalysis(
     let refusalContent = "";
     let chunkCount = 0;
 
+    console.log("📡 Starting to receive chunks from OpenAI...");
+
     // Stream chunks to client
     for await (const chunk of stream) {
       const content = chunk.choices[0]?.delta?.content || "";
@@ -76,11 +83,17 @@ export async function performStreamingAnalysis(
       // Check for refusal (OpenAI content policy rejection)
       if (refusal) {
         refusalContent += refusal;
+        console.log("⚠️ Refusal chunk received:", refusal);
       }
 
       if (content) {
         fullContent += content;
         chunkCount++;
+
+        // Log first few chunks and every 50th chunk
+        if (chunkCount <= 3 || chunkCount % 50 === 0) {
+          console.log(`📥 Chunk ${chunkCount}: +${content.length} chars (total: ${fullContent.length})`);
+        }
 
         // Send progress update every 10 chunks
         if (chunkCount % 10 === 0) {
@@ -91,6 +104,9 @@ export async function performStreamingAnalysis(
         }
       }
     }
+
+    const streamDuration = Date.now() - startTime;
+    console.log(`✅ Streaming complete: ${chunkCount} chunks, ${fullContent.length} total chars in ${streamDuration}ms`);
 
     // Handle refusals from OpenAI
     if (refusalContent) {
