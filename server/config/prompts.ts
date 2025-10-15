@@ -18,7 +18,7 @@ Deliver a deep, structured, and practical analysis based on the uploaded face im
 
 Be specific, don't generalize. Act as a trusted functional medicine specialist and holistic coach - expert yet empowering.`,
 
-  analysisPrompt: `🧠 ULTRA-DETAILED FACE ANALYSIS FROM IMAGE
+  analysisPrompt: `Analyze this face image and provide a comprehensive health analysis.
 
 Analyze this face comprehensively from multiple expert perspectives:
 
@@ -164,14 +164,10 @@ Please provide your analysis in this JSON format:
   }
 }
 
-CRITICAL INSTRUCTIONS:
-1. NEVER use placeholder or example text - provide actual specific observations
-2. Be VERY concise - 1 sentence per field maximum
-3. Focus only on the most critical insights
-4. Keep responses brief but actionable`,
+Please provide your analysis in the JSON format shown above. Be thorough and specific with actionable insights.`,
 
   temperature: 0.7,
-  maxTokens: 2500  // Reduced for faster completion under 60s Vercel limit
+  maxTokens: 4000
 };
 
 export const ALTERNATIVE_PROMPTS = {
