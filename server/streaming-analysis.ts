@@ -160,7 +160,7 @@ export async function performStreamingAnalysis(
     analysisResult.rawAnalysis = {
       model: "gpt-4o", // Valid OpenAI model
       responseTime: new Date().toISOString(),
-      fullResponse: fullContent.substring(0, 1000) // Only store first 1000 chars to avoid DB issues
+      fullResponse: fullContent // Store complete response from OpenAI
     };
 
     // Send completion event
