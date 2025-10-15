@@ -35,12 +35,13 @@ export async function performStreamingAnalysis(
     console.log("📋 System prompt (first 100 chars):", promptConfig.systemPrompt.substring(0, 100));
 
     // Call OpenAI with streaming enabled
-    // Note: Using gpt-4o with parameters from prompt config
+    // Note: Using gpt-4.1 (latest model as of Oct 2024, better instruction following)
+    // GPT-4.1 improvements: +26% instruction following, +21.4% coding, 1M tokens context, 26% cheaper
     console.log("🚀 Calling OpenAI streaming API...");
     console.log(`📊 Using temperature: ${promptConfig.temperature}, maxTokens: ${promptConfig.maxTokens || 4000}`);
     const startTime = Date.now();
     const stream = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       temperature: promptConfig.temperature,
       max_tokens: promptConfig.maxTokens || 4000,
       top_p: 0.9, // Nucleus sampling for higher quality outputs
@@ -175,7 +176,7 @@ export async function performStreamingAnalysis(
 
     // Add metadata
     analysisResult.rawAnalysis = {
-      model: "gpt-4o", // Valid OpenAI model
+      model: "gpt-4.1", // Latest valid OpenAI model (Oct 2024+)
       responseTime: new Date().toISOString(),
       fullResponse: fullContent // Store complete response from OpenAI
     };
