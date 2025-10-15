@@ -75,8 +75,8 @@ async function performFacialAnalysis(imagePath: string) {
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`,
-                detail: "high" // High detail mode for better visual analysis
+                url: `data:image/jpeg;base64,${base64Image}`
+                // Note: "detail: high" triggers stricter content policy - removed
               }
             }
           ]
