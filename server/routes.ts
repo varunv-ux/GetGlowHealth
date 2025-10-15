@@ -53,12 +53,13 @@ async function performFacialAnalysis(imagePath: string) {
     console.log("Making OpenAI API call...");
     console.log("API Key exists:", !!process.env.OPENAI_API_KEY);
     
-    // Using GPT-4o model for enhanced facial analysis capabilities with vision
+    // Using GPT-4o model with optimized parameters for high-quality wellness analysis
     const promptConfig = configManager.getActivePrompt();
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // Valid OpenAI model
-      temperature: promptConfig.temperature,
-      max_tokens: promptConfig.maxTokens,
+      model: "gpt-4o",
+      temperature: 0.4, // Lower for more consistent, factual responses
+      max_tokens: 6000, // Increased for comprehensive responses
+      top_p: 0.9, // Nucleus sampling for higher quality outputs
       messages: [
         {
           role: "system",
@@ -74,7 +75,8 @@ async function performFacialAnalysis(imagePath: string) {
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`
+                url: `data:image/jpeg;base64,${base64Image}`,
+                detail: "high" // High detail mode for better visual analysis
               }
             }
           ]

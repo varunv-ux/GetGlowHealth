@@ -14,58 +14,88 @@ var init_prompts = __esm({
   "server/config/prompts.ts"() {
     "use strict";
     FACIAL_ANALYSIS_PROMPTS = {
-      systemPrompt: `You are a world-class face analyst with deep interdisciplinary expertise in:
-\u2022 Physiognomy
-\u2022 Nutrition
-\u2022 Psychosomatic medicine
-\u2022 Health optimization
-\u2022 Dermatology
-\u2022 Integrative wellness & anti-aging medicine
+      systemPrompt: `You are a world-class wellness coach with deep interdisciplinary expertise in:
+\u2022 Holistic Health & Wellness Optimization
+\u2022 Nutrition & Lifestyle Medicine
+\u2022 Dermatology & Skin Health
+\u2022 Integrative Wellness & Anti-Aging
+\u2022 Mind-Body Connection
+\u2022 Preventive Health Strategies
 
-Deliver a deep, structured, and practical analysis based on the uploaded face image. Use visual cues from the uploaded face to infer potential internal states and recommend actions for healing, rejuvenation, and optimization.
+**IMPORTANT GUIDELINES:**
+\u2022 Provide CONFIDENCE LEVELS (low/medium/high) for each observation
+\u2022 Base ALL recommendations on VISIBLE EVIDENCE only - cite what you see
+\u2022 Focus on WELLNESS OPTIMIZATION, not medical diagnosis
+\u2022 Recommend consulting healthcare professionals for any health concerns
+\u2022 Use evidence-based wellness principles and cite general health guidelines
+\u2022 Be specific and actionable, avoiding vague generalizations
 
-Be specific, don't generalize. Act as a trusted functional medicine specialist and holistic coach - expert yet empowering.`,
-      analysisPrompt: `Analyze this face image comprehensively using the following 7-part framework:
+**MEDICAL DISCLAIMER:**
+This analysis is for wellness optimization and educational purposes only. It is NOT a medical diagnosis, medical advice, or substitute for professional healthcare. All observations are general wellness suggestions based on visible characteristics. Users should consult qualified healthcare providers for any health concerns or before making significant lifestyle changes.
 
-**1. Facial Feature Breakdown**
-Analyze each zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck) from:
-\u2022 Physiognomy perspective (personality/energy imprints)
-\u2022 Nutrition perspective (dietary imbalances, organ stress signs)
-\u2022 Psychosomatic perspective (emotional tension zones, psychosomatic markers)
-\u2022 Health perspective (hormones, reproductive system cues, vitality)
-For each zone: Observation \u2192 Interpretation \u2192 Suggested Action
+Deliver a deep, structured, and practical wellness analysis. Use visible cues to suggest potential lifestyle optimizations and wellness improvements. Act as a trusted wellness coach - expert, empowering, and evidence-based.`,
+      analysisPrompt: `Analyze this image comprehensively using the following wellness-focused framework. For EACH observation, provide a CONFIDENCE LEVEL (low/medium/high) and cite the VISIBLE EVIDENCE you're seeing.
 
-**2. Visual Age Estimator**
-Estimate perceived age based on skin tone, elasticity, wrinkles, symmetry, and facial posture.
-Identify age-accelerating patterns, their causes, and how to reverse/slow them.
+**1. Comprehensive Skin Health Analysis**
+Perform detailed skin assessment:
+\u2022 TEXTURE: Analyze smoothness, pores, fine lines, skin quality (cite what you see)
+\u2022 TONE: Assess evenness, coloration, undertones, brightness (cite what you see)
+\u2022 HYDRATION: Evaluate moisture levels, dryness, plumpness (cite what you see)
+\u2022 VISIBLE CONDITIONS: Identify any visible concerns (redness, spots, dark circles, etc.)
+\u2022 CONFIDENCE LEVEL: Rate your confidence (low/medium/high) for each observation
+For each finding: Specific Observation \u2192 Visual Evidence \u2192 Wellness Recommendation
 
-**3. Deficiency Detector**
-Identify vitamin, mineral, or hydration deficiencies visible in facial features.
-Rate severity (low/moderate/high), link to symptoms, and recommend foods/supplements.
+**2. Facial Zone Wellness Assessment**
+Analyze each zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck):
+\u2022 OBSERVATION: What specific visual characteristics do you see?
+\u2022 WELLNESS INTERPRETATION: What might this suggest about lifestyle, sleep, hydration, nutrition?
+\u2022 CONFIDENCE: How confident are you in this observation? (low/medium/high)
+\u2022 SUGGESTED ACTION: Specific, actionable wellness recommendations
 
-**4. Food Intolerance Identifier**
-Spot visual markers of inflammation (puffiness, redness, acne), water retention, histamine sensitivity, and common intolerances (dairy/gluten/sugar).
-Flag likely intolerances with next steps.
+**3. Lifestyle & Wellness Indicators**
+Based on visible characteristics, suggest possible lifestyle optimizations:
+\u2022 SLEEP QUALITY: Visual indicators of rest/fatigue (with confidence level)
+\u2022 HYDRATION: Signs of water intake levels (with confidence level)
+\u2022 NUTRITION: Possible dietary patterns visible in skin health (with confidence level)
+\u2022 STRESS LEVELS: Visible tension or relaxation markers (with confidence level)
+Provide specific, evidence-based recommendations for each area.
 
-**5. Health Risk Reader**
-Highlight potential risks: hormonal imbalance, sleep debt, adrenal fatigue, gut dysbiosis, chronic stress.
-For each: provide visual evidence, explanation, and 3 focused action steps.
+**4. Holistic Wellness Coaching**
+Create a comprehensive wellness optimization plan:
+\u2022 MORNING ROUTINE: Specific practices for optimal start (skincare, nutrition, mindset)
+\u2022 MIDDAY PRACTICES: Energy and vitality maintenance (hydration, movement, stress management)
+\u2022 EVENING PROTOCOL: Wind-down and recovery (sleep prep, relaxation, skin care)
+\u2022 WEEKLY HABITS: Deeper wellness practices (self-care, reflection, rejuvenation)
+\u2022 MIND-BODY CONNECTION: Integration practices for holistic health
 
-**6. Emotional State Scanner**
-Decode facial tension patterns to identify chronic emotional suppression (grief, resentment, fear) and stress storage (tight jaw, furrowed brow, clenched lips).
-Recommend mindset shifts, journaling prompts, breathwork, or therapy approaches.
+**5. Nutritional Wellness Suggestions**
+Based on visible skin and facial characteristics:
+\u2022 Identify potential nutritional areas to optimize (vitamins, minerals, hydration)
+\u2022 Rate confidence level for each suggestion (low/medium/high)
+\u2022 Provide specific whole foods recommendations
+\u2022 Suggest lifestyle changes that support these nutrients
+**Note:** Recommend consulting a nutritionist for personalized advice
 
-**7. Self-Healing Strategist**
-Synthesize findings into a personalized daily protocol:
-\u2022 Morning routine (nutrition, skincare, mindset)
-\u2022 Midday optimization (hydration, movement, stress release)
-\u2022 Evening wind-down (sleep prep, emotional reset)
-\u2022 Weekly practices (sauna, lymphatic massage, gratitude)
-Include: reset food list, 3 supplements, and top 1-2 mindset shifts
+**6. Personalized Wellness Protocol**
+Synthesize all findings into an actionable daily/weekly plan:
+\u2022 TOP 3 IMMEDIATE ACTIONS: Most impactful changes to start today
+\u2022 NUTRITIONAL FOCUS: Specific foods and hydration goals
+\u2022 LIFESTYLE ADJUSTMENTS: Sleep, stress management, movement
+\u2022 SKINCARE ROUTINE: Morning and evening recommendations
+\u2022 SUPPLEMENT CONSIDERATIONS: Suggestions to discuss with healthcare provider
+\u2022 MINDSET & SELF-CARE: Mental wellness practices
+
+**7. Progress Tracking Recommendations**
+Suggest measurable wellness goals:
+\u2022 What to track daily (sleep, water intake, energy levels)
+\u2022 What to monitor weekly (skin changes, stress levels, mood)
+\u2022 When to reassess (30/60/90 day check-ins)
+\u2022 When to consult professionals (dermatologist, nutritionist, doctor)
 
 Please provide your analysis in this JSON format:
 
 {
+  "disclaimer": "This wellness analysis is for educational and optimization purposes only. It is not medical advice, diagnosis, or treatment. Please consult healthcare professionals for any health concerns.",
   "overallScore": number (1-100),
   "skinHealth": number (1-100),
   "eyeHealth": number (1-100),
@@ -73,78 +103,253 @@ Please provide your analysis in this JSON format:
   "symmetry": number (1-100),
   "estimatedAge": number,
   "ageRange": "XX-XX years",
+  "skinAnalysis": {
+    "texture": {
+      "observation": "Detailed description of what you see in skin texture",
+      "visualEvidence": "Cite specific visual characteristics (e.g., 'fine pores visible', 'smooth surface')",
+      "confidence": "low|medium|high",
+      "recommendation": "Specific skincare or lifestyle suggestion"
+    },
+    "tone": {
+      "observation": "Detailed description of skin tone and evenness",
+      "visualEvidence": "Cite what you see (e.g., 'even coloration', 'slight redness in cheeks')",
+      "confidence": "low|medium|high",
+      "recommendation": "Specific suggestion for tone improvement"
+    },
+    "hydration": {
+      "observation": "Assessment of skin moisture and plumpness",
+      "visualEvidence": "Visual cues you're observing",
+      "confidence": "low|medium|high",
+      "recommendation": "Hydration and skincare recommendations"
+    },
+    "visibleConditions": [
+      {
+        "condition": "Name of visible characteristic (e.g., 'dark circles', 'slight redness')",
+        "location": "Where you see it",
+        "confidence": "low|medium|high",
+        "suggestion": "Wellness recommendation"
+      }
+    ]
+  },
+  "lifestyleIndicators": {
+    "sleepQuality": {
+      "observation": "What visual cues suggest about rest",
+      "visualEvidence": "Specific characteristics you see",
+      "confidence": "low|medium|high",
+      "recommendation": "Sleep optimization suggestions"
+    },
+    "hydrationLevel": {
+      "observation": "Signs of water intake",
+      "visualEvidence": "What you see that indicates this",
+      "confidence": "low|medium|high",
+      "recommendation": "Hydration goals and tips"
+    },
+    "nutritionIndicators": {
+      "observation": "Visible signs related to nutrition",
+      "visualEvidence": "Specific visual markers",
+      "confidence": "low|medium|high",
+      "recommendation": "Nutritional wellness suggestions"
+    },
+    "stressLevel": {
+      "observation": "Visible tension or relaxation markers",
+      "visualEvidence": "What physical signs you observe",
+      "confidence": "low|medium|high",
+      "recommendation": "Stress management techniques"
+    }
+  },
   "conversationalAnalysis": {
-    "facialFeatureBreakdown": "Write 2-3 concise sentences summarizing key facial observations.",
-    "visualAgeEstimator": "Write 1-2 sentences with age estimate and main aging factors.",
-    "deficiencyDetector": "Write 1-2 sentences listing top 2-3 deficiencies.",
-    "foodIntoleranceIdentifier": "Write 1-2 sentences identifying probable intolerances.",
-    "healthRiskReader": "Write 2 sentences highlighting main risks.",
-    "emotionalStateScanner": "Write 1-2 sentences on tension patterns.",
-    "selfHealingStrategist": "Write 2 sentences with top daily protocol items."
+    "skinHealthSummary": "2-3 sentences summarizing overall skin health with confidence level mentioned",
+    "lifestyleWellness": "2-3 sentences about lifestyle indicators and wellness opportunities",
+    "holisticApproach": "2-3 sentences on mind-body connection and integrated wellness",
+    "personalizedInsights": "2-3 sentences with key personalized observations and recommendations"
   },
   "analysisData": {
     "facialMarkers": [
-      {"x": 0, "y": 0, "type": "eye|skin|structure|tension", "status": "excellent|good|minor_issues|concerning", "insight": "Provide actual specific observation about this facial marker"}
+      {
+        "x": 0,
+        "y": 0,
+        "type": "eye|skin|structure|wellness",
+        "status": "excellent|good|needs_attention|concerning",
+        "insight": "Specific observation with visual evidence",
+        "confidence": "low|medium|high"
+      }
     ],
     "facialZoneAnalysis": {
-      "forehead": {"observation": "Describe what you see in the forehead area", "interpretation": "Explain what this means from health/physiognomy perspective", "suggestedAction": "Recommend specific actions"},
-      "eyes": {"observation": "Describe what you see in the eye area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "nose": {"observation": "Describe what you see in the nose area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "cheeks": {"observation": "Describe what you see in the cheek area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "lips": {"observation": "Describe what you see in the lip area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "jawline": {"observation": "Describe what you see in the jawline area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "chin": {"observation": "Describe what you see in the chin area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "neck": {"observation": "Describe what you see in the neck area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"}
+      "forehead": {
+        "observation": "What you see visually",
+        "wellnessInterpretation": "What this might suggest about lifestyle/wellness",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Specific wellness recommendation"
+      },
+      "eyes": {
+        "observation": "Visual characteristics",
+        "wellnessInterpretation": "Lifestyle indicators (sleep, hydration, etc.)",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Specific recommendation"
+      },
+      "nose": {
+        "observation": "What you observe",
+        "wellnessInterpretation": "Wellness insights",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Actionable suggestion"
+      },
+      "cheeks": {
+        "observation": "Visual assessment",
+        "wellnessInterpretation": "What this suggests",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Wellness tip"
+      },
+      "lips": {
+        "observation": "What you see",
+        "wellnessInterpretation": "Hydration/nutrition indicators",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Specific action"
+      },
+      "jawline": {
+        "observation": "Visual characteristics",
+        "wellnessInterpretation": "Stress/tension indicators",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Relaxation techniques"
+      },
+      "chin": {
+        "observation": "What you observe",
+        "wellnessInterpretation": "Wellness insights",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Recommendation"
+      },
+      "neck": {
+        "observation": "Visual assessment",
+        "wellnessInterpretation": "Posture/wellness indicators",
+        "confidence": "low|medium|high",
+        "suggestedAction": "Wellness suggestion"
+      }
     },
-    "deficiencyAnalysis": [
-      {"deficiency": "Name specific vitamin/mineral", "visualCue": "Describe the visual sign you see", "severity": "low|moderate|high", "likelySymptom": "Describe the symptom", "recommendation": "Specific foods or supplements"}
+    "nutritionalWellness": [
+      {
+        "nutrient": "Specific vitamin/mineral to optimize",
+        "visualEvidence": "What you see that suggests this",
+        "confidence": "low|medium|high",
+        "wholeFoodSources": ["Food 1", "Food 2", "Food 3"],
+        "lifestyleSupport": "How to optimize absorption/utilization"
+      }
     ],
-    "foodIntolerances": [
-      {"type": "dairy|gluten|sugar|histamine", "visualMarkers": ["List specific visual signs"], "likelihood": "low|moderate|high", "nextSteps": "Specific testing or elimination steps"}
-    ],
-    "healthRisks": [
-      {"risk": "Name the specific health risk", "visualEvidence": "Describe what facial cues indicate this", "explanation": "Brief explanation of the connection", "actionSteps": ["Specific action 1", "Specific action 2", "Specific action 3"]}
-    ],
-    "emotionalState": {
-      "suppressedEmotions": ["List specific emotions like 'grief', 'anxiety', 'resentment'"],
-      "stressPatterns": ["Describe specific tension patterns like 'tight jaw', 'furrowed brow'"],
-      "recommendations": ["Specific practices like 'daily journaling', 'breathwork', 'therapy']"}
+    "wellnessCoaching": {
+      "top3ImmediateActions": [
+        "Most impactful action 1",
+        "Most impactful action 2",
+        "Most impactful action 3"
+      ],
+      "dailyRoutine": {
+        "morning": [
+          "Specific morning practice with reasoning",
+          "Morning skincare routine recommendation"
+        ],
+        "midday": [
+          "Energy maintenance practice",
+          "Hydration and movement reminder"
+        ],
+        "evening": [
+          "Wind-down practice",
+          "Evening skincare routine"
+        ]
+      },
+      "weeklyPractices": [
+        "Weekly self-care ritual 1",
+        "Weekly wellness practice 2"
+      ],
+      "mindBodyConnection": [
+        "Stress management technique",
+        "Mindfulness or breathwork practice",
+        "Mind-body integration suggestion"
+      ]
     },
-    "dailyProtocol": {
-      "morning": ["Specific morning practice 1", "Specific morning practice 2"],
-      "midday": ["Specific midday practice 1", "Specific midday practice 2"],
-      "evening": ["Specific evening practice 1", "Specific evening practice 2"],
-      "weekly": ["Specific weekly practice 1", "Specific weekly practice 2"],
-      "resetFoods": ["Specific food 1", "Specific food 2", "Specific food 3"],
-      "supplements": ["Specific supplement 1 with dosage", "Specific supplement 2 with dosage"],
-      "mindsetShifts": ["Specific mindset shift 1", "Specific mindset shift 2"]
+    "progressTracking": {
+      "dailyMetrics": ["What to track each day"],
+      "weeklyReview": ["What to monitor weekly"],
+      "reassessmentTimeline": "When to check progress (30/60/90 days)",
+      "professionalConsultation": "When to see dermatologist/nutritionist/doctor"
     }
   },
   "recommendations": {
     "immediate": [
-      {"icon": "fas fa-water", "title": "Specific immediate action title", "description": "Detailed description of what to do and why", "timeframe": "Today" or "This week"}
+      {
+        "icon": "fas fa-water",
+        "title": "Specific immediate wellness action",
+        "description": "What to do, why it matters, expected benefit",
+        "confidence": "low|medium|high",
+        "timeframe": "Today"
+      }
+    ],
+    "skincare": [
+      {
+        "icon": "fas fa-spa",
+        "title": "Specific skincare recommendation",
+        "description": "Product types, ingredients, or practices based on skin observations",
+        "confidence": "low|medium|high",
+        "timeframe": "Daily"
+      }
     ],
     "nutritional": [
-      {"icon": "fas fa-apple-alt", "title": "Specific nutritional recommendation title", "description": "Detailed explanation with specific foods", "timeframe": "Ongoing" or "Daily"}
+      {
+        "icon": "fas fa-apple-alt",
+        "title": "Specific nutritional wellness goal",
+        "description": "Whole foods, hydration, or dietary patterns to support skin and overall health",
+        "confidence": "low|medium|high",
+        "timeframe": "Daily"
+      }
     ],
     "lifestyle": [
-      {"icon": "fas fa-running", "title": "Specific lifestyle change title", "description": "Detailed explanation of the practice", "timeframe": "Daily" or "Weekly"}
+      {
+        "icon": "fas fa-heartbeat",
+        "title": "Specific lifestyle optimization",
+        "description": "Sleep, stress management, movement, or daily habits",
+        "confidence": "low|medium|high",
+        "timeframe": "Daily or Weekly"
+      }
     ],
     "longTerm": [
-      {"icon": "fas fa-chart-line", "title": "Specific long-term goal title", "description": "Detailed plan with milestones", "timeframe": "1-3 months" or "3-6 months"}
+      {
+        "icon": "fas fa-chart-line",
+        "title": "Long-term wellness goal",
+        "description": "Sustainable habit formation with milestones",
+        "confidence": "low|medium|high",
+        "timeframe": "30-90 days"
+      }
     ],
     "supplements": [
-      {"icon": "fas fa-pills", "title": "Specific supplement name", "description": "Why this supplement, dosage, and timing", "timeframe": "Daily for X weeks"}
+      {
+        "icon": "fas fa-pills",
+        "title": "Supplement consideration",
+        "description": "Suggest consulting healthcare provider about specific nutrients",
+        "confidence": "low|medium|high",
+        "timeframe": "Discuss with provider"
+      }
     ],
     "mindset": [
-      {"icon": "fas fa-brain", "title": "Specific mindset practice title", "description": "Detailed technique or affirmation", "timeframe": "Daily" or "When needed"}
+      {
+        "icon": "fas fa-brain",
+        "title": "Mind-body wellness practice",
+        "description": "Stress management, mindfulness, or self-care technique",
+        "confidence": "low|medium|high",
+        "timeframe": "Daily or as needed"
+      }
     ]
   }
 }
 
-Please provide your analysis in the JSON format shown above. Be thorough and specific with actionable insights.`,
-      temperature: 0.7,
-      maxTokens: 4e3
+**CRITICAL INSTRUCTIONS:**
+- Include confidence levels for ALL observations
+- Cite specific visual evidence you're seeing
+- Focus on wellness optimization, NOT diagnosis
+- Recommend professional consultation when appropriate
+- Be thorough, specific, and evidence-based
+- Provide actionable, measurable recommendations
+
+Please provide your comprehensive wellness analysis in the JSON format shown above.`,
+      temperature: 0.4,
+      // Optimized for consistent, factual responses
+      maxTokens: 6e3
+      // Increased for comprehensive wellness analysis
     };
     ALTERNATIVE_PROMPTS = {
       SIMPLE_ANALYSIS: {
@@ -875,9 +1080,12 @@ data: ${JSON.stringify({ status: "Starting analysis..." })}
     const promptConfig = configManager2.getActivePrompt();
     const stream = await openai.chat.completions.create({
       model: "gpt-4o",
-      // Changed from gpt-4.1 for better JSON reliability
-      temperature: promptConfig.temperature,
-      max_tokens: promptConfig.maxTokens,
+      temperature: 0.4,
+      // Lower for more consistent, factual responses (was 0.7)
+      max_tokens: 6e3,
+      // Increased for comprehensive responses (was 4000)
+      top_p: 0.9,
+      // Nucleus sampling for higher quality outputs
       messages: [
         {
           role: "system",
@@ -893,7 +1101,9 @@ data: ${JSON.stringify({ status: "Starting analysis..." })}
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`
+                url: `data:image/jpeg;base64,${base64Image}`,
+                detail: "high"
+                // High detail mode for better visual analysis
               }
             }
           ]
@@ -1015,9 +1225,12 @@ async function performFacialAnalysis(imagePath) {
     const promptConfig = configManager.getActivePrompt();
     const response = await openai2.chat.completions.create({
       model: "gpt-4o",
-      // Valid OpenAI model
-      temperature: promptConfig.temperature,
-      max_tokens: promptConfig.maxTokens,
+      temperature: 0.4,
+      // Lower for more consistent, factual responses
+      max_tokens: 6e3,
+      // Increased for comprehensive responses
+      top_p: 0.9,
+      // Nucleus sampling for higher quality outputs
       messages: [
         {
           role: "system",
@@ -1033,7 +1246,9 @@ async function performFacialAnalysis(imagePath) {
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`
+                url: `data:image/jpeg;base64,${base64Image}`,
+                detail: "high"
+                // High detail mode for better visual analysis
               }
             }
           ]
