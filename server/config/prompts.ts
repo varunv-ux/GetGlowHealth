@@ -105,42 +105,10 @@ Please provide your analysis in this JSON format:
     "selfHealingStrategist": "Write 2 sentences with top daily protocol items."
   },
   "analysisData": {
-    "facialMarkers": [
-      {"x": 0, "y": 0, "type": "eye|skin|structure|tension", "status": "excellent|good|minor_issues|concerning", "insight": "Provide actual specific observation about this facial marker"}
-    ],
-    "facialZoneAnalysis": {
-      "forehead": {"observation": "Describe what you see in the forehead area", "interpretation": "Explain what this means from health/physiognomy perspective", "suggestedAction": "Recommend specific actions"},
-      "eyes": {"observation": "Describe what you see in the eye area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "nose": {"observation": "Describe what you see in the nose area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "cheeks": {"observation": "Describe what you see in the cheek area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "lips": {"observation": "Describe what you see in the lip area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "jawline": {"observation": "Describe what you see in the jawline area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "chin": {"observation": "Describe what you see in the chin area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
-      "neck": {"observation": "Describe what you see in the neck area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"}
-    },
-    "deficiencyAnalysis": [
-      {"deficiency": "Name specific vitamin/mineral", "visualCue": "Describe the visual sign you see", "severity": "low|moderate|high", "likelySymptom": "Describe the symptom", "recommendation": "Specific foods or supplements"}
-    ],
-    "foodIntolerances": [
-      {"type": "dairy|gluten|sugar|histamine", "visualMarkers": ["List specific visual signs"], "likelihood": "low|moderate|high", "nextSteps": "Specific testing or elimination steps"}
-    ],
-    "healthRisks": [
-      {"risk": "Name the specific health risk", "visualEvidence": "Describe what facial cues indicate this", "explanation": "Brief explanation of the connection", "actionSteps": ["Specific action 1", "Specific action 2", "Specific action 3"]}
-    ],
-    "emotionalState": {
-      "suppressedEmotions": ["List specific emotions like 'grief', 'anxiety', 'resentment'"],
-      "stressPatterns": ["Describe specific tension patterns like 'tight jaw', 'furrowed brow'"],
-      "recommendations": ["Specific practices like 'daily journaling', 'breathwork', 'therapy']"}
-    },
-    "dailyProtocol": {
-      "morning": ["Specific morning practice 1", "Specific morning practice 2"],
-      "midday": ["Specific midday practice 1", "Specific midday practice 2"],
-      "evening": ["Specific evening practice 1", "Specific evening practice 2"],
-      "weekly": ["Specific weekly practice 1", "Specific weekly practice 2"],
-      "resetFoods": ["Specific food 1", "Specific food 2", "Specific food 3"],
-      "supplements": ["Specific supplement 1 with dosage", "Specific supplement 2 with dosage"],
-      "mindsetShifts": ["Specific mindset shift 1", "Specific mindset shift 2"]
-    }
+    "topDeficiencies": ["List 2-3 likely vitamin/mineral deficiencies"],
+    "foodIntolerances": ["List 1-2 probable food intolerances"],
+    "healthRisks": ["List 2-3 main health risks to address"],
+    "keyActions": ["List 3-4 most important actions to take"]
   },
   "recommendations": {
     "immediate": [
@@ -171,7 +139,7 @@ CRITICAL INSTRUCTIONS:
 4. Keep responses brief but actionable`,
 
   temperature: 0.7,
-  maxTokens: 2500  // Reduced for faster completion under 60s Vercel limit
+  maxTokens: 3500  // Increased slightly - with simplified JSON this should complete
 };
 
 export const ALTERNATIVE_PROMPTS = {
