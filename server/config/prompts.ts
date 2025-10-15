@@ -26,19 +26,19 @@ This analysis is for wellness optimization and educational purposes only. It is 
 
 Deliver a deep, structured, and practical analysis. Use visible cues to infer potential internal states and recommend actions for healing, rejuvenation, and optimization. Act as a trusted functional medicine specialist and wellness coach - expert yet empowering.`,
 
-  analysisPrompt: `Analyze this face image comprehensively using the following framework. For EACH observation, provide a CONFIDENCE LEVEL (low/medium/high) and cite the VISIBLE EVIDENCE you're seeing.
+  analysisPrompt: `Provide a comprehensive wellness assessment of the visible characteristics in this image using the following framework. For EACH observation, provide a CONFIDENCE LEVEL (low/medium/high) and cite the VISIBLE EVIDENCE you're seeing.
 
-**1. Comprehensive Skin Health Analysis** (NEW - DETAILED)
-Perform detailed skin assessment:
-• TEXTURE: Analyze smoothness, pores, fine lines, skin quality - cite what you see
-• TONE: Assess evenness, coloration, undertones, brightness - cite what you see
-• HYDRATION: Evaluate moisture levels, dryness, plumpness - cite what you see
+**1. Comprehensive Skin Health Observations** (NEW - DETAILED)
+Describe visible skin characteristics:
+• TEXTURE: Describe smoothness, pores, fine lines, skin quality - cite what you see
+• TONE: Describe evenness, coloration, undertones, brightness - cite what you see
+• HYDRATION: Describe moisture levels, dryness, plumpness - cite what you see
 • VISIBLE CONDITIONS: Identify any concerns (redness, spots, dark circles, etc.)
 • CONFIDENCE LEVEL: Rate your confidence (low/medium/high) for each observation
 Format: Specific Observation → Visual Evidence → Recommendation
 
-**2. Facial Zone Analysis** (ENHANCED)
-Analyze each zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck) from multiple perspectives:
+**2. Facial Zone Observations** (ENHANCED)
+Observe each zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck) from multiple perspectives:
 • OBSERVATION: What specific visual characteristics do you see?
 • PHYSIOGNOMY: Personality/energy imprints
 • NUTRITION: Dietary imbalances or organ stress signs

@@ -53,8 +53,8 @@ export async function performStreamingAnalysis(
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`,
-                detail: "high" // High detail mode for better visual analysis
+                url: `data:image/jpeg;base64,${base64Image}`
+                // Note: "detail: high" triggers stricter content policy - removed
               }
             }
           ]
@@ -65,11 +65,19 @@ export async function performStreamingAnalysis(
     });
 
     let fullContent = "";
+    let refusalContent = "";
     let chunkCount = 0;
 
     // Stream chunks to client
     for await (const chunk of stream) {
       const content = chunk.choices[0]?.delta?.content || "";
+      const refusal = chunk.choices[0]?.delta?.refusal || "";
+
+      // Check for refusal (OpenAI content policy rejection)
+      if (refusal) {
+        refusalContent += refusal;
+      }
+
       if (content) {
         fullContent += content;
         chunkCount++;
@@ -82,6 +90,18 @@ export async function performStreamingAnalysis(
           })}\n\n`);
         }
       }
+    }
+
+    // Handle refusals from OpenAI
+    if (refusalContent) {
+      console.error("❌ OpenAI refused the request:", refusalContent);
+      res.write(`event: error\ndata: ${JSON.stringify({
+        message: "Unable to analyze this image",
+        details: "The AI service declined to process this request. This may occur with certain types of images or requests.",
+        refusal: refusalContent
+      })}\n\n`);
+      res.end();
+      throw new Error(`OpenAI refusal: ${refusalContent}`);
     }
 
     // Parse final result with better error handling
