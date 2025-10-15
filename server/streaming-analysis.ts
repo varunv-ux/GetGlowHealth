@@ -100,18 +100,19 @@ export async function performStreamingAnalysis(
       console.error("❌ Content preview (first 500):", fullContent.substring(0, 500));
       console.error("❌ Content preview (last 500):", fullContent.substring(fullContent.length - 500));
       
-      // Try to fix incomplete JSON by closing it
+      // Try to fix incomplete JSON
       try {
-        let fixedContent = fullContent.trim();
-        
+        // Remove control characters and trim
+        let fixedContent = fullContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim();
+
         // Count open/close braces and brackets
         const openBraces = (fixedContent.match(/{/g) || []).length;
         const closeBraces = (fixedContent.match(/}/g) || []).length;
         const openBrackets = (fixedContent.match(/\[/g) || []).length;
         const closeBrackets = (fixedContent.match(/]/g) || []).length;
-        
+
         console.log(`📊 Braces: ${openBraces} open, ${closeBraces} close | Brackets: ${openBrackets} open, ${closeBrackets} close`);
-        
+
         // Try to close incomplete JSON
         for (let i = 0; i < (openBrackets - closeBrackets); i++) {
           fixedContent += ']';
@@ -119,7 +120,7 @@ export async function performStreamingAnalysis(
         for (let i = 0; i < (openBraces - closeBraces); i++) {
           fixedContent += '}';
         }
-        
+
         analysisResult = JSON.parse(fixedContent);
         console.log("✅ Fixed incomplete JSON by closing missing brackets/braces");
       } catch (retryError) {
@@ -135,7 +136,7 @@ export async function performStreamingAnalysis(
 
     // Add metadata
     analysisResult.rawAnalysis = {
-      model: "gpt-4o",
+      model: "gpt-4o", // Valid OpenAI model
       responseTime: new Date().toISOString(),
       fullResponse: fullContent.substring(0, 1000) // Only store first 1000 chars to avoid DB issues
     };

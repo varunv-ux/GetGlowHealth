@@ -56,7 +56,7 @@ async function performFacialAnalysis(imagePath: string) {
     // Using GPT-4o model for enhanced facial analysis capabilities with vision
     const promptConfig = configManager.getActivePrompt();
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o", // Valid OpenAI model
       temperature: promptConfig.temperature,
       max_tokens: promptConfig.maxTokens,
       messages: [

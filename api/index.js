@@ -25,72 +25,43 @@ var init_prompts = __esm({
 Deliver a deep, structured, and practical analysis based on the uploaded face image. Use visual cues from the uploaded face to infer potential internal states and recommend actions for healing, rejuvenation, and optimization.
 
 Be specific, don't generalize. Act as a trusted functional medicine specialist and holistic coach - expert yet empowering.`,
-      analysisPrompt: `\u{1F9E0} ULTRA-DETAILED FACE ANALYSIS FROM IMAGE
-
-Analyze this face comprehensively from multiple expert perspectives:
+      analysisPrompt: `Analyze this face image comprehensively using the following 7-part framework:
 
 **1. Facial Feature Breakdown**
-Analyze each zone: forehead, eyes, nose, cheeks, lips, jawline, chin, neck
-From the perspective of:
-\u2022 \u{1F9E0} Physiognomy: personality/energy imprints
-\u2022 \u{1F957} Nutritionist: dietary imbalances or organ stress signs
-\u2022 \u{1F616} Psychosomatic expert: emotional tension zones, psychosomatic markers
-\u2022 \u{1F9EC} Health specialist: hormones, reproductive system cues, vitality
-
-For each zone: Observation \u2192 Interpretation \u2192 Suggested Action or Test
+Analyze each zone (forehead, eyes, nose, cheeks, lips, jawline, chin, neck) from:
+\u2022 Physiognomy perspective (personality/energy imprints)
+\u2022 Nutrition perspective (dietary imbalances, organ stress signs)
+\u2022 Psychosomatic perspective (emotional tension zones, psychosomatic markers)
+\u2022 Health perspective (hormones, reproductive system cues, vitality)
+For each zone: Observation \u2192 Interpretation \u2192 Suggested Action
 
 **2. Visual Age Estimator**
-Estimate perceived age based on:
-\u2022 Skin tone, elasticity, wrinkle depth, volume loss
-\u2022 Facial symmetry and posture
-\u2022 Muscle tension or sagging
-
-Identify age-accelerating patterns, their causes, and how to reverse or slow them (collagen boosters, sleep, anti-inflammatory diet).
+Estimate perceived age based on skin tone, elasticity, wrinkles, symmetry, and facial posture.
+Identify age-accelerating patterns, their causes, and how to reverse/slow them.
 
 **3. Deficiency Detector**
-From face features (skin, lips, under-eyes, hairline, mouth corners):
-\u2022 Detect vitamin, mineral, or hydration deficiencies
-\u2022 Rate severity (low/moderate/high)
-\u2022 Link to symptoms (fatigue, low immunity, etc.)
-\u2022 Recommend foods/supplements to restore balance
+Identify vitamin, mineral, or hydration deficiencies visible in facial features.
+Rate severity (low/moderate/high), link to symptoms, and recommend foods/supplements.
 
 **4. Food Intolerance Identifier**
-Spot visual markers of:
-\u2022 Inflammation (puffiness, redness, acne)
-\u2022 Water retention
-\u2022 Histamine sensitivity
-\u2022 Dairy/gluten/sugar-related congestion
-
-Flag likely intolerances with next steps (elimination trial, GI tests).
+Spot visual markers of inflammation (puffiness, redness, acne), water retention, histamine sensitivity, and common intolerances (dairy/gluten/sugar).
+Flag likely intolerances with next steps.
 
 **5. Health Risk Reader**
-Highlight potential internal risks based on facial cues:
-\u2022 Hormonal imbalance
-\u2022 Sleep debt
-\u2022 Adrenal fatigue
-\u2022 Gut dysbiosis
-\u2022 Chronic stress or burnout
-
-For each: give visual evidence, short explanation, 3 focused steps to address.
+Highlight potential risks: hormonal imbalance, sleep debt, adrenal fatigue, gut dysbiosis, chronic stress.
+For each: provide visual evidence, explanation, and 3 focused action steps.
 
 **6. Emotional State Scanner**
-Decode facial tension and expression to identify:
-\u2022 Chronic emotional suppression (grief, resentment, fear, pressure)
-\u2022 Stress-pattern storage (tight jaw, drooping eyes, clenched lips)
-
-Recommend mindset shifts, journaling prompts, breathwork, somatic releases, or therapy styles.
+Decode facial tension patterns to identify chronic emotional suppression (grief, resentment, fear) and stress storage (tight jaw, furrowed brow, clenched lips).
+Recommend mindset shifts, journaling prompts, breathwork, or therapy approaches.
 
 **7. Self-Healing Strategist**
-Synthesize all findings into a personalized daily protocol to optimize mind, body, and spirit:
+Synthesize findings into a personalized daily protocol:
 \u2022 Morning routine (nutrition, skincare, mindset)
-\u2022 Mid-day optimization (hydration, movement, stress release)
+\u2022 Midday optimization (hydration, movement, stress release)
 \u2022 Evening wind-down (sleep prep, emotional reset)
-\u2022 Weekly healing practices (sauna, lymphatic massage, gratitude reset)
-
-Include:
-\u2022 A reset food list
-\u2022 3 supplements to consider
-\u2022 Top 1\u20132 mindset shifts
+\u2022 Weekly practices (sauna, lymphatic massage, gratitude)
+Include: reset food list, 3 supplements, and top 1-2 mindset shifts
 
 Please provide your analysis in this JSON format:
 
@@ -103,78 +74,77 @@ Please provide your analysis in this JSON format:
   "estimatedAge": number,
   "ageRange": "XX-XX years",
   "conversationalAnalysis": {
-    "facialFeatureBreakdown": "Detailed analysis of each facial zone from physiognomy, nutrition, psychosomatic, and health perspectives",
-    "visualAgeEstimator": "Age estimation with skin analysis, symmetry assessment, and age-accelerating pattern identification",
-    "deficiencyDetector": "Vitamin, mineral, and hydration deficiency analysis with severity ratings and supplement recommendations",
-    "foodIntoleranceIdentifier": "Visual markers of inflammation, water retention, histamine sensitivity, and food-related congestion",
-    "healthRiskReader": "Potential internal health risks based on facial cues with visual evidence and focused action steps",
-    "emotionalStateScanner": "Facial tension and emotional suppression analysis with mindset and therapeutic recommendations",
-    "selfHealingStrategist": "Personalized daily protocol for mind, body, and spirit optimization with routines and practices"
+    "facialFeatureBreakdown": "Write 2-3 concise sentences summarizing key facial observations.",
+    "visualAgeEstimator": "Write 1-2 sentences with age estimate and main aging factors.",
+    "deficiencyDetector": "Write 1-2 sentences listing top 2-3 deficiencies.",
+    "foodIntoleranceIdentifier": "Write 1-2 sentences identifying probable intolerances.",
+    "healthRiskReader": "Write 2 sentences highlighting main risks.",
+    "emotionalStateScanner": "Write 1-2 sentences on tension patterns.",
+    "selfHealingStrategist": "Write 2 sentences with top daily protocol items."
   },
   "analysisData": {
     "facialMarkers": [
-      {"x": number, "y": number, "type": "eye|skin|structure|tension", "status": "excellent|good|minor_issues|concerning", "insight": "specific observation"}
+      {"x": 0, "y": 0, "type": "eye|skin|structure|tension", "status": "excellent|good|minor_issues|concerning", "insight": "Provide actual specific observation about this facial marker"}
     ],
     "facialZoneAnalysis": {
-      "forehead": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "eyes": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "nose": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "cheeks": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "lips": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "jawline": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "chin": {"observation": "string", "interpretation": "string", "suggestedAction": "string"},
-      "neck": {"observation": "string", "interpretation": "string", "suggestedAction": "string"}
+      "forehead": {"observation": "Describe what you see in the forehead area", "interpretation": "Explain what this means from health/physiognomy perspective", "suggestedAction": "Recommend specific actions"},
+      "eyes": {"observation": "Describe what you see in the eye area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
+      "nose": {"observation": "Describe what you see in the nose area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
+      "cheeks": {"observation": "Describe what you see in the cheek area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
+      "lips": {"observation": "Describe what you see in the lip area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
+      "jawline": {"observation": "Describe what you see in the jawline area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
+      "chin": {"observation": "Describe what you see in the chin area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"},
+      "neck": {"observation": "Describe what you see in the neck area", "interpretation": "Explain what this means from health perspective", "suggestedAction": "Recommend specific actions"}
     },
     "deficiencyAnalysis": [
-      {"deficiency": "string", "visualCue": "string", "severity": "low|moderate|high", "likelySymptom": "string", "recommendation": "string"}
+      {"deficiency": "Name specific vitamin/mineral", "visualCue": "Describe the visual sign you see", "severity": "low|moderate|high", "likelySymptom": "Describe the symptom", "recommendation": "Specific foods or supplements"}
     ],
     "foodIntolerances": [
-      {"type": "dairy|gluten|sugar|histamine", "visualMarkers": ["string"], "likelihood": "low|moderate|high", "nextSteps": "string"}
+      {"type": "dairy|gluten|sugar|histamine", "visualMarkers": ["List specific visual signs"], "likelihood": "low|moderate|high", "nextSteps": "Specific testing or elimination steps"}
     ],
     "healthRisks": [
-      {"risk": "string", "visualEvidence": "string", "explanation": "string", "actionSteps": ["string"]}
+      {"risk": "Name the specific health risk", "visualEvidence": "Describe what facial cues indicate this", "explanation": "Brief explanation of the connection", "actionSteps": ["Specific action 1", "Specific action 2", "Specific action 3"]}
     ],
     "emotionalState": {
-      "suppressedEmotions": ["string"],
-      "stressPatterns": ["string"],
-      "recommendations": ["string"]
+      "suppressedEmotions": ["List specific emotions like 'grief', 'anxiety', 'resentment'"],
+      "stressPatterns": ["Describe specific tension patterns like 'tight jaw', 'furrowed brow'"],
+      "recommendations": ["Specific practices like 'daily journaling', 'breathwork', 'therapy']"}
     },
     "dailyProtocol": {
-      "morning": ["string"],
-      "midday": ["string"],
-      "evening": ["string"],
-      "weekly": ["string"],
-      "resetFoods": ["string"],
-      "supplements": ["string"],
-      "mindsetShifts": ["string"]
+      "morning": ["Specific morning practice 1", "Specific morning practice 2"],
+      "midday": ["Specific midday practice 1", "Specific midday practice 2"],
+      "evening": ["Specific evening practice 1", "Specific evening practice 2"],
+      "weekly": ["Specific weekly practice 1", "Specific weekly practice 2"],
+      "resetFoods": ["Specific food 1", "Specific food 2", "Specific food 3"],
+      "supplements": ["Specific supplement 1 with dosage", "Specific supplement 2 with dosage"],
+      "mindsetShifts": ["Specific mindset shift 1", "Specific mindset shift 2"]
     }
   },
   "recommendations": {
     "immediate": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
+      {"icon": "fas fa-water", "title": "Specific immediate action title", "description": "Detailed description of what to do and why", "timeframe": "Today" or "This week"}
     ],
     "nutritional": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
+      {"icon": "fas fa-apple-alt", "title": "Specific nutritional recommendation title", "description": "Detailed explanation with specific foods", "timeframe": "Ongoing" or "Daily"}
     ],
     "lifestyle": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
+      {"icon": "fas fa-running", "title": "Specific lifestyle change title", "description": "Detailed explanation of the practice", "timeframe": "Daily" or "Weekly"}
     ],
     "longTerm": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
+      {"icon": "fas fa-chart-line", "title": "Specific long-term goal title", "description": "Detailed plan with milestones", "timeframe": "1-3 months" or "3-6 months"}
     ],
     "supplements": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
+      {"icon": "fas fa-pills", "title": "Specific supplement name", "description": "Why this supplement, dosage, and timing", "timeframe": "Daily for X weeks"}
     ],
     "mindset": [
-      {"icon": "fas fa-icon", "title": "string", "description": "string", "timeframe": "string"}
+      {"icon": "fas fa-brain", "title": "Specific mindset practice title", "description": "Detailed technique or affirmation", "timeframe": "Daily" or "When needed"}
     ]
   }
 }
 
-Be extremely thorough and specific in your analysis. Provide detailed, actionable insights that someone can immediately implement to improve their appearance and general well-being.`,
+Please provide your analysis in the JSON format shown above. Be thorough and specific with actionable insights.`,
       temperature: 0.7,
-      maxTokens: 2500
-      // Reduced from 4000 to speed up response (~40% faster)
+      maxTokens: 4e3
     };
     ALTERNATIVE_PROMPTS = {
       SIMPLE_ANALYSIS: {
@@ -965,22 +935,34 @@ data: ${JSON.stringify({
       console.error("\u274C Content preview (last 500):", fullContent.substring(fullContent.length - 500));
       try {
         let fixedContent = fullContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim();
+        const openBraces = (fixedContent.match(/{/g) || []).length;
+        const closeBraces = (fixedContent.match(/}/g) || []).length;
+        const openBrackets = (fixedContent.match(/\[/g) || []).length;
+        const closeBrackets = (fixedContent.match(/]/g) || []).length;
+        console.log(`\u{1F4CA} Braces: ${openBraces} open, ${closeBraces} close | Brackets: ${openBrackets} open, ${closeBrackets} close`);
+        for (let i = 0; i < openBrackets - closeBrackets; i++) {
+          fixedContent += "]";
+        }
+        for (let i = 0; i < openBraces - closeBraces; i++) {
+          fixedContent += "}";
+        }
         analysisResult = JSON.parse(fixedContent);
-        console.log("\u2705 Fixed JSON parsing after cleanup");
+        console.log("\u2705 Fixed incomplete JSON by closing missing brackets/braces");
       } catch (retryError) {
         res.write(`event: error
 data: ${JSON.stringify({
-          message: "Failed to parse AI response. The analysis may have generated invalid JSON.",
-          details: parseError.message
+          message: "AI response was incomplete. Try again or simplify your image.",
+          details: `Response was ${fullContent.length} characters, parsing failed`
         })}
 
 `);
         res.end();
-        throw new Error(`JSON parsing failed: ${parseError.message}`);
+        throw new Error(`JSON parsing failed after retry: ${parseError.message}`);
       }
     }
     analysisResult.rawAnalysis = {
-      model: "gpt-4.1",
+      model: "gpt-4o",
+      // Valid OpenAI model
       responseTime: (/* @__PURE__ */ new Date()).toISOString(),
       fullResponse: fullContent.substring(0, 1e3)
       // Only store first 1000 chars to avoid DB issues
@@ -1032,7 +1014,8 @@ async function performFacialAnalysis(imagePath) {
     console.log("API Key exists:", !!process.env.OPENAI_API_KEY);
     const promptConfig = configManager.getActivePrompt();
     const response = await openai2.chat.completions.create({
-      model: "gpt-4.1",
+      model: "gpt-4o",
+      // Valid OpenAI model
       temperature: promptConfig.temperature,
       max_tokens: promptConfig.maxTokens,
       messages: [
@@ -1085,7 +1068,7 @@ async function performFacialAnalysis(imagePath) {
       throw new Error("Invalid JSON response from OpenAI");
     }
     analysisResult.rawAnalysis = {
-      model: "gpt-4.1",
+      model: "gpt-4o",
       usage: response.usage,
       responseTime: (/* @__PURE__ */ new Date()).toISOString(),
       fullResponse: responseContent
@@ -1643,8 +1626,8 @@ Please provide helpful, accurate, and personalized responses about this specific
 
 // server/vercel-handler.ts
 var app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 var initialized = false;
 var initPromise = null;
 async function initializeApp() {
