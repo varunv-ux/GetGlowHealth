@@ -1,15 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  User, 
-  Clock, 
-  Apple, 
-  AlertTriangle, 
-  Shield, 
-  Brain, 
+import {
+  User,
+  Clock,
+  Apple,
+  AlertTriangle,
+  Shield,
+  Brain,
   Heart,
   Target,
-  MessageSquare
+  MessageSquare,
+  Sparkles,
+  Activity,
+  Flower2
 } from "lucide-react";
 import type { Analysis } from "@shared/schema";
 
@@ -92,6 +95,51 @@ export default function ConversationalAnalysis({ analysis }: ConversationalAnaly
                   <div className="prose prose-sm max-w-none">
                     <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                       {conversationalAnalysis.deficiencyDetector}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Skin Health Summary - NEW */}
+              {conversationalAnalysis.skinHealthSummary && (
+                <div>
+                  <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                    <Sparkles className="w-5 h-5 text-pink-500 mr-2" />
+                    Skin Health Analysis
+                  </h4>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {conversationalAnalysis.skinHealthSummary}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Lifestyle Wellness - NEW */}
+              {conversationalAnalysis.lifestyleWellness && (
+                <div>
+                  <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                    <Activity className="w-5 h-5 text-green-500 mr-2" />
+                    Lifestyle & Wellness Indicators
+                  </h4>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {conversationalAnalysis.lifestyleWellness}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Holistic Approach - NEW */}
+              {conversationalAnalysis.holisticApproach && (
+                <div>
+                  <h4 className="text-lg font-semibold text-dark-grey mb-3 flex items-center">
+                    <Flower2 className="w-5 h-5 text-purple-500 mr-2" />
+                    Holistic Wellness Integration
+                  </h4>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {conversationalAnalysis.holisticApproach}
                     </p>
                   </div>
                 </div>
